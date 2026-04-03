@@ -95,31 +95,43 @@ If a gap appears at any step, loop back to the earlier step and revise.
 
 ## Installation
 
-### For Claude Code
+### Using Skills CLI (Recommended)
+
+Install all SLDD skills with a single command:
+
+```bash
+npx skills add soujava/sldd-skills
+```
+
+This will automatically download and configure all SLDD skills for your AI agent.
+
+### Manual Installation
+
+#### For Claude Code
 
 Copy the skill directories to your Claude skills folder:
 
 ```bash
 # Clone the repository
-git clone https://github.com/omatheusmesmo/sldd-skills.git
+git clone https://github.com/soujava/sldd-skills.git
 
 # Copy to Claude skills directory
-cp -r sldd-skills/sldd-* ~/.claude/skills/
+cp -r sldd-skills/skills/sldd-* ~/.claude/skills/
 ```
 
-### For OpenCode
+#### For OpenCode
 
 Copy the skill directories to your OpenCode skills folder:
 
 ```bash
 # Clone the repository
-git clone https://github.com/omatheusmesmo/sldd-skills.git
+git clone https://github.com/soujava/sldd-skills.git
 
 # Copy to OpenCode skills directory
-cp -r sldd-skills/sldd-* ~/.agents/skills/
+cp -r sldd-skills/skills/sldd-* ~/.agents/skills/
 ```
 
-### For Other AI Tools
+#### For Other AI Tools
 
 These skills are plain Markdown files with YAML frontmatter. They can be adapted to any AI tool that supports:
 - System prompts or instructions
