@@ -25,6 +25,51 @@ When using AI for code generation, teams often face:
 
 SLDD provides a structured feedback loop that prevents these issues while maintaining development velocity.
 
+## Installation
+
+### Using Skills CLI (Recommended)
+
+Install all SLDD skills with a single command:
+
+```bash
+npx skills add soujava/sldd-skills
+```
+
+This will automatically download and configure all SLDD skills for your AI agent.
+
+### Manual Installation
+
+#### For Claude Code
+
+Copy the skill directories to your Claude skills folder:
+
+```bash
+# Clone the repository
+git clone https://github.com/soujava/sldd-skills.git
+
+# Copy to Claude skills directory
+cp -r sldd-skills/skills/sldd-* ~/.claude/skills/
+```
+
+#### For OpenCode
+
+Copy the skill directories to your OpenCode skills folder:
+
+```bash
+# Clone the repository
+git clone https://github.com/soujava/sldd-skills.git
+
+# Copy to OpenCode skills directory
+cp -r sldd-skills/skills/sldd-* ~/.agents/skills/
+```
+
+#### For Other AI Tools
+
+These skills are plain Markdown files with YAML frontmatter. They can be adapted to any AI tool that supports:
+- System prompts or instructions
+- Reusable prompt templates
+- Agent/skill workflows
+
 ## The Process Flow
 
 Run one skill at a time. Review and approve the output before moving to the next step.
@@ -92,51 +137,6 @@ If a gap appears at any step, loop back to the earlier step and revise.
 | 05 | `sldd-05-minimal-implementation-to-pass-existing-tests` | Minimal code to make tests pass |
 | 06 | `sldd-06-verification-and-feedback-report` | Audit implementation, compliance matrix, go/no-go decision |
 | 99 | `sldd-99-existing-codebase-understanding-and-context-summary` | Read and summarize existing codebase (optional prerequisite) |
-
-## Installation
-
-### Using Skills CLI (Recommended)
-
-Install all SLDD skills with a single command:
-
-```bash
-npx skills add soujava/sldd-skills
-```
-
-This will automatically download and configure all SLDD skills for your AI agent.
-
-### Manual Installation
-
-#### For Claude Code
-
-Copy the skill directories to your Claude skills folder:
-
-```bash
-# Clone the repository
-git clone https://github.com/soujava/sldd-skills.git
-
-# Copy to Claude skills directory
-cp -r sldd-skills/skills/sldd-* ~/.claude/skills/
-```
-
-#### For OpenCode
-
-Copy the skill directories to your OpenCode skills folder:
-
-```bash
-# Clone the repository
-git clone https://github.com/soujava/sldd-skills.git
-
-# Copy to OpenCode skills directory
-cp -r sldd-skills/skills/sldd-* ~/.agents/skills/
-```
-
-#### For Other AI Tools
-
-These skills are plain Markdown files with YAML frontmatter. They can be adapted to any AI tool that supports:
-- System prompts or instructions
-- Reusable prompt templates
-- Agent/skill workflows
 
 ## Usage
 
