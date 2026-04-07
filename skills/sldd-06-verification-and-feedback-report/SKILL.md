@@ -40,12 +40,15 @@ Structured report with matrices, lists, and clear status indicators (met/partial
 Critical and honest. Flag every gap and risk. Provide actionable remediation steps. Give a clear yes/no on production readiness.
 
 **Response:**
+Before auditing, check whether an `AGENTS.md` file exists at the project root. If it references a testing guideline file, read it and use it as the baseline for test convention compliance checks.
+
 Deliver exactly these sections in this order:
 1) Compliance matrix (spec requirement → implementation status: met/partial/missing)
 2) Version and dependency validation (are versions correct and supported?)
-3) Risk list by severity (high/medium/low)
-4) Suggested remediation steps (how to fix gaps before release)
-5) Decision: ready for production? yes/no and why. If no, list the top 3 blockers.
+3) Test convention compliance: verify that test files follow the project's testing guideline (from `AGENTS.md` if present). Flag any tests that violate naming conventions, assertion style, soft assertion usage, AAA structure, or exception testing patterns.
+4) Risk list by severity (high/medium/low)
+5) Suggested remediation steps (how to fix gaps before release)
+6) Decision: ready for production? yes/no and why. If no, list the top 3 blockers.
 
 **After delivering the output:**
 Ask the user: "Save this output to SPEC.md? (yes/no)"

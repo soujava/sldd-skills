@@ -33,6 +33,9 @@ Implement only the production code required to make all existing tests pass. Do 
 **Audience:**
 Engineers and code reviewers verifying that implementation matches the low-level design and test intentions.
 
+**Before writing any production code:**
+Check whether an `AGENTS.md` file exists at the project root. If it references a testing guideline file, read it. Do NOT write or modify test files in this step — tests are already written and must remain untouched. Ensure all production code follows the existing architecture and code style conventions of the project.
+
 **Style:**
 Production code written in the project's native language. Follow existing code style and architecture conventions. Keep implementation focused and minimal.
 

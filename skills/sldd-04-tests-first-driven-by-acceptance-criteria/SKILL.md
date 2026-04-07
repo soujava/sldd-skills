@@ -33,8 +33,12 @@ Write test files that directly correspond to the acceptance criteria and test sc
 **Audience:**
 Engineers who will run these tests immediately and implement code to make them pass.
 
+**Before writing any tests:**
+Check whether an `AGENTS.md` file exists at the project root. If it references a testing guideline file (e.g. `TESTING-GUIDELINE.adoc`), read it and apply all conventions found there to every test written. Conventions typically cover: test framework, assertion library, naming patterns, test structure (AAA), soft assertions, exception testing style, and coverage requirements.
+If no guideline is found, fall back to the conventions of existing test files in the project as the baseline.
+
 **Style:**
-Test code in the project's native test framework. One test per clearly named scenario. Include brief comments explaining what each test validates.
+Test code in the project's native test framework. One test per clearly named scenario. Include brief comments explaining what each test validates. Naming, structure, and assertion style must follow the project's testing guideline if one exists.
 
 **Tone:**
 Explicit. Each test must map to one acceptance criterion. Leave no ambiguity about what passes or fails.
