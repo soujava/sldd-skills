@@ -15,6 +15,18 @@ Spec: <provide the approved low-level design and product intent specification>
 
 Implementation summary: <provide the implementation output or reference files>
 
+SPEC.md (optional): <provide path to an existing SPEC.md to load prior context, or leave blank>
+
+**SPEC.md resume behavior:**
+If a SPEC.md path is provided:
+1. Read the file and check the Progress checklist to identify which steps are already complete.
+2. If Step 01 is marked complete, extract its section as the product intent spec (problem statement, acceptance criteria) — no need to paste it manually.
+3. If Step 03 is marked complete, extract its section as the low-level design to audit against — no need to paste it manually.
+4. If Step 05 is marked complete, extract the implementation summary (production files, run commands, assumptions) from its section — no need to provide it manually.
+5. Announce: "Resuming SLDD process. Steps complete: [list]. Continuing with Step 06."
+If the user provides a specs root directory instead of a full path, list all `*/SPEC.md` files found under it and ask which feature to resume.
+If no SPEC.md is provided, proceed normally.
+
 **Objective:**
 Produce a gap report that compares the implementation against the spec and identifies what matches, what is missing, what risks remain, and whether the work is production-ready.
 
@@ -34,3 +46,9 @@ Deliver exactly these sections in this order:
 3) Risk list by severity (high/medium/low)
 4) Suggested remediation steps (how to fix gaps before release)
 5) Decision: ready for production? yes/no and why. If no, list the top 3 blockers.
+
+**After delivering the output:**
+Ask the user: "Save this output to SPEC.md? (yes/no)"
+- If yes and no SPEC.md exists yet: ask "Which directory should I use for specs?" (e.g. `docs/specs`), then suggest a slug derived from the feature name and ask the user to confirm or edit it. Create `<dir>/<slug>/SPEC.md` with the Progress checklist header (all steps unchecked) and the Step 06 section (full gap report and go/no-go decision), marking Step 06 as `[x]`.
+- If yes and a SPEC.md already exists: ask for the path to the existing SPEC.md, then append the `## Step 06 — Verification Report` section (full gap report and go/no-go decision) and mark `[x]` next to Step 06 in the Progress checklist.
+- If no: continue without saving.

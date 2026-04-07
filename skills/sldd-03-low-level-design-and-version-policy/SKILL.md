@@ -13,6 +13,18 @@ You are a staff engineer preparing an implementation plan. You have the high-lev
 
 High-level design: <provide the approved high-level technical design>
 
+SPEC.md (optional): <provide path to an existing SPEC.md to load prior context, or leave blank>
+
+**SPEC.md resume behavior:**
+If a SPEC.md path is provided:
+1. Read the file and check the Progress checklist to identify which steps are already complete.
+2. If Step 02 is marked complete, extract its section as the high-level design — no need to paste it manually.
+3. If Step 01 is marked complete, extract it as additional intent context.
+4. If Step 99 is marked complete, include the codebase context as additional input.
+5. Announce: "Resuming SLDD process. Steps complete: [list]. Continuing with Step 03."
+If the user provides a specs root directory instead of a full path, list all `*/SPEC.md` files found under it and ask which feature to resume.
+If no SPEC.md is provided, proceed normally.
+
 **Objective:**
 Produce a detailed low-level design and implementation plan that specifies what to build, version constraints, and test strategy — enabling unambiguous work assignments.
 
@@ -41,3 +53,11 @@ Version policy requirements must include:
 After delivering the low-level design, produce a detailed ordered implementation plan listing every task (components, endpoints, data models, migrations, tests, configuration) as discrete sequenced steps small enough to evaluate individually. This plan is the checklist the team agrees on before any implementation prompt is sent.
 
 Gate: present the high-level and low-level designs for review before any code is generated. Do not skip the review gate because AI can generate code quickly.
+
+**After delivering the output:**
+First, check whether file writes are currently allowed (i.e. whether you are NOT in plan mode / read-only mode):
+- If file writes are FORBIDDEN (plan mode is active): tell the user explicitly — "I am in plan mode and cannot write files right now. To save this spec to SPEC.md, switch to build/execution mode and I will create it immediately." Do NOT ask the save question yet. Stop here.
+- If file writes are ALLOWED: ask the user "Save this output to SPEC.md? (yes/no)"
+- If yes and no SPEC.md exists yet: ask "Which directory should I use for specs?" (e.g. `docs/specs`), then suggest a slug derived from the feature name and ask the user to confirm or edit it. Create `<dir>/<slug>/SPEC.md` with the Progress checklist header (all steps unchecked) and the Step 03 section, marking Step 03 as `[x]`.
+- If yes and a SPEC.md already exists: ask for the path to the existing SPEC.md, then append the `## Step 03 — Low-Level Design and Version Policy` section and mark `[x]` next to Step 03 in the Progress checklist.
+- If no: continue without saving.
