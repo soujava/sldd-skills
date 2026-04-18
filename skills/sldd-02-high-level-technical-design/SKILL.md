@@ -49,8 +49,8 @@ Do not generate implementation code or tests. Do not write code in any language.
 
 **After delivering the output:**
 First, check whether file writes are currently allowed (i.e. whether you are NOT in plan mode / read-only mode):
-- If file writes are FORBIDDEN (plan mode is active): tell the user explicitly — "I am in plan mode and cannot write files right now. To save this spec to SPEC.md, switch to build/execution mode and I will create it immediately." Do NOT ask the save question yet. Stop here.
-- If file writes are ALLOWED: ask the user "Save this output to SPEC.md? (yes/no)"
-- If yes and no SPEC.md exists yet: ask "Which directory should I use for specs?" (e.g. `docs/specs`), then suggest a slug derived from the feature name and ask the user to confirm or edit it. Create `<dir>/<slug>/SPEC.md` with the Progress checklist header (all steps unchecked) and the Step 02 section, marking Step 02 as `[x]`.
-- If yes and a SPEC.md already exists: ask for the path to the existing SPEC.md, then append the `## Step 02 — High-Level Technical Design` section and mark `[x]` next to Step 02 in the Progress checklist.
+- If file writes are FORBIDDEN (plan mode is active): tell the user explicitly — "I am in plan mode and cannot write files right now. To save this spec output, switch to build/execution mode and I will create it immediately." Do NOT ask the save question yet. Stop here.
+- If file writes are ALLOWED: ask the user "Save this spec output to SPEC.md and derived files? (yes/no)"
+- If yes and no SPEC.md exists yet: ask "Which directory should I use for specs?" (e.g. `docs/specs`), then suggest a slug derived from the feature or module name (e.g. `add-user-auth`) and ask the user to confirm or edit it. Create `<dir>/<slug>/SPEC.md` with the Progress checklist header (all steps unchecked) and follow the next step behavior below.
+- If yes and a SPEC.md already exists: create a new file named `02-high-level-technical-design.md` in the same directory as the existing SPEC.md, and mark `[x]` next to Step 02 in the Progress checklist, and add a link to `02-high-level-technical-design.md`.
 - If no: continue without saving.
