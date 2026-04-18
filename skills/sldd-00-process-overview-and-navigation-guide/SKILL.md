@@ -89,6 +89,7 @@ When a path is provided:
 1. Read the file and check the Progress checklist to identify completed steps.
 2. Extract relevant prior sections as pre-populated context for the current step.
 3. Announce: `"Resuming SLDD process. Steps complete: [list]. Continuing with Step XX."`
+4. If there are incomplete or missing steps, ask the user if they want to continue or if they want to revise any prior steps.
 
 If the user provides a specs **root directory** instead of a full path, the skill lists all `*/SPEC.md` files found under it and asks which feature to resume.
 
