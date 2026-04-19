@@ -8,7 +8,45 @@ metadata:
 
 # Skill: Tests First Driven by Acceptance Criteria
 
-**Context:**
+## 🚨 GATE ENFORCEMENT (Read First)
+
+**BEFORE producing any test output, verify prerequisites:**
+
+### Prerequisite Check
+
+Step 04 requires **Steps 01, 02, and 03 to be complete and approved**.
+
+1. **Check SPEC.md Progress:**
+   - Read the SPEC.md file
+   - Verify Step 01 is marked `[x]` (Product Intent approved)
+   - Verify Step 02 is marked `[x]` (High-Level Design approved)
+   - Verify Step 03 is marked `[x]` (Low-Level Design approved)
+   - If any step is NOT marked `[x]` → **GATE VIOLATION**
+
+2. **If violation detected:**
+   → **STOP**. Reply with:
+   > "I cannot proceed to Step 04 (Tests) because prerequisite steps are not complete and approved:
+   > - Step 01 (Product Intent): [x] if complete, [ ] if not
+   > - Step 02 (High-Level Design): [x] if complete, [ ] if not
+   > - Step 03 (Low-Level Design): [x] if complete, [ ] if not
+   >
+   > The SLDD gate rule requires all prior steps to be approved before writing tests.
+   >
+   > Please complete and approve Steps 01, 02, and 03 first."
+
+3. **If Steps 01, 02, and 03 are complete [x]:**
+   - Extract Step 03 content as context
+   - Proceed with Step 04
+
+### Skip-Ahead Detection
+
+If user asks to "implement", "write production code", "skip tests", "just code it" at this stage:
+→ **STOP**. Reply: "Tests must be written at Step 04 before any production code. I cannot proceed to implementation."
+
+---
+
+## Context
+
 You are a senior engineer working in strict test-driven development (TDD) mode. You have a low-level design and acceptance criteria. Tests must be written first, before any production code.
 
 Low-level design: <provide the approved low-level design>
@@ -17,16 +55,23 @@ Acceptance criteria: <provide the acceptance criteria from the product intent sp
 
 SPEC.md (optional): <provide path to an existing SPEC.md to load prior context, or leave blank>
 
-**SPEC.md resume behavior:**
+---
+
+## SPEC.md Resume Behavior
+
 If a SPEC.md path is provided:
 1. Read the file and check the Progress checklist to identify which steps are already complete.
-2. If Step 03 is marked complete, extract its section as the low-level design — no need to paste it manually.
-3. If Step 01 is marked complete, extract the acceptance criteria from its section — no need to paste them manually.
-4. Announce: "Resuming SLDD process. Steps complete: [list]. Continuing with Step 04."
-If the user provides a specs root directory instead of a full path, list all `*/SPEC.md` files found under it and ask which feature to resume.
-If no SPEC.md is provided, proceed normally.
+2. **VIOLATION CHECK:** If Step 04 is marked [x] but any of Steps 01, 02, or 03 is NOT marked [x] → this is a gate violation. Warn the user.
+3. If Step 03 is marked complete, extract its section as the low-level design — no need to paste it manually.
+4. If Step 01 is marked complete, extract the acceptance criteria from its section — no need to paste them manually.
+5. Announce: "Resuming SLDD process. Steps complete: [list]. Continuing with Step 04."
 
-**Objective:**
+If the user provides a specs root directory instead of a full path, list all `*/SPEC.md` files found under it and ask which feature to resume.
+
+---
+
+## Objective
+
 Write ONLY test files. Create ZERO production code files. The tests will fail if the modules/functions/classes they reference do not exist — compile-time failures are a valid Red-phase outcome. Create ONLY the minimal stubs needed for tests to compile (or to produce meaningful compile errors that map to missing implementation):
 
 ### Stub Rules (STRICT)
@@ -106,10 +151,43 @@ After creating stubs, run the test suite and confirm:
 - Runtime failures (assertions failing, "not implemented" errors) are also valid Red-phase outcomes
 - A successful compilation with all tests passing is NOT the expected outcome at Step 04
 
-**After delivering the output:**
-First, check whether file writes are currently allowed (i.e. whether you are NOT in plan mode / read-only mode):
-- If file writes are FORBIDDEN (plan mode is active): tell the user explicitly — "I am in plan mode and cannot write files right now. To save this spec output, switch to build/execution mode and I will create it immediately." Do NOT ask the save question yet. Stop here.
-- If file writes are ALLOWED: ask the user "Update the SPEC.md? (yes/no)"
+---
 
-### Critical: Verify TDD Red Phase
-After saving SPEC.md, run the tests. The Red phase is confirmed when tests do not all pass. Both compile-time failures (missing symbols, undefined types) and runtime failures (assertion errors, "not implemented" thrown) satisfy this definition of done. If the test suite compiles cleanly and all tests pass, you violated the stub rules — rollback and recreate stubs that expose the missing implementation. Step 04 must produce tests that fail in some form, not passing tests.
+## Save Flow (only after user approval)
+
+### Plan Mode Check
+
+First, check whether file writes are currently allowed:
+- **If file writes are FORBIDDEN** (plan mode): tell the user — "I am in plan mode and cannot write test files. To write the test files, switch to build/execution mode and I will create them immediately." Stop here.
+- **If file writes are ALLOWED and user approved:** proceed to write test files.
+
+### Writing Test Files
+
+Write actual test files to the project's test directories. These are real code files, not inline spec content.
+
+### Step 1: Write and Verify Test Files
+
+1. Write all test files to the project's test directories
+2. Run the test suite to confirm tests fail (Red phase verification)
+3. Confirm which tests are failing and why
+
+### Step 2: Update SPEC.md (Only After Tests Fail)
+
+**Now** update SPEC.md:
+
+1. Read the existing SPEC.md
+2. Mark `[x]` next to Step 04 in SPEC.md
+3. Do NOT copy test code into SPEC.md
+
+### Step 3: Final Verification
+
+After updating SPEC.md, read it and confirm:
+- [ ] SPEC.md Progress shows Step 04 as `[x]`
+- [ ] SPEC.md does NOT contain any test code or spec content
+
+### Step 4: Report Results
+
+Report:
+- The exact test commands to run
+- Which tests are failing and why (Red phase expected)
+- Confirmation that tests fail before implementation

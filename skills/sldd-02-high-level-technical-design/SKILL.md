@@ -8,36 +8,79 @@ metadata:
 
 # Skill: High-Level Technical Design
 
-**Context:**
+## 🚨 GATE ENFORCEMENT (Read First)
+
+**BEFORE producing any design output, verify prerequisites:**
+
+### Prerequisite Check
+
+Step 02 requires **Step 01 to be complete and approved**.
+
+1. **Check SPEC.md Progress:**
+   - Read the SPEC.md file
+   - Verify Step 01 is marked `[x]`
+   - If Step 01 is NOT marked `[x]` → **GATE VIOLATION**
+
+2. **If violation detected:**
+   → **STOP**. Reply with:
+   > "I cannot proceed to Step 02 (High-Level Design) because Step 01 (Product Intent Specification) is not marked complete and approved.
+   >
+   > The SLDD gate rule requires: Step 01 (approved) → Step 02 → Step 03 → Tests → Implementation.
+   >
+   > Please complete and approve Step 01 first."
+
+3. **If Step 01 is complete [x]:**
+   - Extract Step 01 content as context
+   - Proceed with Step 02
+
+### Skip-Ahead Detection
+
+If user asks to "implement", "write code", "skip to tests", "just do it" at this stage:
+→ **STOP**. Reply: "I need to complete Steps 01 and 02 first before any implementation."
+
+---
+
+## Context
+
 You are a senior software architect designing solutions. You have reviewed the product intent spec and are now translating business requirements into system design.
 
 Intent spec: <provide the approved product intent specification>
 
 SPEC.md (optional): <provide path to an existing SPEC.md to load prior context, or leave blank>
 
-**SPEC.md resume behavior:**
+---
+
+## SPEC.md Resume Behavior
+
 If a SPEC.md path is provided:
 1. Read the file and check the Progress checklist to identify which steps are already complete.
-2. If Step 01 is marked complete, extract its section as the intent spec — no need to paste it manually.
-3. If Step 99 is marked complete, include the codebase context as additional input.
-4. Announce: "Resuming SLDD process. Steps complete: [list]. Continuing with Step 02."
-If the user provides a specs root directory instead of a full path, list all `*/SPEC.md` files found under it and ask which feature to resume.
-If no SPEC.md is provided, proceed normally.
+2. **VIOLATION CHECK:** If Step 02 is marked [x] but Step 01 is NOT marked [x] → this is a gate violation. Warn the user.
+3. If Step 01 is marked complete, extract its section as the intent spec — no need to paste it manually.
+4. If Step 99 is marked complete, include the codebase context as additional input.
+5. Announce: "Resuming SLDD process. Steps complete: [list]. Continuing with Step 02."
 
-**Objective:**
+If the user provides a specs root directory instead of a full path, list all `*/SPEC.md` files found under it and ask which feature to resume.
+
+---
+
+## Objective
+
 Produce a high-level technical design that translates the product intent into architecture and system boundaries, without implementation details or code.
 
-**Audience:**
-Engineers, tech leads, and architects who will review this design and decide if it aligns with technical strategy and team capabilities.
+**Audience:** Engineers, tech leads, and architects who will review this design and decide if it aligns with technical strategy and team capabilities.
 
-**Style:**
-Text-based diagrams and structured sections. Visual representations in ASCII or text form are preferred (not code). Annotate relationships and data flows clearly.
+**Style:** Text-based diagrams and structured sections. Visual representations in ASCII or text form are preferred (not code). Annotate relationships and data flows clearly.
 
-**Tone:**
-Clear and architectural. Explain trade-offs between alternatives. Flag constraints or concerns early.
+**Tone:** Clear and architectural. Explain trade-offs between alternatives. Flag constraints or concerns early.
 
-**Response:**
-Deliver exactly these sections in this order:
+---
+
+## Draft Output
+
+**Present the following sections as a draft — this is NOT yet saved to any file.**
+The user will review and approve before any files are written.
+
+Deliver exactly these sections:
 - Architecture diagram in text form (ASCII or text-based visualization)
 - Component responsibilities (what each major component owns)
 - Data flow (how data moves between components)
@@ -47,10 +90,94 @@ Deliver exactly these sections in this order:
 
 Do not generate implementation code or tests. Do not write code in any language.
 
-**After delivering the output:**
-First, check whether file writes are currently allowed (i.e. whether you are NOT in plan mode / read-only mode):
-- If file writes are FORBIDDEN (plan mode is active): tell the user explicitly — "I am in plan mode and cannot write files right now. To save this spec output, switch to build/execution mode and I will create it immediately." Do NOT ask the save question yet. Stop here.
-- If file writes are ALLOWED: ask the user "Save this spec output to SPEC.md and derived files? (yes/no)"
-- If yes and no SPEC.md exists yet: ask "Which directory should I use for specs?" (e.g. `docs/specs`), then suggest a slug derived from the feature or module name (e.g. `add-user-auth`) and ask the user to confirm or edit it. Create `<dir>/<slug>/SPEC.md` with the Progress checklist header (all steps unchecked) and follow the next step behavior below.
-- If yes and a SPEC.md already exists: create a new file named `02-high-level-technical-design.md` in the same directory as the existing SPEC.md, and mark `[x]` next to Step 02 in the Progress checklist, and add a link to `02-high-level-technical-design.md`.
-- If no: continue without saving.
+After presenting the draft, say:
+> "Step 02 (High-Level Technical Design) draft is ready for your review. Please approve or provide feedback before I save it to a file."
+
+**Wait for user approval before proceeding to the save step.**
+
+---
+
+## Save Flow (only after user approval)
+
+### ⚠️ CRITICAL: SPEC.md Structure Rule
+
+**SPEC.md must contain ONLY the Progress checklist — never the step content itself.**
+
+| File | Contents |
+|------|----------|
+| `SPEC.md` | Progress checklist + links only |
+| `02-high-level-technical-design.md` | Step 02 content (six sections) |
+
+**❌ WRONG — Do NOT do this:**
+```markdown
+# SPEC: My Feature
+- [ ] Step 01
+- [ ] Step 02
+## Architecture Diagram
+...
+## Component Responsibilities
+...
+```
+
+**✅ CORRECT — Do THIS:**
+```markdown
+# SPEC: My Feature
+## Progress
+- [x] Step 01 — Product Intent Specification -> 01-product-intent-specification.md
+- [ ] Step 02 — High-Level Technical Design -> 02-high-level-technical-design.md
+...
+```
+
+---
+
+### Step 1: Create the Step File (First!)
+
+**Create the numbered step file BEFORE touching SPEC.md.**
+
+1. Ask: "Which directory should I use for specs?" (e.g. `docs/specs`)
+2. Confirm the directory path from Step 01 (or ask if not resuming)
+3. Create `<dir>/02-high-level-technical-design.md` with the six sections
+4. **STOP. Do NOT touch SPEC.md yet.**
+
+### Step 2: Verify the Step File
+
+Read the file you just created and verify:
+- [ ] It contains exactly the six sections (Architecture Diagram, Component Responsibilities, Data Flow, Security/Observability, Trade-offs, Test Scenario Map)
+- [ ] It does NOT contain a "Progress" section
+- [ ] It does NOT duplicate content that belongs in other steps
+
+If verification fails, fix the step file before proceeding.
+
+### Step 3: Update SPEC.md (Only After Verification Passes)
+
+**Now** update SPEC.md:
+
+1. Read the existing SPEC.md
+2. Mark `[x]` next to Step 02 and link to `02-high-level-technical-design.md`
+3. **Do NOT copy the six sections into SPEC.md**
+
+### Step 4: Final Verification
+
+After updating SPEC.md, read it and confirm:
+- [ ] SPEC.md contains ONLY the Progress checklist (and any previously saved step content if resuming)
+- [ ] SPEC.md does NOT contain the step content (Architecture Diagram, Component Responsibilities, etc.)
+- [ ] The Progress checklist shows Step 02 as `[x]` with a link
+
+If verification fails, remove any incorrectly added content from SPEC.md.
+
+---
+
+### Save Decision (Fallback)
+
+First, check whether file writes are currently allowed:
+- **If file writes are FORBIDDEN** (plan mode): tell the user — "I am in plan mode and cannot write files right now. To save this spec output, switch to build/execution mode and I will create it immediately." Stop here.
+- **If file writes are ALLOWED and user approved:** ask "Save this spec output to a file? (yes/no)"
+- **If no:** continue without saving. The draft is discarded.
+
+### New SPEC.md (no existing spec)
+
+If no SPEC.md exists yet and user says yes, follow the **4-step process above**.
+
+### Existing SPEC.md
+
+If a SPEC.md already exists and user says yes, follow the **4-step process above** (Steps 1-4 apply to both new and existing specs).
