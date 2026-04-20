@@ -218,6 +218,8 @@ After marking Step 03 as [x] and updating SPEC.md, present:
 - **Approve and continue**: Reply "approved, proceed to Step 04"
 ```
 
+**THE PRE-DEFINED REPLIES ("yes, continue", "no", "approved, proceed to Step X", etc.) MUST BE TRANSLATED TO THE RESOLVED LANGUAGE.**
+
 ---
 
 ### Save Decision (Fallback)

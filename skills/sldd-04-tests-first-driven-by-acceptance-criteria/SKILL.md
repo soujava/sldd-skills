@@ -233,3 +233,5 @@ After marking Step 04 as [x] and updating SPEC.md, present:
 - **No**: Reply "no, wait for instructions"  
 - **Approve and continue**: Reply "approved, proceed to Step 05"
 ```
+
+**THE PRE-DEFINED REPLIES ("yes, continue", "no", "approved, proceed to Step X", etc.) MUST BE TRANSLATED TO THE RESOLVED LANGUAGE.**

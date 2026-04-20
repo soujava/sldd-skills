@@ -50,6 +50,9 @@ When the user approves ("approved", "looks good", "proceed", etc.):
 ```
 **
 
+**THE PRE-DEFINED REPLIES ("yes, continue", "no", "approved, proceed to Step X", etc.) MUST BE TRANSLATED TO THE RESOLVED LANGUAGE.**
+
+
 ### 2. After Rejection/Feedback (Step Incomplete)
 
 When the user requests corrections:
