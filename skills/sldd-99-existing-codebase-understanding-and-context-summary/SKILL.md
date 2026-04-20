@@ -8,6 +8,30 @@ metadata:
 
 # Skill: Existing Codebase Understanding and Context Summary
 
+## Project Settings
+
+At the start of this step, before any other action:
+
+1. **Read `AGENTS.md`** at the project root.
+2. **Look for the `## SLDD` section** and extract:
+   - `language` — use this for all conversation output and generated file content.
+   - `specs-dir` — use this as the root directory for all spec file paths.
+3. **Resolve language with this precedence:**
+   - If the user explicitly requests a language in the current interaction, use it immediately.
+   - Otherwise, use `language` from `AGENTS.md`.
+   - If no language is configured, ask once, use the answer, and persist it in `AGENTS.md`.
+4. **If the `## SLDD` section is missing:** ask the user to run `sldd-00` first to configure project settings, or ask them directly (in the resolved language) for preferred language and specs directory.
+5. **Apply these settings throughout this step** — all responses, drafts, questions, and saved files must use the resolved language and specs directory.
+
+### Language Compliance Check (mandatory before every reply)
+
+Before sending any user-facing message, validate language compliance:
+- The full response (including final review/approval prompts) must be in the resolved language.
+- If this skill contains example text in another language, translate the meaning; do not copy that text literally.
+- If any sentence is not in the resolved language, rewrite the response before sending.
+
+---
+
 This is an optional prerequisite step. For greenfield projects, skip this and proceed directly to sldd-01.
 
 **Context:**
@@ -21,7 +45,7 @@ SPEC.md (optional): <provide path to an existing SPEC.md to load prior context, 
 If a SPEC.md path is provided:
 1. Read the file and check the Progress checklist to identify which steps are already complete.
 2. Extract Step 01 (Product Intent Specification) as prior context if present.
-3. Announce: "Resuming SLDD process. Steps complete: [list]. Continuing with Step 99."
+3. Announce in the resolved language that SLDD is resuming, list completed steps, and indicate continuation with Step 99.
 If the user provides a specs root directory instead of a full path, list all `*/SPEC.md` files found under it and ask which feature to resume.
 If no SPEC.md is provided, proceed normally.
 

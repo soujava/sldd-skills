@@ -8,6 +8,30 @@ metadata:
 
 # Skill: Verification and Feedback Report
 
+## Project Settings
+
+At the start of this step, before any other action:
+
+1. **Read `AGENTS.md`** at the project root.
+2. **Look for the `## SLDD` section** and extract:
+   - `language` — use this for all conversation output and generated file content.
+   - `specs-dir` — use this as the root directory for all spec file paths.
+3. **Resolve language with this precedence:**
+   - If the user explicitly requests a language in the current interaction, use it immediately.
+   - Otherwise, use `language` from `AGENTS.md`.
+   - If no language is configured, ask once, use the answer, and persist it in `AGENTS.md`.
+4. **If the `## SLDD` section is missing:** ask the user to run `sldd-00` first to configure project settings, or ask them directly (in the resolved language) for preferred language and specs directory.
+5. **Apply these settings throughout this step** — all responses, drafts, questions, gate messages, and saved files must use the resolved language and specs directory.
+
+### Language Compliance Check (mandatory before every reply)
+
+Before sending any user-facing message, validate language compliance:
+- The full response (including final review/approval prompts) must be in the resolved language.
+- If this skill contains example text in another language, translate the meaning; do not copy that text literally.
+- If any sentence is not in the resolved language, rewrite the response before sending.
+
+---
+
 ## 🚨 GATE ENFORCEMENT (Read First)
 
 **BEFORE producing any verification output, verify prerequisites:**
@@ -26,17 +50,8 @@ Step 06 requires **ALL prior steps (01-05) to be complete and approved**.
    - If any step is NOT marked `[x]` → **GATE VIOLATION**
 
 2. **If violation detected:**
-   → **STOP**. Reply with:
-   > "I cannot proceed to Step 06 (Verification) because prerequisite steps are not complete and approved:
-   > - Step 01 (Product Intent): [x] if complete, [ ] if not
-   > - Step 02 (High-Level Design): [x] if complete, [ ] if not
-   > - Step 03 (Low-Level Design): [x] if complete, [ ] if not
-   > - Step 04 (Tests): [x] if complete, [ ] if not
-   > - Step 05 (Implementation): [x] if complete, [ ] if not
-   >
-   > The SLDD gate rule requires all prior steps to be complete before verification.
-   >
-   > Please complete and approve Steps 01 through 05 first."
+   → **STOP**. Reply in the resolved language with this meaning:
+> Cannot proceed to Step 06 because one or more prerequisite steps (01-05) are not complete/approved; show status per prerequisite, restate gate rule, and request completion/approval first.
 
 3. **If Steps 01-05 are complete [x]:**
    - Extract Step 01, 03, and 05 content as context
@@ -45,7 +60,7 @@ Step 06 requires **ALL prior steps (01-05) to be complete and approved**.
 ### Skip-Ahead Detection
 
 If user asks to "verify", "audit", "check against spec" before implementation is done:
-→ **STOP**. Reply: "Verification requires implementation to be complete at Step 05 first. I cannot audit against a spec without code to verify."
+→ **STOP**. Reply in the resolved language that Step 05 implementation must be complete before verification.
 
 ---
 
@@ -69,7 +84,7 @@ If a SPEC.md path is provided:
 3. If Step 01 is marked complete, extract its section as the product intent spec (problem statement, acceptance criteria) — no need to paste it manually.
 4. If Step 03 is marked complete, extract its section as the low-level design to audit against — no need to paste it manually.
 5. If Step 05 is marked complete, extract the implementation summary (production files, run commands, assumptions) from its section — no need to provide it manually.
-6. Announce: "Resuming SLDD process. Steps complete: [list]. Continuing with Step 06."
+6. Announce in the resolved language that SLDD is resuming, list completed steps, and indicate continuation with Step 06.
 
 If the user provides a specs root directory instead of a full path, list all `*/SPEC.md` files found under it and ask which feature to resume.
 
@@ -114,8 +129,8 @@ Deliver exactly these sections:
 5) Suggested remediation steps (how to fix gaps before release)
 6) Decision: ready for production? yes/no and why. If no, list the top 3 blockers.
 
-After presenting the draft, say:
-> "Step 06 (Verification and Feedback Report) draft is ready for your review. This is the final gate before production. Please approve or provide feedback."
+After presenting the draft, say in the resolved language:
+> Step 06 draft is ready for review; this is the final gate before production; ask for approval or feedback.
 
 **Wait for user approval before proceeding to the save step.**
 
@@ -199,8 +214,8 @@ If verification fails, remove any incorrectly added content from SPEC.md.
 ### Save Decision (Fallback)
 
 First, check whether file writes are currently allowed:
-- **If file writes are FORBIDDEN** (plan mode): tell the user — "I am in plan mode and cannot write files right now. To save this spec output, switch to build/execution mode and I will create it immediately." Stop here.
-- **If file writes are ALLOWED and user approved:** ask "Save this spec output to a file? (yes/no)"
+- **If file writes are FORBIDDEN** (plan mode): tell the user in the resolved language that plan mode cannot write files and they must switch to build/execution mode to save.
+- **If file writes are ALLOWED and user approved:** ask in the resolved language whether to save the spec output to a file (yes/no).
 - **If no:** continue without saving. The draft is discarded.
 
 ### Existing SPEC.md

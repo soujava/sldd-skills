@@ -8,6 +8,30 @@ metadata:
 
 # Skill: Minimal Implementation to Pass Existing Tests
 
+## Project Settings
+
+At the start of this step, before any other action:
+
+1. **Read `AGENTS.md`** at the project root.
+2. **Look for the `## SLDD` section** and extract:
+   - `language` — use this for all conversation output and generated file content.
+   - `specs-dir` — use this as the root directory for all spec file paths.
+3. **Resolve language with this precedence:**
+   - If the user explicitly requests a language in the current interaction, use it immediately.
+   - Otherwise, use `language` from `AGENTS.md`.
+   - If no language is configured, ask once, use the answer, and persist it in `AGENTS.md`.
+4. **If the `## SLDD` section is missing:** ask the user to run `sldd-00` first to configure project settings, or ask them directly (in the resolved language) for preferred language and specs directory.
+5. **Apply these settings throughout this step** — all responses, drafts, questions, gate messages, and saved files must use the resolved language and specs directory.
+
+### Language Compliance Check (mandatory before every reply)
+
+Before sending any user-facing message, validate language compliance:
+- The full response (including final review/approval prompts) must be in the resolved language.
+- If this skill contains example text in another language, translate the meaning; do not copy that text literally.
+- If any sentence is not in the resolved language, rewrite the response before sending.
+
+---
+
 ## 🚨 GATE ENFORCEMENT (Read First)
 
 **BEFORE producing any implementation output, verify prerequisites:**
@@ -25,16 +49,8 @@ Step 05 requires **Steps 01, 02, 03, and 04 to be complete and approved**.
    - If any step is NOT marked `[x]` → **GATE VIOLATION**
 
 2. **If violation detected:**
-   → **STOP**. Reply with:
-   > "I cannot proceed to Step 05 (Implementation) because prerequisite steps are not complete and approved:
-   > - Step 01 (Product Intent): [x] if complete, [ ] if not
-   > - Step 02 (High-Level Design): [x] if complete, [ ] if not
-   > - Step 03 (Low-Level Design): [x] if complete, [ ] if not
-   > - Step 04 (Tests): [x] if complete, [ ] if not
-   >
-   > The SLDD gate rule requires all prior steps to be approved before implementation.
-   >
-   > Please complete and approve Steps 01 through 04 first."
+   → **STOP**. Reply in the resolved language with this meaning:
+> Cannot proceed to Step 05 because one or more prerequisite steps (01-04) are not complete/approved; show status per prerequisite, restate gate rule, and request completion/approval first.
 
 3. **If Steps 01, 02, 03, and 04 are complete [x]:**
    - Extract Step 03 content as context
@@ -44,7 +60,7 @@ Step 05 requires **Steps 01, 02, 03, and 04 to be complete and approved**.
 ### Skip-Ahead Detection
 
 If user asks to "skip tests", "skip Step 04", "go straight to code" at this stage:
-→ **STOP**. Reply: "Tests must be completed at Step 04 before implementation. I cannot proceed to Step 05 without approved tests."
+→ **STOP**. Reply in the resolved language that Step 04 tests are mandatory before Step 05 implementation.
 
 ---
 
@@ -68,7 +84,7 @@ If a SPEC.md path is provided:
 3. If Step 03 is marked complete, extract its section as the low-level design — no need to paste it manually.
 4. If Step 04 is marked complete, extract the test file locations and run commands from its section — no need to provide them manually.
 5. If Step 99 is marked complete, include the codebase context (language, conventions, architecture) as additional input.
-6. Announce: "Resuming SLDD process. Steps complete: [list]. Continuing with Step 05."
+6. Announce in the resolved language that SLDD is resuming, list completed steps, and indicate continuation with Step 05.
 
 If the user provides a specs root directory instead of a full path, the skill lists all `*/SPEC.md` files found under it and asks which feature to resume.
 
@@ -107,7 +123,7 @@ Imperative: Do not modify the tests. Do not add features. Do not refactor. If th
 ### Plan Mode Check
 
 First, check whether file writes are currently allowed:
-- **If file writes are FORBIDDEN** (plan mode): tell the user — "I am in plan mode and cannot write production code. To implement, switch to build/execution mode and I will create them immediately." Stop here.
+- **If file writes are FORBIDDEN** (plan mode): tell the user in the resolved language that plan mode cannot write production code and they must switch to build/execution mode.
 - **If file writes are ALLOWED and user approved:** proceed to write production code.
 
 ### Writing Production Code

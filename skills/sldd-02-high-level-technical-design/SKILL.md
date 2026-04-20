@@ -8,6 +8,30 @@ metadata:
 
 # Skill: High-Level Technical Design
 
+## Project Settings
+
+At the start of this step, before any other action:
+
+1. **Read `AGENTS.md`** at the project root.
+2. **Look for the `## SLDD` section** and extract:
+   - `language` — use this for all conversation output and generated file content.
+   - `specs-dir` — use this as the root directory for all spec file paths.
+3. **Resolve language with this precedence:**
+   - If the user explicitly requests a language in the current interaction, use it immediately.
+   - Otherwise, use `language` from `AGENTS.md`.
+   - If no language is configured, ask once, use the answer, and persist it in `AGENTS.md`.
+4. **If the `## SLDD` section is missing:** ask the user to run `sldd-00` first to configure project settings, or ask them directly (in the resolved language) for preferred language and specs directory.
+5. **Apply these settings throughout this step** — all responses, drafts, questions, gate messages, and saved files must use the resolved language and specs directory.
+
+### Language Compliance Check (mandatory before every reply)
+
+Before sending any user-facing message, validate language compliance:
+- The full response (including final review/approval prompts) must be in the resolved language.
+- If this skill contains example text in another language, translate the meaning; do not copy that text literally.
+- If any sentence is not in the resolved language, rewrite the response before sending.
+
+---
+
 ## 🚨 GATE ENFORCEMENT (Read First)
 
 **BEFORE producing any design output, verify prerequisites:**
@@ -22,12 +46,8 @@ Step 02 requires **Step 01 to be complete and approved**.
    - If Step 01 is NOT marked `[x]` → **GATE VIOLATION**
 
 2. **If violation detected:**
-   → **STOP**. Reply with:
-   > "I cannot proceed to Step 02 (High-Level Design) because Step 01 (Product Intent Specification) is not marked complete and approved.
-   >
-   > The SLDD gate rule requires: Step 01 (approved) → Step 02 → Step 03 → Tests → Implementation.
-   >
-   > Please complete and approve Step 01 first."
+   → **STOP**. Reply in the resolved language with this meaning:
+> Cannot proceed to Step 02 because Step 01 is not marked complete/approved; restate gate sequence and request completion/approval of Step 01 first.
 
 3. **If Step 01 is complete [x]:**
    - Extract Step 01 content as context
@@ -36,7 +56,7 @@ Step 02 requires **Step 01 to be complete and approved**.
 ### Skip-Ahead Detection
 
 If user asks to "implement", "write code", "skip to tests", "just do it" at this stage:
-→ **STOP**. Reply: "I need to complete Steps 01 and 02 first before any implementation."
+→ **STOP**. Reply in the resolved language that Steps 01 and 02 must be completed before implementation.
 
 ---
 
@@ -57,7 +77,7 @@ If a SPEC.md path is provided:
 2. **VIOLATION CHECK:** If Step 02 is marked [x] but Step 01 is NOT marked [x] → this is a gate violation. Warn the user.
 3. If Step 01 is marked complete, extract its section as the intent spec — no need to paste it manually.
 4. If Step 99 is marked complete, include the codebase context as additional input.
-5. Announce: "Resuming SLDD process. Steps complete: [list]. Continuing with Step 02."
+5. Announce in the resolved language that SLDD is resuming, list completed steps, and indicate continuation with Step 02.
 
 If the user provides a specs root directory instead of a full path, list all `*/SPEC.md` files found under it and ask which feature to resume.
 
@@ -90,8 +110,8 @@ Deliver exactly these sections:
 
 Do not generate implementation code or tests. Do not write code in any language.
 
-After presenting the draft, say:
-> "Step 02 (High-Level Technical Design) draft is ready for your review. Please approve or provide feedback before I save it to a file."
+After presenting the draft, say in the resolved language:
+> Step 02 draft is ready for review; ask for approval or feedback before saving to file.
 
 **Wait for user approval before proceeding to the save step.**
 
@@ -134,7 +154,7 @@ After presenting the draft, say:
 
 **Create the numbered step file BEFORE touching SPEC.md.**
 
-1. Ask: "Which directory should I use for specs?" (e.g. `docs/specs`)
+1. Ask in the resolved language which directory should be used for specs (e.g. `docs/specs`)
 2. Confirm the directory path from Step 01 (or ask if not resuming)
 3. Create `<dir>/02-high-level-technical-design.md` with the six sections
 4. **STOP. Do NOT touch SPEC.md yet.**
@@ -170,8 +190,8 @@ If verification fails, remove any incorrectly added content from SPEC.md.
 ### Save Decision (Fallback)
 
 First, check whether file writes are currently allowed:
-- **If file writes are FORBIDDEN** (plan mode): tell the user — "I am in plan mode and cannot write files right now. To save this spec output, switch to build/execution mode and I will create it immediately." Stop here.
-- **If file writes are ALLOWED and user approved:** ask "Save this spec output to a file? (yes/no)"
+- **If file writes are FORBIDDEN** (plan mode): tell the user in the resolved language that plan mode cannot write files and they must switch to build/execution mode to save.
+- **If file writes are ALLOWED and user approved:** ask in the resolved language whether to save the spec output to a file (yes/no).
 - **If no:** continue without saving. The draft is discarded.
 
 ### New SPEC.md (no existing spec)

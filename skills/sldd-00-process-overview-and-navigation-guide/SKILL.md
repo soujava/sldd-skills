@@ -12,6 +12,42 @@ SLDD (Spec Loops Driven Development) is a specs-driven feedback loop for AI-assi
 
 ---
 
+## Project Settings Bootstrap
+
+At the start of every SLDD session, before any other action:
+
+1. **Read `AGENTS.md`** at the project root (if it exists).
+2. **Look for an `## SLDD` section** with this format:
+   ```
+   ## SLDD
+   - **language**: <language tag, e.g. `en`, `pt-BR`, `es`>
+   - **specs-dir**: <relative path, e.g. `docs/specs`>
+   ```
+3. **Resolve language with this precedence:**
+   - If the user explicitly requests a language in the current interaction, use it immediately.
+   - Otherwise, use `language` from `AGENTS.md`.
+   - If no language is configured, ask once, use the answer, and persist it in `AGENTS.md`.
+4. **If the `## SLDD` section is missing or incomplete:**
+   - Ask the language and specs-directory questions in the resolved language.
+   - Ask which language should be used for all SLDD conversations and generated files.
+   - Ask which directory should store spec files (default: `docs/specs`).
+   - Write the answers into `AGENTS.md` under a new `## SLDD` section.
+   - Confirm in the resolved language that SLDD preferences were saved to `AGENTS.md`.
+5. **Apply these settings for the entire session:**
+   - Conduct all conversation, questions, and feedback prompts in the resolved language.
+   - Write all generated files — spec documents, design files, reports — in the resolved language.
+   - Use `specs-dir` as the root for all spec file paths (e.g. `<specs-dir>/<feature-slug>/SPEC.md`).
+   - If the user writes in a different language mid-session, switch to match them and update `AGENTS.md` accordingly.
+
+### Language Compliance Check (mandatory before every reply)
+
+Before sending any user-facing message, validate language compliance:
+- The full response (including final review/approval prompts) must be in the resolved language.
+- If this skill contains example text in another language, translate the meaning; do not copy that text literally.
+- If any sentence is not in the resolved language, rewrite the response before sending.
+
+---
+
 ## 🚨 GATE VIOLATIONS — Know These Rules
 
 **EVERY agent must enforce these rules without exception.**
@@ -57,13 +93,13 @@ Before creating any spec or proceeding, run this check:
 
 Check whether file writes are currently allowed (i.e. whether you are NOT in plan mode / read-only mode):
 
-- **If file writes are FORBIDDEN (plan mode is active):** tell the user explicitly — "I am in plan mode and cannot write files right now. To save this spec output, switch to build/execution mode and I will create it immediately.". Ask the user "Do you want to start with Step 01 - Product Intent Specification? (yes/no)"
+- **If file writes are FORBIDDEN (plan mode is active):** tell the user in the resolved language that file writes are unavailable in plan mode and they must switch to build/execution mode to save files. Then ask, in the same language, whether to start with Step 01 (yes/no).
 
-- **If no:** "Okay, I will not create any files. You can still use the SLDD skills, but you will need to manage the spec files yourself. Let me know if you want to start with Step 01 or if you have any questions about the process."
+- **If no:** acknowledge in the resolved language that no files will be created and that the user can still run SLDD manually.
 
 - **If file writes are ALLOWED and SPEC.md does not exist:** use `docs/specs/<feature-slug>/SPEC.md` as the default path (e.g. `docs/specs/subtraction-endpoint/SPEC.md`). Create it with the Progress checklist, then auto-proceed to Step 01 without asking.
 
-- **If file writes are ALLOWED but SPEC.md already exists:** announce "Resuming SLDD process. Steps complete: [list]. Continuing with Step XX." based on the Progress checklist. **But first verify Step 01 is marked [x] with user approval — if not, this is a violation.**
+- **If file writes are ALLOWED but SPEC.md already exists:** announce in the resolved language that SLDD is resuming, list completed steps, and indicate the next step. **But first verify Step 01 is marked [x] with user approval — if not, this is a violation.**
 
 ```markdown
 # SPEC: <feature name>
@@ -111,7 +147,7 @@ Check whether file writes are currently allowed (i.e. whether you are NOT in pla
 For every step, after producing output:
 
 1. **Present the output** to the user
-2. **Say:** "Step XX is ready for your review. Please approve or provide feedback before proceeding."
+2. **Say (in resolved language):** Step XX is ready for review; ask for approval or feedback before proceeding.
 3. **Wait for approval** — keywords: "looks good", "approved", "proceed", "next step"
 4. **Only then:** Mark step [x], save file, proceed to next step
 
@@ -131,7 +167,7 @@ When a path is provided:
 1. Read the file and check the Progress checklist to identify completed steps.
 2. **VIOLATION CHECK:** If Steps 02-06 are marked [x] but Step 01 is NOT marked [x] → this is a gate violation. Warn the user before proceeding.
 3. Extract relevant prior sections as pre-populated context for the current step.
-4. Announce: `"Resuming SLDD process. Steps complete: [list]. Continuing with Step XX."`
+4. Announce in the resolved language that SLDD is resuming, list completed steps, and indicate continuation with Step XX.
 5. If there are incomplete or missing steps, ask the user if they want to continue or if they want to revise any prior steps.
 
 If the user provides a specs **root directory** instead of a full path, the skill lists all `*/SPEC.md` files found under it and asks which feature to resume.
