@@ -37,25 +37,35 @@ Before sending any user-facing message, validate language compliance:
 
 **BEFORE producing any spec output, check for violations:**
 
-### Jump-Ahead Detection
+### Jump-Ahead Detection and Implementation Advisory
 
-If the user explicitly asks to "implement", "refactor", "write code", "just do it", "start coding", or similar WITHOUT first completing and approving Step 01:
+If the user explicitly asks to "implement", "refactor", "write code", "write tests", "just do it", "start coding", or similar at any point BEFORE Steps 01, 02 and 03 are all complete and approved:
 
 → **STOP**. Reply in the resolved language with this meaning:
-> Refuse implementation without an approved intent specification and restate the gate sequence (Step 01 → Step 02 → Step 03 → Step 04 → Step 05), then ask whether to start with Step 01.
+> Implementation is forbidden until Steps 01, 02 and 03 are completed and approved. Restate the gate sequence (Step 01 → Step 02 → Step 03 → Step 04 → Step 05) and ask whether the user wants to proceed with Step 02.
+
+Implementation Advisory (interactive mode):
+- By default, perform a path-scoped repository check to surface any uncommitted changes that may affect implementation. Target relevant paths only (for example: `src/main/`, `src/test/`, or other project-specific implementation directories). Ignore build and IDE folders by default (e.g. `target/`, `build/`, `.idea/`, `.vscode/`).
+- Run `git status --porcelain` scoped to the relevant paths and present a concise list of modified files to the user. Do NOT modify files.
+- Ask the user for explicit consent to proceed despite a dirty working tree. Require a typed acknowledgement (for auditability). For example, ask the user to reply with the exact phrase: `I acknowledge and accept the dirty working tree` to proceed.
+
+Strict behavior (automated / non-interactive mode):
+- If the agent is running in an automated or non-interactive environment (CI, scheduled runs, or when the user asked the agent to auto-commit), enforce a strict rule: refuse to perform any file writes or code generation while relevant implementation paths contain uncommitted changes. Require the working tree to be clean.
+
+Pre-flight checks and TOCTOU mitigation:
+- Always re-check the working tree immediately before any file write. If new changes appear between checks, abort and surface the new diffs to the user, requiring re-acknowledgement.
 
 ### Pre-Flight Check (when starting Step 01 fresh)
 
 If no SPEC.md exists and user asks to start Step 01:
 
 1. **Check for existing implementation:**
-   - Run `git status --short` (or equivalent) to detect uncommitted changes
-   - If there are modified implementation files (not docs/tests), the user may be skipping ahead
-    - Ask in the resolved language whether previous steps were completed and approved before proceeding, if implementation appears to have started.
+   - Run a path-scoped `git status --porcelain` (or equivalent) to detect uncommitted changes in implementation directories.
+   - If there are modified implementation files (not docs/tests), the user may be skipping ahead.
+    - Ask in the resolved language whether previous steps were completed and approved before proceeding, if implementation appears to have started. If the working tree is dirty, follow the advisory flow above (present files and request explicit typed acknowledgement) or refuse in automated mode.
 
 2. **Check for existing SPEC.md in docs/specs/:**
    - If a SPEC.md exists with Steps 02-06 marked [x] but Step 01 was never reviewed, this is a violation — warn the user
-
 ### Approval Gate
 
 **CRITICAL:** Step 01 is not complete until:

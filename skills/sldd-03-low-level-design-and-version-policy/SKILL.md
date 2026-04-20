@@ -55,11 +55,19 @@ Step 03 requires **Steps 01 and 02 to be complete and approved**.
    - Extract Step 01 and Step 02 content as context
    - Proceed with Step 03
 
-### Skip-Ahead Detection
+### Implementation Gate, Skip-Ahead Detection and Advisory
 
-If user asks to "implement", "write tests", "write code", "skip to tests", "just do it" at this stage:
-→ **STOP**. Reply in the resolved language that Steps 01, 02, and 03 must be completed before tests or implementation.
+Step 03 produces low-level design and version policy only. Implementation actions (creating or modifying production code, tests, running build commands that write to the repository, or creating commits) are forbidden until Step 03 is approved.
 
+If the user asks to "implement", "write production code", "write tests", "just do it", or similar at this stage:
+→ **STOP**. Reply in the resolved language: Steps 01, 02 and 03 must be completed and approved before any implementation steps (Step 04/05) are permitted.
+
+Pre-flight repository verification (advisory behavior):
+- Perform a path-scoped `git status --porcelain` limited to implementation directories (e.g. `src/main/`, `src/test/`). Exclude conventional build/IDE directories by default.
+- If there are uncommitted changes in relevant paths, present them concisely and require explicit typed acknowledgement from the user to proceed despite the dirty working tree.
+- In automated/non-interactive modes, enforce strict behavior: refuse to perform file writes while relevant implementation paths contain uncommitted changes.
+
+Re-check the working tree immediately before any file write and abort if new changes are detected.
 ---
 
 ## Context

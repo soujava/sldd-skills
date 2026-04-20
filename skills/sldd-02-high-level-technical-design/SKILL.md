@@ -54,11 +54,19 @@ Step 02 requires **Step 01 to be complete and approved**.
    - Extract Step 01 content as context
    - Proceed with Step 02
 
-### Skip-Ahead Detection
+### Implementation Prohibition, Skip-Ahead Detection and Advisory
 
-If user asks to "implement", "write code", "skip to tests", "just do it" at this stage:
-→ **STOP**. Reply in the resolved language that Steps 01 and 02 must be completed before implementation.
+Step 02 may produce only design artifacts. Implementation actions (writing production code, writing tests, running build commands that modify files, creating commits) are strictly prohibited until Steps 01, 02 and 03 are all complete and approved.
 
+If the user asks to "implement", "write code", "create tests", "start coding", "skip to tests", "just do it" at this stage:
+→ **STOP**. Reply in the resolved language that Steps 01, 02 and 03 must be completed and approved before any implementation can begin.
+
+Pre-flight repository verification (advisory behavior):
+- Perform a path-scoped `git status --porcelain` restricted to implementation paths (e.g. `src/main/`, `src/test/`). Ignore typical build/IDE folders by default.
+- If uncommitted changes are detected, present a concise list to the user and request explicit typed acknowledgement to proceed despite the dirty working tree.
+- In automated/non-interactive runs, enforce strict behavior: refuse to proceed if relevant implementation paths contain uncommitted changes.
+
+Before writing any files, re-run the path-scoped git status and abort if anything changed.
 ---
 
 ## Context
