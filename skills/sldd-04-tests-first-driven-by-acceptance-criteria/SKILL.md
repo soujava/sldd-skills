@@ -27,7 +27,7 @@ At the start of this step, before any other action:
 
 Before sending any user-facing message, validate language compliance:
 - The full response (including final review/approval prompts) must be in the resolved language.
-- The pre-defined replies ("yes, continue", "no", "approved, proceed to Step X", etc.) must be translated to the resolved language.
+- All the pre-defined replies  must be translated to the resolved language.
 - If this skill contains example text in another language, translate the meaning; do not copy that text literally.
 - If any sentence is not in the resolved language, rewrite the response before sending.
 
