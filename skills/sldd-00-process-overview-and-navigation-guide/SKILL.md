@@ -43,6 +43,7 @@ At the start of every SLDD session, before any other action:
 
 Before sending any user-facing message, validate language compliance:
 - The full response (including final review/approval prompts) must be in the resolved language.
+- The pre-defined replies ("yes, continue", "no", "approved, proceed to Step X", etc.) must be translated to the resolved language.
 - If this skill contains example text in another language, translate the meaning; do not copy that text literally.
 - If any sentence is not in the resolved language, rewrite the response before sending.
 
@@ -148,10 +149,13 @@ For every step, after producing output:
 
 1. **Present the output** to the user
 2. **Say (in resolved language):** Step XX is ready for review; ask for approval or feedback before proceeding.
-3. **Wait for approval** — keywords: "looks good", "approved", "proceed", "next step"
-4. **Only then:** Mark step [x], save file, proceed to next step
+3. **Wait for approval** — keywords: "approved", "looks good", "proceed"
+4. **After approval:** Mark step [x], save file, then **always ask** whether to proceed to the next step:
+   - **Yes**: Reply "yes, continue to Step XX+1"  
+   - **No**: Reply "no, wait for instructions"  
+   - **Approve and continue**: Reply "approved, proceed to Step XX+1"
 
-**Never auto-complete.** Never mark [x] without explicit user confirmation.
+**Never auto-proceed after approval.** Never skip the "proceed to next step?" prompt.
 
 ---
 
@@ -177,6 +181,8 @@ If the user provides a specs **root directory** instead of a full path, the skil
 ## Appendix
 
 For existing codebases, use **sldd-99-existing-codebase-understanding-and-context-summary** after step 01 and before step 02 to ground all design decisions in the current architecture and conventions. Skip for greenfield projects.
+
+For standardized approval template used by all SLDD skills (01-06), use **sldd-98-approval-helper**.
 
 ---
 

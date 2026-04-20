@@ -27,6 +27,7 @@ At the start of this step, before any other action:
 
 Before sending any user-facing message, validate language compliance:
 - The full response (including final review/approval prompts) must be in the resolved language.
+- The pre-defined replies ("yes, continue", "no", "approved, proceed to Step X", etc.) must be translated to the resolved language.
 - If this skill contains example text in another language, translate the meaning; do not copy that text literally.
 - If any sentence is not in the resolved language, rewrite the response before sending.
 
@@ -208,6 +209,33 @@ After updating SPEC.md, read it and confirm:
 - [ ] The Progress checklist shows Step 06 as `[x]` with a link
 
 If verification fails, remove any incorrectly added content from SPEC.md.
+
+---
+
+### Approval Confirmation
+
+After marking Step 06 as [x] and updating SPEC.md, present:
+
+```
+## ✅ Step 06 complete and saved to: <file>
+
+**Progress updated:**
+- [x] Step 01 — Product Intent Specification -> 01-product-intent-specification.md
+- [x] Step 02 — High-Level Technical Design -> 02-high-level-technical-design.md
+- [x] Step 03 — Low-Level Design and Version Policy -> 03-low-level-design-and-version-policy.md
+- [x] Step 04 — Tests (written and confirmed failing)
+- [x] Step 05 — Implementation (all tests passing)
+- [x] Step 06 — Verification Report -> 06-verification-and-feedback-report.md
+
+---
+
+**All SLDD steps have been completed!**
+
+The SLDD flow is complete. Waiting for instructions to:
+- Start a new feature with SLDD
+- Review existing specs
+- Other actions
+```
 
 ---
 

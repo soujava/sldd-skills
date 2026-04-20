@@ -27,6 +27,7 @@ At the start of this step, before any other action:
 
 Before sending any user-facing message, validate language compliance:
 - The full response (including final review/approval prompts) must be in the resolved language.
+- The pre-defined replies ("yes, continue", "no", "approved, proceed to Step X", etc.) must be translated to the resolved language.
 - If this skill contains example text in another language, translate the meaning; do not copy that text literally.
 - If any sentence is not in the resolved language, rewrite the response before sending.
 
@@ -155,3 +156,28 @@ After updating SPEC.md, read it and confirm:
 Report:
 - Test results (which tests pass)
 - Confirmation that all tests pass
+
+---
+
+### Approval Confirmation
+
+After marking Step 05 as [x] and updating SPEC.md, present:
+
+```
+## ✅ Step 05 complete and saved to: <file>
+
+**Progress updated:**
+- [x] Step 01 — Product Intent Specification -> 01-product-intent-specification.md
+- [x] Step 02 — High-Level Technical Design -> 02-high-level-technical-design.md
+- [x] Step 03 — Low-Level Design and Version Policy -> 03-low-level-design-and-version-policy.md
+- [x] Step 04 — Tests (written and confirmed failing)
+- [x] Step 05 — Implementation (all tests passing)
+
+---
+
+**Proceed to the next step?**
+
+- **Yes**: Reply "yes, continue to Step 06"  
+- **No**: Reply "no, wait for instructions"  
+- **Approve and continue**: Reply "approved, proceed to Step 06"
+```
