@@ -43,7 +43,7 @@ Step 05 requires **Steps 01, 02, 03, and 04 to be complete and approved**.
    → **STOP**. Reply in the user's language with this meaning:
 > Cannot proceed to Step 05 because one or more prerequisite steps (01-04) are not complete/approved; show status per prerequisite, restate gate rule, and request completion/approval first.
 
-3. **If Steps 01-04 approval is verified:** extract the approved Step 03 content and Step 04 tests/run commands as context and proceed with Step 05.
+3. **If Steps 01-04 approval is verified:** extract the approved low-level design and failing-test context and proceed with Step 05.
 
 ### Skip-Ahead Detection
 
@@ -82,11 +82,18 @@ If the user provides a specs root directory instead of a full path, list the ava
 
 Implement only the production code required to make all existing tests pass. Do not add features not covered by tests. Do not refactor unless tests fail.
 
+Core constraints:
+- Do not modify test files.
+- Do not add features outside the approved design and existing tests.
+- Do not refactor unless needed to make the existing tests pass.
+- If the low-level design seems wrong, propose a design amendment instead of changing the architecture.
+
 **Audience:**
 Engineers and code reviewers verifying that implementation matches the low-level design and test intentions.
 
 **Before writing any production code:**
-Check whether an `AGENTS.md` file exists at the project root. If it references a testing guideline file, read it. Do NOT write or modify test files in this step — tests are already written and must remain untouched. Ensure all production code follows the existing architecture and code style conventions of the project.
+- Check whether an `AGENTS.md` file exists at the project root. If it references a testing guideline file, read it.
+- Keep all tests untouched, and follow the project's existing architecture and code style conventions.
 
 **Style:**
 Production code written in the project's native language. Follow existing code style and architecture conventions. Keep implementation focused and minimal.
@@ -101,8 +108,6 @@ Deliver:
 - Commands to verify framework/runtime versions (to confirm the environment)
 - Assumptions checklist (what assumptions did you make? are they in the low-level design?)
 - Expected test output summary (show which tests now pass)
-
-Imperative: Do not modify the tests. Do not add features. Do not refactor. If the low-level design seems wrong, propose a design amendment instead of changing architecture.
 
 ---
 
@@ -137,7 +142,7 @@ After updating SPEC.md, read it and confirm:
 ### Report Results
 
 Report:
-- Test results (which tests pass)
+- Which tests pass
 - Confirmation that all tests pass
 
 ---
