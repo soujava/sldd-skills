@@ -23,7 +23,7 @@ Use this exact structure:
 docs/specs/<feature-name>/
   SPEC.md
   01-product-intent-specification.md
-  99-existing-codebase-understanding.md
+  99-existing-codebase-understanding.md (optional persisted snapshot)
   02-high-level-technical-design.md
   03-low-level-design-and-version-policy.md
   04-tests-first-report.md
@@ -32,8 +32,9 @@ docs/specs/<feature-name>/
 ```
 
 Rules:
-- `SPEC.md` is journal-only (progress + links).
+- `SPEC.md` is journal-only (progress + links or save-status notes).
 - Step bodies go only to numbered artifacts.
+- Step 99 may be approved without persisting its artifact; if omitted, record only the save status in `SPEC.md` and re-run Step 99 when resuming before Step 02.
 - Never write step content into `SPEC.md`.
 
 ## 2) SPEC.md Journal Template
@@ -43,7 +44,7 @@ Rules:
 
 ## Progress
 - [ ] Step 01 — Product Intent Specification -> 01-product-intent-specification.md
-- [ ] Step 99 — Existing Codebase Understanding (required for existing codebases) -> 99-existing-codebase-understanding.md
+- [ ] Step 99 — Existing Codebase Understanding (required for existing codebases) -> 99-existing-codebase-understanding.md or not saved; re-run on resume
 - [ ] Step 02 — High-Level Technical Design -> 02-high-level-technical-design.md
 - [ ] Step 03 — Low-Level Design and Version Policy -> 03-low-level-design-and-version-policy.md
 - [ ] Step 04 — Tests First Report (Red phase, failing tests required) -> 04-tests-first-report.md
@@ -62,14 +63,18 @@ Rules:
 
 Violation handling: stop, report missing prerequisite, route back.
 
-## 4) Save + Approval Protocol
+## 4) Save + Approval Protocol (Two-Phase Verification)
 
-For every step:
-1. Produce draft for review.
-2. Wait for explicit approval.
-3. Save only to step artifact.
-4. Update `SPEC.md` checkbox + link.
-5. Confirm completion and ask to continue.
+For every technical step involving codebase modifications or environment changes:
+
+### Phase 1: Action Plan Approval (Pre-Execution)
+1. Before performing any operations that modify the codebase, file system, or execute environment-altering commands, present a detailed **Action Plan**.
+2. The plan must specify: files to be created or modified, the logic to be introduced, and the verification commands to be used.
+3. **Hard Gate:** Do NOT perform any implementation or execution actions until this plan receives explicit approval.
+
+### Phase 2: Report and Artifact Approval (Post-Execution)
+1. After executing the approved plan, present the draft of the artifact containing the actual evidence (logs, test results, or specific outcomes).
+2. Wait for explicit approval before persisting the artifact or updating progress.
 
 Use `sldd-98-approval-helper` for approval messaging.
 
@@ -90,7 +95,7 @@ Use these required headings (minimal contract):
   - Risks and Assumptions
   - Acceptance Criteria (Given/When/Then)
 
-- `99-existing-codebase-understanding.md`:
+- `99-existing-codebase-understanding.md` (when persisted):
   - Repository Structure Overview
   - Architecture Summary
   - Conventions to Preserve

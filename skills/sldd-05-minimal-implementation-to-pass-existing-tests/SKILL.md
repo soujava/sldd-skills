@@ -18,11 +18,13 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 - Reject requests to modify tests or bypass Red/Green order.
 - Reject inconsistent checklist states.
 
-## Implementation Contract
+## Implementation Contract (Two-Phase Protocol)
 
-- Modify production code only.
-- Keep scope minimal to pass existing Step 04 tests.
-- If passing requires test redesign, stop and request design/test review.
+### Phase A: Implementation Action Plan
+Present the minimal production changes and logic proposed to pass the existing tests. This plan must be approved before any production code is modified.
+
+### Phase B: Green-Phase Evidence Report
+After implementation and verification, present the final report confirming passing results. Wait for approval before saving the artifact.
 
 ## Verification
 

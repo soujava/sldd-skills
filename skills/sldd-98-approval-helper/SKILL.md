@@ -16,18 +16,36 @@ Detect and maintain the user's language. Preserve formatting (##, -, [x], ✅, �
 
 ## Approval Flows
 
+### Approval Required
+
+Use this prompt when presenting a Step XX draft for approval:
+
+```
+## Approval Required
+
+Do you approve this Step XX report?
+
+- **Yes**: Reply "approved"
+  - Saves the Step XX artifact
+  - Updates `SPEC.md` progress to `[x] Step XX — <description>`
+  - Then asks whether to continue to Step XX+1
+
+- **No**: Reply with corrections or "no, wait"
+  - Keeps Step XX incomplete
+  - Waits for further instructions
+```
+
 ### Approval
 
-When user says "approved", "looks good", "proceed", "ok", etc.:
+When user says "approved", "looks good", "ok", etc.:
 
 ```
 ## ✅ Step XX complete and saved
 **Progress updated:** [x] Step XX — <description>
 ---
-**Proceed to the next step?**
+**Continue to Step XX+1?**
 - **Yes**: Reply "yes, continue to Step XX+1"  
 - **No**: Reply "no, wait for instructions"  
-- **Approve and continue**: Reply "approved, proceed to Step XX+1"
 ```
 
 ### Rejection
@@ -57,19 +75,9 @@ Understood. Waiting for your instructions.
 The current progress is saved at: <specs-dir>/<feature>/SPEC.md
 ```
 
-### Approve & Advance
+## Intent Routing
 
-When user says "approved, proceed to Step XX+1":
-
-```
-Understood. Approving and proceeding to Step XX+1...
-[Mark [x] + Save file + Load next step]
-```
-
-## Keywords
-
-- "approved", "looks good", "proceed", "ok" -> Mark [x] + save
-- "approved, proceed to Step X" -> Mark [x] + save + advance to Step X
-- "yes, continue" -> Confirm + advance
-- "no", "wait" -> Stop + wait
-- "revise", "correct", "change" -> Reject + request new draft
+- Approval: "approved", "looks good", "ok" -> Mark [x] + save, then ask whether to continue.
+- Continue after approval: "yes, continue" -> Load next step skill.
+- Hold: "no", "wait" -> Stop and wait for instructions.
+- Rejection: "revise", "correct", "change" -> Reject and request a new draft.
