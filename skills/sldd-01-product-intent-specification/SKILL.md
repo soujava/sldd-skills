@@ -26,6 +26,6 @@ Wait for explicit approval.
 2. Verify artifact contains Step 01 content only.
 3. Update `SPEC.md` Step 01 `[x]` with link.
 4. Verify `SPEC.md` remains journal-only.
-5. Use `sldd-98-approval-helper` completion prompt.
+5. Use `sldd-88-approval-helper` completion prompt.
 
 Apply Step 88 Section 5 (Shared Save Decision).

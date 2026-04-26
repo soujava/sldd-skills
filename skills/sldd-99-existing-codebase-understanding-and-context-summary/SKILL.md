@@ -29,6 +29,6 @@ Wait for explicit approval.
 2. If persistence is approved, save `docs/specs/<feature-name>/99-existing-codebase-understanding.md`.
 3. Update `SPEC.md` Step 99 `[x]` with either the saved artifact link or a journal note that the approved summary was not saved and Step 99 must be re-run on resume.
 4. Verify `SPEC.md` remains journal-only; do not write Step 99 body content into `SPEC.md`.
-5. Use `sldd-98-approval-helper` completion prompt.
+5. Use `sldd-88-approval-helper` completion prompt.
 
 Apply Step 88 Section 5 (Shared Save Decision).

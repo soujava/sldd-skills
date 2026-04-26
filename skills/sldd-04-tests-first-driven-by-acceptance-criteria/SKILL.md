@@ -46,6 +46,6 @@ After execution, present the final report containing the actual failing test out
 2. Verify artifact contains Step 04 report only.
 3. Update `SPEC.md` Step 04 `[x]` with link.
 4. Verify `SPEC.md` remains journal-only.
-5. Use `sldd-98-approval-helper` completion prompt.
+5. Use `sldd-88-approval-helper` completion prompt.
 
 Apply Step 88 Section 5 (Shared Save Decision).

@@ -1,6 +1,6 @@
 ---
 name: sldd-00-process-overview-and-navigation-guide
-description: Start/resume SLDD, validate checklist consistency, and route to the next valid step.
+description: Start/resume SLDD, validate checklist consistency, and route to exploration or the next valid step.
 metadata:
   step: "00"
   type: navigation
@@ -12,11 +12,11 @@ Use `sldd-88-shared-templates-and-protocols` for gate rules, artifact paths, and
 
 ## Objective
 
-Determine current state, block invalid jumps, and route to one valid next step.
+Determine current state, block invalid jumps, and route to the most appropriate next step, including pre-Step-01 exploration when the spec is still being clarified.
 
 ## Gate Order
 
-Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 03 -> Step 04 -> Step 05 -> Step 06
+Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 03 -> Step 04 -> Step 05 -> Step 06
 
 ## Start/Resume Flow
 
@@ -26,8 +26,9 @@ Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 03 -> Step 04 ->
    - selected file under provided specs root, or
    - default `docs/specs/<feature-name>/SPEC.md`.
 3. Read checklist and detect out-of-order completions.
-4. If violation exists, stop and route to missing step.
-5. Route only to the next valid step skill.
+4. If the user is still clarifying a new spec, route to `sldd-88-spec-exploration-and-clarification` before formal Step 01.
+5. If violation exists, stop and route to the missing step.
+6. Route only to the next valid step skill.
 
 ## Response Format
 

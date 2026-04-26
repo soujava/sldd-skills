@@ -1,12 +1,12 @@
 ---
-name: sldd-98-approval-helper
+name: sldd-88-approval-helper
 description: Standardized approval workflow used by all SLDD skills (01-06). Centralizes approval logic to ensure consistent user-facing messages.
 metadata:
-  step: "98"
+  step: "88"
   type: utility
 ---
 
-# Skill: sldd-98-approval-helper
+# Skill: sldd-88-approval-helper
 
 Standardized approval workflow for SLDD steps 01-06. Triggered when the user responds to approval requests.
 

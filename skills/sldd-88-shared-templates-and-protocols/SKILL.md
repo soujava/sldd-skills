@@ -76,7 +76,7 @@ For every technical step involving codebase modifications or environment changes
 1. After executing the approved plan, present the draft of the artifact containing the actual evidence (logs, test results, or specific outcomes).
 2. Wait for explicit approval before persisting the artifact or updating progress.
 
-Use `sldd-98-approval-helper` for approval messaging.
+Use `sldd-88-approval-helper` for approval messaging.
 
 ## 5) Shared Save Decision (apply in all steps)
 
