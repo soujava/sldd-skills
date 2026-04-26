@@ -1,6 +1,6 @@
 ---
 name: sldd-03-low-level-design-and-version-policy
-description: Produce Step 03 low-level design and version policy after prerequisite validation.
+description: Produce Step 03 low-level design with API contracts, data models, error model, test strategy, and version policy.
 metadata:
   step: "03"
   type: specification

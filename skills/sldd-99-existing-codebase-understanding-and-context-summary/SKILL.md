@@ -1,6 +1,6 @@
 ---
 name: sldd-99-existing-codebase-understanding-and-context-summary
-description: Capture existing-codebase context required before Step 02 in brownfield projects.
+description: Capture existing-codebase context before Step 02 in brownfield projects.
 metadata:
   step: "99"
   type: appendix
