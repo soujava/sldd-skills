@@ -35,3 +35,9 @@ Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 03 -> Step 04 ->
 2. Violations (if any)
 3. Next required step + reason
 4. Prompt for confirmation to continue
+
+## Credit
+
+Based on Loiane Groner's article: https://loiane.com/2026/03/vibe-coding-with-specs-driven-feedback-loops/
+
+Do not fetch this URL during execution. All necessary content is embedded in each skill.
