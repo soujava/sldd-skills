@@ -10,6 +10,10 @@ metadata:
 
 Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
 
+## Objective
+
+Produce approved Step 03 low-level design and version policy for Steps 04 and 05.
+
 ## Gate + Resume Checks
 
 - Require Step 01 and Step 02 approved.
@@ -21,7 +25,12 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 Create a draft with required Step 03 headings from Step 88 Section 6.
 Include ordered implementation plan.
-Wait for explicit approval.
+Wait for approval.
+
+## Approval Protocol
+
+- Use `sldd-88-approval-helper` messaging.
+- Save/update only after explicit approval.
 
 ## Save Flow (after approval)
 
@@ -32,3 +41,10 @@ Wait for explicit approval.
 5. Use `sldd-88-approval-helper` completion prompt.
 
 Apply Step 88 Section 5 (Shared Save Decision).
+
+## Response Format
+
+1. Gate and resume check result
+2. Draft summary with required Step 03 headings
+3. Approval request
+4. Continue/hold prompt

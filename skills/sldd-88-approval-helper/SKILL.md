@@ -10,15 +10,30 @@ metadata:
 
 Standardized approval workflow for SLDD steps 01-06. Triggered when the user responds to approval requests.
 
+## Objective
+
+Provide one consistent approval protocol for predictable save/progress behavior.
+
+## Trigger Conditions
+
+- Use when a step asks for approval of a draft, action plan, or report.
+- Use when user intent indicates approval, rejection, continue, or hold.
+
+## Gate Rules
+
+- Do not mark any SLDD step complete unless explicit approval intent is detected.
+- Do not route to the next step unless completion/continue intent is explicit.
+- On rejection or hold intent, stop progression and await user direction.
+
 ## Language
 
-Detect and maintain the user's language. Preserve formatting (##, -, [x], ✅, ⚠️) and placeholders (Step XX, <description>) in all languages.
+Maintain user language and preserve formatting/placeholders.
 
 ## Approval Flows
 
 ### Approval Required
 
-Use this prompt when presenting a Step XX draft for approval:
+Use this prompt for Step XX draft approval:
 
 ```
 ## Approval Required
@@ -26,13 +41,13 @@ Use this prompt when presenting a Step XX draft for approval:
 Do you approve this Step XX report?
 
 - **Yes**: Reply "approved"
-  - Saves the Step XX artifact
-  - Updates `SPEC.md` progress to `[x] Step XX — <description>`
-  - Then asks whether to continue to Step XX+1
+  - Save Step XX artifact
+  - Update `SPEC.md` to `[x] Step XX — <description>`
+  - Ask whether to continue to Step XX+1
 
 - **No**: Reply with corrections or "no, wait"
-  - Keeps Step XX incomplete
-  - Waits for further instructions
+  - Keep Step XX incomplete
+  - Wait for instructions
 ```
 
 ### Approval
@@ -50,16 +65,16 @@ When user says "approved", "looks good", "ok", etc.:
 
 ### Rejection
 
-When user requests corrections or revisions:
+When user requests revisions:
 
 ```
 ## ⚠️ Step XX awaiting revisions
-The draft has been rejected. Please incorporate the feedback and present a new draft for review.
+Draft rejected. Apply feedback and present a new draft.
 ```
 
 ### Proceed to Next Step
 
-When user confirms "yes, continue":
+When user confirms continue:
 
 ```
 Understood. Proceeding to Step XX+1...
@@ -68,7 +83,7 @@ Understood. Proceeding to Step XX+1...
 
 ### Hold / Wait for Instructions
 
-When user says "no" or "wait for instructions":
+When user says hold/wait:
 
 ```
 Understood. Waiting for your instructions.
@@ -81,3 +96,8 @@ The current progress is saved at: <specs-dir>/<feature>/SPEC.md
 - Continue after approval: "yes, continue" -> Load next step skill.
 - Hold: "no", "wait" -> Stop and wait for instructions.
 - Rejection: "revise", "correct", "change" -> Reject and request a new draft.
+
+## Output Format
+
+- Emit only the matching template block for the detected intent.
+- Preserve formatting markers and placeholders exactly (`Step XX`, `<description>`, checklist notation).

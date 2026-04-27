@@ -10,6 +10,10 @@ metadata:
 
 Use this skill as the single source of truth for SLDD process mechanics.
 
+## Objective
+
+Define canonical SLDD rules for consistent gates, approval behavior, artifacts, and outputs.
+
 ## 0) Independence Rule
 
 All SLDD skills are self-contained and must not depend on `AGENTS.md` for language or `specs-dir`.
@@ -142,3 +146,8 @@ Use these required headings (minimal contract):
   - Risks by Severity
   - Remediation Steps
   - Go/No-Go Decision and Rationale
+
+## Output Format and Contract References
+
+- Step skills should reference this protocol instead of repeating boilerplate.
+- Outputs should include only step-specific deltas and required approval prompts.
