@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Objective
 
-Execute Step 04 in strict Red phase by creating tests first, proving they fail, and capturing auditable evidence.
+Execute Step 04 in strict Red phase by creating tests first, proving they fail, and capturing auditable evidence aligned to Step 03.
 
 ## Gate + Resume Checks
 

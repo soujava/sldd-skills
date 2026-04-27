@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Objective
 
-Produce approved Step 03 low-level design and version policy for Steps 04 and 05.
+Produce approved Step 03 low-level design and version policy aligned to Step 02 for Steps 04 and 05, including an explicit decision on whether the feature can be implemented with existing dependencies or requires new ones.
 
 ## Gate + Resume Checks
 
@@ -25,6 +25,12 @@ Produce approved Step 03 low-level design and version policy for Steps 04 and 05
 
 Create a draft with required Step 03 headings from Step 88 Section 6.
 Include ordered implementation plan.
+The draft must explicitly state:
+- whether the current dependency set is sufficient
+- which new dependencies are required, if any
+- why each dependency is needed
+- version pinning or compatibility constraints for each new dependency
+- the impact on runtime behavior, tests, and maintenance
 Wait for approval.
 
 ## Approval Protocol

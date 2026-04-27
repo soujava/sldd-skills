@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Objective
 
-Implement only the minimum production changes required to pass Step 04 tests without modifying test files.
+Implement only the minimum production changes required to pass Step 04 tests without modifying test files and considering the approved Step 03 design.
 
 ## Gate + Resume Checks
 
