@@ -12,7 +12,7 @@ Standardized approval workflow for SLDD steps 01-06. Triggered when the user res
 
 ## Objective
 
-Provide a single, consistent approval protocol for SLDD steps so save/progress behavior and user messaging remain predictable.
+Provide one consistent approval protocol for predictable save/progress behavior.
 
 ## Trigger Conditions
 
@@ -27,13 +27,13 @@ Provide a single, consistent approval protocol for SLDD steps so save/progress b
 
 ## Language
 
-Detect and maintain the user's language. Preserve formatting (##, -, [x], ✅, ⚠️) and placeholders (Step XX, <description>) in all languages.
+Maintain user language and preserve formatting/placeholders.
 
 ## Approval Flows
 
 ### Approval Required
 
-Use this prompt when presenting a Step XX draft for approval:
+Use this prompt for Step XX draft approval:
 
 ```
 ## Approval Required
@@ -65,7 +65,7 @@ When user says "approved", "looks good", "ok", etc.:
 
 ### Rejection
 
-When user requests corrections or revisions:
+When user requests revisions:
 
 ```
 ## ⚠️ Step XX awaiting revisions
@@ -74,7 +74,7 @@ Draft rejected. Apply feedback and present a new draft.
 
 ### Proceed to Next Step
 
-When user confirms "yes, continue":
+When user confirms continue:
 
 ```
 Understood. Proceeding to Step XX+1...
@@ -83,7 +83,7 @@ Understood. Proceeding to Step XX+1...
 
 ### Hold / Wait for Instructions
 
-When user says "no" or "wait for instructions":
+When user says hold/wait:
 
 ```
 Understood. Waiting for your instructions.

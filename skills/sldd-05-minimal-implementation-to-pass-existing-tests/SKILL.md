@@ -25,10 +25,10 @@ Implement only the minimum production changes required to pass Step 04 tests wit
 ## Implementation Contract (Two-Phase Protocol)
 
 ### Phase A: Implementation Action Plan
-Present the minimal production changes and logic proposed to pass the existing tests. This plan must be approved before any production code is modified.
+Present minimal production changes to pass existing tests. Approve before modifying production code.
 
 ### Phase B: Green-Phase Evidence Report
-After implementation and verification, present the final report confirming passing results. Wait for approval before saving the artifact.
+After implementation and verification, present passing evidence. Approve before saving.
 
 ## Draft Output
 

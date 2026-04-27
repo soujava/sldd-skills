@@ -12,7 +12,7 @@ Use this skill as the single source of truth for SLDD process mechanics.
 
 ## Objective
 
-Define canonical SLDD process rules so all step skills apply consistent gates, approval behavior, artifact structure, and output contracts.
+Define canonical SLDD rules for consistent gates, approval behavior, artifacts, and outputs.
 
 ## 0) Independence Rule
 

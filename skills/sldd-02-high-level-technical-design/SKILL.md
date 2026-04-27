@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Objective
 
-Produce an approved Step 02 high-level technical design that is consistent with Step 01 intent and Step 99 context (when required).
+Produce approved Step 02 high-level design aligned to Step 01 and Step 99 (when required).
 
 ## Gate + Resume Checks
 
@@ -24,7 +24,7 @@ Produce an approved Step 02 high-level technical design that is consistent with 
 ## Draft Output
 
 Create a draft with required Step 02 headings from Step 88 Section 6.
-Wait for explicit approval.
+Wait for approval.
 
 ## Approval Protocol
 

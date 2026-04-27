@@ -31,10 +31,10 @@ Execute Step 04 in strict Red phase by creating tests first, proving they fail, 
 ## Draft Output (Two-Phase Protocol)
 
 ### Phase A: Test Action Plan
-Present the proposed test files, specific test scenarios, and verification commands. This plan must be approved before any code is written or tests are executed.
+Present proposed test files, scenarios, and commands. Approve before writing tests or running commands.
 
 ### Phase B: Red-Phase Evidence Report
-After execution, present the final report containing the actual failing test output. Wait for approval before saving the artifact.
+After execution, present failing-output evidence. Approve before saving.
 
 ## Required Evidence
 

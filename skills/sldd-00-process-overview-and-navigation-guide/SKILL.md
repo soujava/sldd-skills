@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for gate rules, artifact paths, and
 
 ## Objective
 
-Determine current state, block invalid jumps, and route to the most appropriate next step, including pre-Step-01 exploration when the spec is still being clarified.
+Determine current state, block invalid jumps, and route to the correct next step.
 
 ## Gate Order
 
@@ -26,7 +26,7 @@ Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 0
    - selected file under provided specs root, or
    - default `docs/specs/<feature-name>/SPEC.md`.
 3. Read checklist and detect out-of-order completions.
-4. If the user is still clarifying a new spec, route to `sldd-88-spec-exploration-and-clarification` before formal Step 01.
+4. If the spec is still being clarified, route to `sldd-88-spec-exploration-and-clarification`.
 5. If violation exists, stop and route to the missing step.
 6. Route only to the next valid step skill.
 
@@ -40,7 +40,7 @@ Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 0
 ## Approval Protocol
 
 - This navigation step does not persist numbered artifacts.
-- Before routing forward, ask for explicit user confirmation to continue to the next required step.
+- Before routing forward, ask for explicit confirmation to continue.
 - If the user asks to pause, hold position and wait for instructions.
 
 ## Credit

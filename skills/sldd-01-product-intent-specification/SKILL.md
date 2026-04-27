@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Objective
 
-Define and validate Step 01 product intent so downstream design and implementation steps are scoped by approved requirements.
+Define and validate Step 01 product intent for downstream steps.
 
 ## Gate + Resume Checks
 
@@ -22,7 +22,7 @@ Define and validate Step 01 product intent so downstream design and implementati
 ## Draft Output
 
 Create a draft with required Step 01 headings from Step 88 Section 6.
-Wait for explicit approval.
+Wait for approval.
 
 ## Approval Protocol
 

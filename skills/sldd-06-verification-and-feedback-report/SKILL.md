@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Objective
 
-Produce an approved Step 06 verification report with explicit Go/No-Go decision based on prior approved artifacts and evidence.
+Produce approved Step 06 verification with explicit Go/No-Go decision.
 
 ## Gate + Resume Checks
 
@@ -24,7 +24,7 @@ Produce an approved Step 06 verification report with explicit Go/No-Go decision 
 ## Draft Output
 
 Create a draft with required Step 06 headings from Step 88 Section 6.
-Wait for explicit approval.
+Wait for approval.
 
 ## Approval Protocol
 

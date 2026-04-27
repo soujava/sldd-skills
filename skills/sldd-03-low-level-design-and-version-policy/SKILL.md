@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Objective
 
-Produce an approved Step 03 low-level design and version policy that can directly guide Step 04 tests and Step 05 implementation.
+Produce approved Step 03 low-level design and version policy for Steps 04 and 05.
 
 ## Gate + Resume Checks
 
@@ -25,7 +25,7 @@ Produce an approved Step 03 low-level design and version policy that can directl
 
 Create a draft with required Step 03 headings from Step 88 Section 6.
 Include ordered implementation plan.
-Wait for explicit approval.
+Wait for approval.
 
 ## Approval Protocol
 
