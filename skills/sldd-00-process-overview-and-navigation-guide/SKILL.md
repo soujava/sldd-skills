@@ -37,6 +37,12 @@ Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 0
 3. Next required step + reason
 4. Prompt for confirmation to continue
 
+## Approval Protocol
+
+- This navigation step does not persist numbered artifacts.
+- Before routing forward, ask for explicit user confirmation to continue to the next required step.
+- If the user asks to pause, hold position and wait for instructions.
+
 ## Credit
 
 Based on Loiane Groner's article: https://loiane.com/2026/03/vibe-coding-with-specs-driven-feedback-loops/

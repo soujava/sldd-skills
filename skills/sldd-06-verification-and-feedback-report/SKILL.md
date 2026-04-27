@@ -10,6 +10,10 @@ metadata:
 
 Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
 
+## Objective
+
+Produce an approved Step 06 verification report with explicit Go/No-Go decision based on prior approved artifacts and evidence.
+
 ## Gate + Resume Checks
 
 - Require Steps 01-05 approved.
@@ -22,6 +26,11 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 Create a draft with required Step 06 headings from Step 88 Section 6.
 Wait for explicit approval.
 
+## Approval Protocol
+
+- Use `sldd-88-approval-helper` messaging.
+- Save/update only after explicit approval.
+
 ## Save Flow (after approval)
 
 1. Save `docs/specs/<feature-name>/06-verification-and-feedback-report.md`.
@@ -31,3 +40,10 @@ Wait for explicit approval.
 5. Use `sldd-88-approval-helper` completion prompt.
 
 Apply Step 88 Section 5 (Shared Save Decision).
+
+## Response Format
+
+1. Gate and resume check result
+2. Draft summary with required Step 06 headings
+3. Approval request
+4. Continue/hold prompt

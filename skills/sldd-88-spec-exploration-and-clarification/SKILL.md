@@ -14,6 +14,12 @@ Use `sldd-88-shared-templates-and-protocols` for shared SLDD gate rules and arti
 
 Help the user turn a rough idea into a clear, testable spec direction before formal SLDD Step 01 starts.
 
+## Gate/Route Rules
+
+- Keep exploration pre-Step-01 unless the user explicitly asks to formalize.
+- Route to Step 01 when the idea is sufficiently clear.
+- For existing codebases, remind that Step 99 is required before Step 02 design work.
+
 ## Stance
 
 - Explore first, formalize later.
@@ -72,3 +78,16 @@ Prefer concise but meaningful turns:
 - Suggested next step
 
 If the shape of the problem is still unclear, keep exploring. If it is clear enough, say so and hand off to Step 01.
+
+## Approval Protocol
+
+- Exploration outputs are conversational and are not saved as numbered SLDD artifacts by default.
+- If the user asks to formalize outcomes, present the proposed formalization and wait for explicit approval before persisting any artifact.
+
+## Output Format
+
+1. Current understanding
+2. Open questions
+3. Candidate directions
+4. Key risks
+5. Suggested next step and routing decision

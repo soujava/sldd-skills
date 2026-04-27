@@ -10,6 +10,10 @@ metadata:
 
 Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
 
+## Objective
+
+Capture and approve existing-codebase context required for safe Step 02+ design and implementation decisions.
+
 ## Gate + Resume Checks
 
 - Required before Step 02 for existing codebases.
@@ -23,6 +27,11 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 Create a draft with required Step 99 headings from Step 88 Section 6.
 Wait for explicit approval.
 
+## Approval Protocol
+
+- Use `sldd-88-approval-helper` messaging.
+- Do not mark complete or save/update without explicit approval.
+
 ## Save Flow (after approval)
 
 1. Ask whether to persist `docs/specs/<feature-name>/99-existing-codebase-understanding.md`; saving this snapshot is optional.
@@ -32,3 +41,10 @@ Wait for explicit approval.
 5. Use `sldd-88-approval-helper` completion prompt.
 
 Apply Step 88 Section 5 (Shared Save Decision).
+
+## Response Format
+
+1. Gate and resume check result
+2. Draft summary with required Step 99 headings
+3. Persistence choice (save artifact vs. approved-not-saved journal note)
+4. Approval request and continue/hold prompt

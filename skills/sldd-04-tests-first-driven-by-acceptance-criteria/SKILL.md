@@ -10,6 +10,10 @@ metadata:
 
 Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
 
+## Objective
+
+Execute Step 04 in strict Red phase by creating tests first, proving they fail, and capturing auditable evidence.
+
 ## Gate + Resume Checks
 
 - Require Step 01, Step 02, and Step 03 approved.
@@ -40,6 +44,13 @@ After execution, present the final report containing the actual failing test out
 - Failing output summary
 - Explicit Red confirmation
 
+## Approval Protocol
+
+- Follow Step 88 two-phase approval behavior:
+  - approve Phase A plan before writing tests or running commands,
+  - approve Phase B evidence report before saving artifacts.
+- Use `sldd-88-approval-helper` approval messaging.
+
 ## Save Flow (after approval)
 
 1. Save `docs/specs/<feature-name>/04-tests-first-report.md`.
@@ -49,3 +60,10 @@ After execution, present the final report containing the actual failing test out
 5. Use `sldd-88-approval-helper` completion prompt.
 
 Apply Step 88 Section 5 (Shared Save Decision).
+
+## Response Format
+
+1. Gate and resume check result
+2. Phase A test action plan
+3. Phase B red-phase evidence summary
+4. Approval request and continue/hold prompt

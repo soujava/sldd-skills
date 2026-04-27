@@ -10,6 +10,10 @@ metadata:
 
 Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
 
+## Objective
+
+Implement only the minimum production changes required to pass Step 04 tests without modifying test files.
+
 ## Gate + Resume Checks
 
 - Require Steps 01-04 approved.
@@ -26,6 +30,20 @@ Present the minimal production changes and logic proposed to pass the existing t
 ### Phase B: Green-Phase Evidence Report
 After implementation and verification, present the final report confirming passing results. Wait for approval before saving the artifact.
 
+## Draft Output
+
+Present:
+- Phase A implementation action plan
+- Phase B green-phase evidence report
+- confirmation that tests were not modified
+
+## Approval Protocol
+
+- Follow Step 88 two-phase approval behavior:
+  - approve Phase A plan before modifying production code,
+  - approve Phase B evidence report before saving artifacts.
+- Use `sldd-88-approval-helper` approval messaging.
+
 ## Verification
 
 - Run tests and confirm previously failing tests pass.
@@ -40,3 +58,10 @@ After implementation and verification, present the final report confirming passi
 5. Use `sldd-88-approval-helper` completion prompt.
 
 Apply Step 88 Section 5 (Shared Save Decision).
+
+## Response Format
+
+1. Gate and resume check result
+2. Phase A implementation action plan
+3. Phase B green-phase evidence summary
+4. Approval request and continue/hold prompt
