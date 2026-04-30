@@ -29,75 +29,30 @@ Provide one consistent approval protocol for predictable save/progress behavior.
 
 Maintain user language and preserve formatting/placeholders.
 
-## Approval Flows
+## Approval Flow
 
-### Approval Required
+Use one compact approval loop:
 
-Use this prompt for Step XX draft approval:
-
-```
-## Approval Required
-
-Do you approve this Step XX report?
-
-- **Yes**: Reply "approved"
-  - Save Step XX artifact
-  - Update `SPEC.md` to `[x] Step XX — <description>`
-  - Ask whether to continue to Step XX+1
-
-- **No**: Reply with corrections or "no, wait"
-  - Keep Step XX incomplete
-  - Wait for instructions
-```
-
-### Approval
-
-When user says "approved", "looks good", "ok", etc.:
-
-```
-## ✅ Step XX complete and saved
-**Progress updated:** [x] Step XX — <description>
----
-**Continue to Step XX+1?**
-- **Yes**: Reply "yes, continue to Step XX+1"  
-- **No**: Reply "no, wait for instructions"  
-```
-
-### Rejection
-
-When user requests revisions:
-
-```
-## ⚠️ Step XX awaiting revisions
-Draft rejected. Apply feedback and present a new draft.
-```
-
-### Proceed to Next Step
-
-When user confirms continue:
-
-```
-Understood. Proceeding to Step XX+1...
-[Load next step skill]
-```
-
-### Hold / Wait for Instructions
-
-When user says hold/wait:
-
-```
-Understood. Waiting for your instructions.
-The current progress is saved at: <specs-dir>/<feature>/SPEC.md
-```
+1. Present the draft, action plan, or report and ask for explicit approval.
+2. If approved, perform only the approved action:
+   - save/update the artifact when applicable,
+   - update `SPEC.md` only after the artifact is saved,
+   - ask whether to continue to the next step.
+3. If rejected, requested for changes, or placed on hold:
+   - leave progress unchanged,
+   - do not route forward,
+   - wait for user direction.
+4. If intent is ambiguous, ask for clarification instead of inferring approval.
 
 ## Intent Routing
 
-- Approval: "approved", "looks good", "ok" -> Mark [x] + save, then ask whether to continue.
-- Continue after approval: "yes, continue" -> Load next step skill.
-- Hold: "no", "wait" -> Stop and wait for instructions.
-- Rejection: "revise", "correct", "change" -> Reject and request a new draft.
+- Approval: explicit approval such as "approved", "looks good", or "ok".
+- Continue: explicit continuation after completion, such as "yes, continue".
+- Hold: "wait", "hold", "stop", or "no, wait".
+- Rejection: requested corrections, changes, or revision.
+- Ambiguous: ask for clarification.
 
 ## Output Format
 
-- Emit only the matching template block for the detected intent.
-- Preserve formatting markers and placeholders exactly (`Step XX`, `<description>`, checklist notation).
+- Emit only the response needed for the detected intent.
+- Preserve step identifiers, descriptions, paths, and checklist notation when reporting progress.
