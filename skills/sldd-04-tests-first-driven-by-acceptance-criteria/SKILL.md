@@ -38,7 +38,9 @@ After execution, present failing-output evidence. Approve before saving.
 
 ## Required Evidence
 
-- Acceptance criteria -> tests mapping
+- Acceptance criteria and Step 03 test scenarios -> tests mapping
+- Coverage of the Step 03 Test Scenario Catalog
+- Traceability from formalized exploration decisions, through Step 01 and Step 03, into concrete tests
 - At least one edge case per criterion
 - Exact test commands
 - Failing output summary

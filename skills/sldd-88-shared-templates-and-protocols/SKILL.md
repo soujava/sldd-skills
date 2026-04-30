@@ -94,6 +94,7 @@ Use these required headings (minimal contract):
 - `01-product-intent-specification.md`:
   - Problem Statement
   - Target Users
+  - Formalized Exploration Decisions
   - Success Metrics
   - Out of Scope
   - Risks and Assumptions
@@ -108,6 +109,7 @@ Use these required headings (minimal contract):
   - Context to Carry Into Steps 02-06
 
 - `02-high-level-technical-design.md`:
+  - Requirements Traceability
   - Architecture Diagram
   - Component Responsibilities
   - Data Flow
@@ -116,6 +118,7 @@ Use these required headings (minimal contract):
   - High-Level Test Scenario Map
 
 - `03-low-level-design-and-version-policy.md`:
+  - Requirement-to-Design Traceability
   - API Contracts
   - Data Models
   - Error Model

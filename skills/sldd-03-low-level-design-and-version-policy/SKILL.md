@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Objective
 
-Produce approved Step 03 low-level design and version policy aligned to Step 02 for Steps 04 and 05, including an explicit decision on whether the feature can be implemented with existing dependencies or requires new ones.
+Produce approved Step 03 low-level design and version policy aligned to Step 02 for Steps 04 and 05, including traceability from Step 01 requirements and formalized exploration decisions to contracts, data models, error handling, tests, dependencies, and implementation order.
 
 ## Gate + Resume Checks
 
@@ -24,8 +24,11 @@ Produce approved Step 03 low-level design and version policy aligned to Step 02 
 ## Draft Output
 
 Create a draft with required Step 03 headings from Step 88 Section 6.
+The draft must explicitly map Step 01 requirements and formalized exploration decisions through Step 02 design choices into concrete low-level decisions.
 Include ordered implementation plan.
 The draft must explicitly state:
+- how each approved requirement is covered by API contracts, data models, error handling, tests, or implementation steps
+- which Step 02 design decisions constrain Step 04 tests and Step 05 implementation
 - whether the current dependency set is sufficient
 - which new dependencies are required, if any
 - why each dependency is needed

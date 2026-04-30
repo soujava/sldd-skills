@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Objective
 
-Implement only the minimum production changes required to pass Step 04 tests without modifying test files and considering the approved Step 03 design.
+Implement only the minimum production changes required to pass Step 04 tests without modifying test files, while respecting the approved Step 03 design constraints and formalized Step 01 requirements.
 
 ## Gate + Resume Checks
 
@@ -29,6 +29,8 @@ Present minimal production changes to pass existing tests. Approve before modify
 
 ### Phase B: Green-Phase Evidence Report
 After implementation and verification, present passing evidence. Approve before saving.
+
+The implementation plan must identify which Step 03 contracts, constraints, and implementation steps are being satisfied. Do not introduce behavior that is not required by Step 04 tests or approved by Step 03.
 
 ## Draft Output
 

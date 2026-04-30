@@ -12,7 +12,7 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Objective
 
-Produce approved Step 02 high-level design aligned to Step 01 and Step 99 (when required).
+Produce approved Step 02 high-level design aligned to Step 01, including formalized exploration decisions, and Step 99 when required.
 
 ## Gate + Resume Checks
 
@@ -24,6 +24,7 @@ Produce approved Step 02 high-level design aligned to Step 01 and Step 99 (when 
 ## Draft Output
 
 Create a draft with required Step 02 headings from Step 88 Section 6.
+The draft must explicitly trace approved Step 01 requirements, including formalized exploration decisions, into the proposed architecture, component responsibilities, data flow, security/observability requirements, trade-offs, and high-level test scenarios.
 Wait for approval.
 
 ## Approval Protocol
