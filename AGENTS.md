@@ -12,6 +12,7 @@ This repository contains the SLDD (Spec Loops Driven Development) skills — str
 - Write skill content in plain, actionable Markdown. Document behavior, not implementation.
 - Maintain consistency across all skill files (tone, structure, gate enforcement patterns).
 - Ensure every skill has: a clear objective, gate enforcement rules, approval protocol, and output format.
+- Use Conventional Commits for commit messages, following the `<type>(optional-scope): <description>` format.
 
 ### Don't
 - Do not add runtime code, build scripts, or package configuration — this repo is Markdown-only.
