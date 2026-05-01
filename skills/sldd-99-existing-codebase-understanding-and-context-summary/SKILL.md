@@ -8,8 +8,6 @@ metadata:
 
 # Skill: Existing Codebase Understanding and Context Summary
 
-Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
-
 ## Objective
 
 Capture and approve existing-codebase context for safe Step 02+ work.
@@ -24,13 +22,24 @@ Capture and approve existing-codebase context for safe Step 02+ work.
 
 ## Draft Output
 
-Create a draft with required Step 99 headings from Step 88 "Compact Step Template Contracts".
+Create a draft with these required Step 99 headings:
+
+- Repository Structure Overview
+- Architecture Summary
+- Conventions to Preserve
+- Integration Points
+- Risks and Unknowns
+- Context to Carry Into Steps 02-06
+
 Wait for approval.
 
 ## Approval Protocol
 
-- Use `sldd-88-approval-helper` messaging.
+- Ask for explicit approval before marking Step 99 complete, saving an artifact, or updating `SPEC.md`.
 - Do not mark complete or save/update without explicit approval.
+- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
+- If approval intent is ambiguous, ask for clarification instead of saving or updating progress.
+- If writes are unavailable, stop and report the limitation.
 
 ## Save Flow (after approval)
 
@@ -38,9 +47,7 @@ Wait for approval.
 2. If persistence is approved, save `docs/specs/<feature-name>/99-existing-codebase-understanding.md`.
 3. Update `SPEC.md` Step 99 `[x]` with either the saved link or a not-saved note requiring re-run on resume.
 4. Verify `SPEC.md` remains journal-only; do not write Step 99 body content into `SPEC.md`.
-5. Use `sldd-88-approval-helper` completion prompt.
-
-Apply Step 88 "Shared Save Decision".
+5. Ask whether to continue to the next step or hold.
 
 ## Response Format
 

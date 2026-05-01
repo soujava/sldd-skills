@@ -8,8 +8,6 @@ metadata:
 
 # Skill: Low-Level Design and Version Policy
 
-Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
-
 ## Objective
 
 Produce approved Step 03 low-level design and version policy aligned to Step 02 for Steps 04 and 05, including traceability from Step 01 requirements and Step 02 design decisions to contracts, data models, error handling, tests, dependencies, and implementation order.
@@ -23,7 +21,17 @@ Produce approved Step 03 low-level design and version policy aligned to Step 02 
 
 ## Draft Output
 
-Create a draft with required Step 03 headings from Step 88 "Compact Step Template Contracts".
+Create a draft with these required Step 03 headings:
+
+- Requirement-to-Design Traceability
+- API Contracts
+- Data Models
+- Error Model
+- Test Strategy
+- Test Scenario Catalog
+- Dependency and Version Policy
+- Ordered Implementation Plan
+
 If `00-exploration-summary.md` exists, use it only as contextual memory for rationale, alternatives, assumptions, and candidate technical ideas; do not import its design ideas as approved low-level decisions.
 The draft must explicitly map Step 01 requirements and Step 02 design choices into concrete low-level decisions.
 Include ordered implementation plan.
@@ -39,8 +47,11 @@ Wait for approval.
 
 ## Approval Protocol
 
-- Use `sldd-88-approval-helper` messaging.
+- Ask for explicit approval before saving or updating any artifact.
 - Save/update only after explicit approval.
+- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
+- If approval intent is ambiguous, ask for clarification instead of saving.
+- If writes are unavailable, stop and report the limitation.
 
 ## Save Flow (after approval)
 
@@ -48,9 +59,7 @@ Wait for approval.
 2. Verify artifact contains Step 03 content only.
 3. Update `SPEC.md` Step 03 `[x]` with link.
 4. Verify `SPEC.md` remains journal-only.
-5. Use `sldd-88-approval-helper` completion prompt.
-
-Apply Step 88 "Shared Save Decision".
+5. Ask whether to continue to the next step or hold.
 
 ## Response Format
 

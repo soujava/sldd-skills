@@ -8,8 +8,6 @@ metadata:
 
 # Skill: Minimal Implementation to Pass Existing Tests
 
-Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
-
 ## Objective
 
 Implement only the minimum production changes required to pass Step 04 tests without modifying test files, while respecting the approved Step 03 design constraints and formalized Step 01 requirements.
@@ -39,12 +37,22 @@ Present:
 - Phase B green-phase evidence report
 - confirmation that tests were not modified
 
+Use these required Step 05 report headings:
+
+- Production Files Changed
+- Implementation Notes (Minimal Scope)
+- Test Commands Executed
+- Passing Results Summary
+- Assumptions and Constraints
+- Test Integrity Confirmation (No Test Modifications)
+
 ## Approval Protocol
 
-- Follow Step 88 two-phase approval behavior:
-  - approve Phase A plan before modifying production code,
-  - approve Phase B evidence report before saving artifacts.
-- Use `sldd-88-approval-helper` approval messaging.
+- Ask for explicit approval of the Phase A implementation action plan before modifying production code.
+- Ask for explicit approval of the Phase B evidence report before saving artifacts or updating `SPEC.md`.
+- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
+- If approval intent is ambiguous, ask for clarification instead of modifying code, running commands, saving, or routing forward.
+- If writes are unavailable, stop and report the limitation.
 
 ## Verification
 
@@ -57,9 +65,7 @@ Present:
 2. Verify artifact contains Step 05 report only.
 3. Update `SPEC.md` Step 05 `[x]` with link.
 4. Verify `SPEC.md` remains journal-only.
-5. Use `sldd-88-approval-helper` completion prompt.
-
-Apply Step 88 "Shared Save Decision".
+5. Ask whether to continue to the next step or hold.
 
 ## Response Format
 

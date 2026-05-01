@@ -8,8 +8,6 @@ metadata:
 
 # Skill: SLDD Process Overview and Navigation Guide
 
-Use `sldd-88-shared-templates-and-protocols` for gate rules, artifact paths, and save protocol.
-
 ## Objective
 
 Determine current state, block invalid jumps, and route to the correct next step.
@@ -17,6 +15,22 @@ Determine current state, block invalid jumps, and route to the correct next step
 ## Gate Order
 
 Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 03 -> Step 04 -> Step 05 -> Step 06
+
+## Artifact and Resume Rules
+
+- Use user-provided paths when available; otherwise default to `docs/specs/<feature-name>/SPEC.md`.
+- Treat `SPEC.md` as journal-only: progress checklist plus links or save-status notes.
+- Do not write numbered step body content into `SPEC.md`.
+- Expected artifacts:
+  - `00-exploration-summary.md` (optional contextual memory; not a progress artifact)
+  - `01-product-intent-specification.md`
+  - `99-existing-codebase-understanding.md` (optional persisted snapshot)
+  - `02-high-level-technical-design.md`
+  - `03-low-level-design-and-version-policy.md`
+  - `04-tests-first-report.md`
+  - `05-minimal-implementation-report.md`
+  - `06-verification-and-feedback-report.md`
+- Approved numbered artifacts take precedence over `00-exploration-summary.md`.
 
 ## Start/Resume Flow
 
@@ -42,6 +56,7 @@ Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 0
 - This navigation step does not persist numbered artifacts.
 - Before routing forward, ask for explicit confirmation to continue.
 - If the user asks to pause, hold position and wait for instructions.
+- If confirmation intent is ambiguous, ask for clarification instead of routing.
 
 ## Credit
 

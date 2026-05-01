@@ -8,8 +8,6 @@ metadata:
 
 # Skill: Tests First Driven by Acceptance Criteria
 
-Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
-
 ## Objective
 
 Execute Step 04 in strict Red phase by creating tests first, proving they fail, and capturing auditable evidence aligned to Step 03.
@@ -36,6 +34,14 @@ Present proposed test files, scenarios, and commands. Approve before writing tes
 ### Phase B: Red-Phase Evidence Report
 After execution, present failing-output evidence. Approve before saving.
 
+Use these required Step 04 report headings:
+
+- Test Files Created
+- Acceptance Criteria -> Tests Mapping
+- Test Commands Executed
+- Failing Results Summary
+- Red-Phase Confirmation
+
 ## Required Evidence
 
 - Acceptance criteria and Step 03 test scenarios -> tests mapping
@@ -49,10 +55,11 @@ After execution, present failing-output evidence. Approve before saving.
 
 ## Approval Protocol
 
-- Follow Step 88 two-phase approval behavior:
-  - approve Phase A plan before writing tests or running commands,
-  - approve Phase B evidence report before saving artifacts.
-- Use `sldd-88-approval-helper` approval messaging.
+- Ask for explicit approval of the Phase A test action plan before writing tests or running commands.
+- Ask for explicit approval of the Phase B evidence report before saving artifacts or updating `SPEC.md`.
+- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
+- If approval intent is ambiguous, ask for clarification instead of writing, running commands, saving, or routing forward.
+- If writes are unavailable, stop and report the limitation.
 
 ## Save Flow (after approval)
 
@@ -60,9 +67,7 @@ After execution, present failing-output evidence. Approve before saving.
 2. Verify artifact contains Step 04 report only.
 3. Update `SPEC.md` Step 04 `[x]` with link.
 4. Verify `SPEC.md` remains journal-only.
-5. Use `sldd-88-approval-helper` completion prompt.
-
-Apply Step 88 "Shared Save Decision".
+5. Ask whether to continue to the next step or hold.
 
 ## Response Format
 

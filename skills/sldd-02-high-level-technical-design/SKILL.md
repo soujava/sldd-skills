@@ -8,8 +8,6 @@ metadata:
 
 # Skill: High-Level Technical Design
 
-Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
-
 ## Objective
 
 Produce approved Step 02 high-level design aligned to Step 01, including exploration outcomes formalized into Step 01, and Step 99 when required.
@@ -23,15 +21,27 @@ Produce approved Step 02 high-level design aligned to Step 01, including explora
 
 ## Draft Output
 
-Create a draft with required Step 02 headings from Step 88 "Compact Step Template Contracts".
+Create a draft with these required Step 02 headings:
+
+- Requirements Traceability
+- Architecture Diagram
+- Component Responsibilities
+- Data Flow
+- Security and Observability Requirements
+- Trade-Offs and Alternatives
+- High-Level Test Scenario Map
+
 If `00-exploration-summary.md` exists, use it only as contextual memory for rationale, alternatives, assumptions, and candidate technical ideas; do not import its design ideas as approved architecture.
 The draft must explicitly trace approved Step 01 requirements, including exploration outcomes formalized into Step 01, into the proposed architecture, component responsibilities, data flow, security/observability requirements, trade-offs, and high-level test scenarios.
 Wait for approval.
 
 ## Approval Protocol
 
-- Use `sldd-88-approval-helper` messaging.
+- Ask for explicit approval before saving or updating any artifact.
 - Save/update only after explicit approval.
+- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
+- If approval intent is ambiguous, ask for clarification instead of saving.
+- If writes are unavailable, stop and report the limitation.
 
 ## Save Flow (after approval)
 
@@ -39,9 +49,7 @@ Wait for approval.
 2. Verify artifact contains Step 02 content only.
 3. Update `SPEC.md` Step 02 `[x]` with link.
 4. Verify `SPEC.md` remains journal-only.
-5. Use `sldd-88-approval-helper` completion prompt.
-
-Apply Step 88 "Shared Save Decision".
+5. Ask whether to continue to the next step or hold.
 
 ## Response Format
 

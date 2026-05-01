@@ -4,7 +4,7 @@ A collection of AI skills for implementing **Spec Loops Driven Development (SLDD
 
 ## Overview
 
-SLDD (Spec Loops Driven Development) is a methodology that adds engineering control around AI-assisted coding, enabling teams to maintain speed without sacrificing quality. This repository contains ready-to-use skills that implement the SLDD process.
+SLDD (Spec Loops Driven Development) is a methodology that adds engineering control around AI-assisted coding, enabling teams to maintain speed without sacrificing quality. This repository contains ready-to-use runtime skills that implement the SLDD process.
 
 ### Based On
 
@@ -29,13 +29,13 @@ SLDD provides a structured feedback loop that prevents these issues while mainta
 
 ### Using Skills CLI (Recommended)
 
-Install all SLDD skills with a single command:
+Install all SLDD runtime skills with a single command:
 
 ```bash
 npx skills add soujava/sldd-skills
 ```
 
-This will automatically download and configure all SLDD skills for your AI agent.
+This will automatically download and configure the executable SLDD skills for your AI agent.
 
 ### Manual Installation
 
@@ -74,11 +74,17 @@ These skills are plain Markdown files with YAML frontmatter. They can be adapted
 
 Run one skill at a time. Review and approve the output before moving to the next step.
 
+All executable skills are standalone at runtime. They do not depend on shared helper skills or a separate Step 88 protocol being loaded for gates, approvals, save behavior, or artifact headings.
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │ SLDD Process Flow                                               │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
+│ Optional: sldd-88-spec-exploration-and-clarification            │
+│ Clarify a rough idea before formal Step 01                      │
+│                                                                 │
+│                              ▼                                  │
 │ Start: sldd-00-process-overview-and-navigation-guide            │
 │ Understand the process, choose the right skill                  │
 │                                                                 │
@@ -106,7 +112,7 @@ Run one skill at a time. Review and approve the output before moving to the next
 │ Write tests only (TDD), no production code                      │
 │                                                                 │
 │                              ▼                                  │
-│ Step 05: sldd-05-minimal-implementation-to-pass-tests           │
+│ Step 05: sldd-05-minimal-implementation-to-pass-existing-tests  │
 │ Minimal code to make tests pass                                 │
 │                                                                 │
 │                              ▼                                  │
@@ -127,8 +133,11 @@ If a gap appears at any step, loop back to the earlier step and revise.
 
 ## Skills Included
 
+The `skills/` directory contains executable runtime skills only. Non-runtime shared helper/reference skills are intentionally not kept under `skills/`.
+
 | Step | Skill | Description |
 |------|-------|-------------|
+| 88 | `sldd-88-spec-exploration-and-clarification` | Clarify rough ideas before formal Step 01 |
 | 00 | `sldd-00-process-overview-and-navigation-guide` | Navigate the SLDD process and choose the correct skill |
 | 01 | `sldd-01-product-intent-specification` | Define problem, users, metrics, risks, acceptance criteria |
 | 02 | `sldd-02-high-level-technical-design` | Architecture diagram, component responsibilities, data flow |
@@ -142,11 +151,12 @@ If a gap appears at any step, loop back to the earlier step and revise.
 
 ### Starting a New Feature
 
-1. Begin with `sldd-00-process-overview-and-navigation-guide` to understand the process
-2. Run `sldd-01-product-intent-specification` to define product intent
-3. For existing codebases: run `sldd-99-existing-codebase-understanding-and-context-summary`
-4. Follow steps 02-06 in sequence
-5. Review and approve each step before proceeding
+1. If the idea is still rough, use `sldd-88-spec-exploration-and-clarification`.
+2. Begin or resume with `sldd-00-process-overview-and-navigation-guide` to choose the correct next skill.
+3. Run `sldd-01-product-intent-specification` to define product intent.
+4. For existing codebases: run `sldd-99-existing-codebase-understanding-and-context-summary`.
+5. Follow steps 02-06 in sequence.
+6. Review and approve each step before proceeding.
 
 ### For Existing Codebases
 
@@ -218,6 +228,21 @@ A lightweight process to adopt:
 3. Architecture changes during coding require a design delta note
 4. PRs include a spec compliance checklist
 5. Release readiness requires explicit support-lifecycle verification
+
+## Skill Architecture and Maintenance
+
+This repository keeps the runtime model simple:
+
+- `skills/` contains only executable skills.
+- Each executable `SKILL.md` is self-sufficient at runtime.
+- Do not add shared runtime helper skills for gates, approvals, save decisions, or artifact headings.
+- If a rule is needed at execution time, include it directly in the executable skill that needs it.
+- If the SLDD process changes, update the affected executable skills and this README in the same change.
+- Preserve YAML frontmatter with `name`, `description`, `metadata.step`, and `metadata.type`.
+- Preserve gate enforcement, explicit approval before persistence, and `SPEC.md` journal-only behavior.
+- Keep `00-exploration-summary.md` contextual only; approved numbered artifacts define binding decisions.
+- Keep Step 04 tests-first and Red-only before Step 05.
+- Keep Step 05 implementation minimal and do not modify Step 04 tests.
 
 ## Further Reading
 

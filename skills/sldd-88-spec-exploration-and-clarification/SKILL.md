@@ -8,8 +8,6 @@ metadata:
 
 # Skill: Spec Exploration and Clarification
 
-Use `sldd-88-shared-templates-and-protocols` for shared SLDD gate rules and artifact conventions.
-
 ## Objective
 
 Help the user turn a rough idea into a clear, testable spec direction before formal SLDD Step 01 starts.
@@ -19,6 +17,9 @@ Help the user turn a rough idea into a clear, testable spec direction before for
 - Keep exploration pre-Step-01 unless the user explicitly asks to formalize.
 - Route to Step 01 when the idea is sufficiently clear.
 - For existing codebases, remind that Step 99 is required before Step 02 design work.
+- Use user-provided paths when available; otherwise default optional summaries to `docs/specs/<feature-name>/00-exploration-summary.md`.
+- Do not update `SPEC.md` progress for exploration summaries.
+- Treat `00-exploration-summary.md` as contextual memory only, not a numbered progress artifact.
 
 ## Stance
 
@@ -88,6 +89,9 @@ If the shape of the problem is still unclear, keep exploring. If it is clear eno
 - `00-exploration-summary.md` is contextual only: it does not mark progress, replace Step 01, update `SPEC.md` checklist state, or create binding requirements/design decisions.
 - Save `docs/specs/<feature-name>/00-exploration-summary.md` only after explicit approval.
 - If the user asks to formalize outcomes, present the proposed formalization and wait for explicit approval before persisting any artifact.
+- If approval is rejected, requested changes are given, or the user asks to hold, leave files and progress unchanged.
+- If approval intent is ambiguous, ask for clarification instead of saving or routing forward.
+- If writes are unavailable, stop and report the limitation.
 - Exploration decisions are not binding requirements until they are explicitly formalized and approved in Step 01.
 - When the user asks to formalize exploration outcomes, convert the relevant decisions into Step 01 content:
   - product intent,

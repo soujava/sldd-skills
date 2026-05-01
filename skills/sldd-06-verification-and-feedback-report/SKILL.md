@@ -8,8 +8,6 @@ metadata:
 
 # Skill: Verification and Feedback Report
 
-Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
-
 ## Objective
 
 Produce approved Step 06 verification with explicit Go/No-Go decision.
@@ -23,13 +21,24 @@ Produce approved Step 06 verification with explicit Go/No-Go decision.
 
 ## Draft Output
 
-Create a draft with required Step 06 headings from Step 88 "Compact Step Template Contracts".
+Create a draft with these required Step 06 headings:
+
+- Compliance Matrix
+- Version and Dependency Validation
+- Test Convention Compliance
+- Risks by Severity
+- Remediation Steps
+- Go/No-Go Decision and Rationale
+
 Wait for approval.
 
 ## Approval Protocol
 
-- Use `sldd-88-approval-helper` messaging.
+- Ask for explicit approval before saving or updating any artifact.
 - Save/update only after explicit approval.
+- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
+- If approval intent is ambiguous, ask for clarification instead of saving.
+- If writes are unavailable, stop and report the limitation.
 
 ## Save Flow (after approval)
 
@@ -37,9 +46,7 @@ Wait for approval.
 2. Verify artifact contains Step 06 report only.
 3. Update `SPEC.md` Step 06 `[x]` with link.
 4. Verify `SPEC.md` remains journal-only.
-5. Use `sldd-88-approval-helper` completion prompt.
-
-Apply Step 88 "Shared Save Decision".
+5. Ask whether to continue to the next step or hold.
 
 ## Response Format
 
