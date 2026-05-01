@@ -61,11 +61,16 @@ After execution, present failing-output evidence. Approve before saving.
 4. Verify `SPEC.md` remains journal-only.
 5. Use `sldd-88-approval-helper` completion prompt.
 
-Apply Step 88 Section 6 (Shared Save Decision).
+Apply Step 88 "Shared Save Decision".
 
 ## Response Format
 
+### Phase A Response
 1. Gate and resume check result
-2. Phase A test action plan
-3. Phase B red-phase evidence summary
-4. Approval request and continue/hold prompt
+2. Test action plan
+3. Approval request
+
+### Phase B Response
+1. Red-phase evidence summary
+2. Artifact approval request
+3. Continue/hold prompt

@@ -59,11 +59,17 @@ Present:
 4. Verify `SPEC.md` remains journal-only.
 5. Use `sldd-88-approval-helper` completion prompt.
 
-Apply Step 88 Section 6 (Shared Save Decision).
+Apply Step 88 "Shared Save Decision".
 
 ## Response Format
 
+### Phase A Response
 1. Gate and resume check result
-2. Phase A implementation action plan
-3. Phase B green-phase evidence summary
-4. Approval request and continue/hold prompt
+2. Implementation action plan
+3. Approval request
+
+### Phase B Response
+1. Green-phase evidence summary
+2. Test integrity confirmation
+3. Artifact approval request
+4. Continue/hold prompt

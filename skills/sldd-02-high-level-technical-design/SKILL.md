@@ -23,7 +23,7 @@ Produce approved Step 02 high-level design aligned to Step 01, including formali
 
 ## Draft Output
 
-Create a draft with required Step 02 headings from Step 88 Section 7.
+Create a draft with required Step 02 headings from Step 88 "Compact Step Template Contracts".
 The draft must explicitly trace approved Step 01 requirements, including formalized exploration decisions, into the proposed architecture, component responsibilities, data flow, security/observability requirements, trade-offs, and high-level test scenarios.
 Wait for approval.
 
@@ -40,7 +40,7 @@ Wait for approval.
 4. Verify `SPEC.md` remains journal-only.
 5. Use `sldd-88-approval-helper` completion prompt.
 
-Apply Step 88 Section 6 (Shared Save Decision).
+Apply Step 88 "Shared Save Decision".
 
 ## Response Format
 

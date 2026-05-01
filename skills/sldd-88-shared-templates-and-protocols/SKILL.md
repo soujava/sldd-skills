@@ -76,6 +76,11 @@ Violation handling: stop, report missing prerequisite, route back.
 - For implementation work, assign clear and disjoint ownership boundaries, and require each subagent to report changed files and evidence.
 - Consolidate all subagent findings into the required SLDD artifact format before asking for approval.
 
+Examples:
+- Step 99: subagents may map independent codebase areas and report architecture, conventions, and risks.
+- Step 04: subagents may review acceptance-criteria coverage, but must not write tests before approval.
+- Step 06: subagents may independently audit compliance evidence and surface risks for the primary agent to consolidate.
+
 ## 5) Save + Approval Protocol (Two-Phase Verification)
 
 For every technical step involving codebase modifications or environment changes:

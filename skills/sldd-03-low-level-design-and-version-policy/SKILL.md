@@ -23,7 +23,7 @@ Produce approved Step 03 low-level design and version policy aligned to Step 02 
 
 ## Draft Output
 
-Create a draft with required Step 03 headings from Step 88 Section 7.
+Create a draft with required Step 03 headings from Step 88 "Compact Step Template Contracts".
 The draft must explicitly map Step 01 requirements and formalized exploration decisions through Step 02 design choices into concrete low-level decisions.
 Include ordered implementation plan.
 The draft must explicitly state:
@@ -49,7 +49,7 @@ Wait for approval.
 4. Verify `SPEC.md` remains journal-only.
 5. Use `sldd-88-approval-helper` completion prompt.
 
-Apply Step 88 Section 6 (Shared Save Decision).
+Apply Step 88 "Shared Save Decision".
 
 ## Response Format
 

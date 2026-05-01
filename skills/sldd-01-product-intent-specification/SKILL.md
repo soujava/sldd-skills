@@ -21,7 +21,7 @@ Define and validate Step 01 product intent for downstream steps.
 
 ## Draft Output
 
-Create a draft with required Step 01 headings from Step 88 Section 7.
+Create a draft with required Step 01 headings from Step 88 "Compact Step Template Contracts".
 Wait for approval.
 
 ## Approval Protocol
@@ -37,7 +37,7 @@ Wait for approval.
 4. Verify `SPEC.md` remains journal-only.
 5. Use `sldd-88-approval-helper` completion prompt.
 
-Apply Step 88 Section 6 (Shared Save Decision).
+Apply Step 88 "Shared Save Decision".
 
 ## Response Format
 
