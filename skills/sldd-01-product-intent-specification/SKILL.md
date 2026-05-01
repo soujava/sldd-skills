@@ -22,6 +22,7 @@ Define and validate Step 01 product intent for downstream steps.
 ## Draft Output
 
 Create a draft with required Step 01 headings from Step 88 "Compact Step Template Contracts".
+If `00-exploration-summary.md` exists, use it only as contextual memory for product intent, behavior, scope, risks, assumptions, and success metrics; do not import technical design ideas as binding Step 01 decisions.
 Wait for approval.
 
 ## Approval Protocol

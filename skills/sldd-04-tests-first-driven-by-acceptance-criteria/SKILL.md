@@ -40,7 +40,8 @@ After execution, present failing-output evidence. Approve before saving.
 
 - Acceptance criteria and Step 03 test scenarios -> tests mapping
 - Coverage of the Step 03 Test Scenario Catalog
-- Traceability from formalized exploration decisions, through Step 01 and Step 03, into concrete tests
+- Traceability from approved Step 01 behavior and Step 03 test scenarios into concrete tests
+- If `00-exploration-summary.md` exists, use it only as contextual memory for rationale, edge cases, risks, and assumptions; do not create tests from summary-only decisions.
 - At least one edge case per criterion
 - Exact test commands
 - Failing output summary

@@ -53,7 +53,8 @@ Use this skill when the user:
 - Do not implement features.
 - Do not write code.
 - Do not jump into numbered SLDD artifacts unless the user explicitly asks to formalize a decision or begin Step 01.
-- Downstream Steps 02-05 must only follow exploration details that were incorporated into an approved Step 01 artifact.
+- Downstream Steps 02-05 must only follow exploration details that were incorporated into the approved numbered artifact for that decision type.
+- If exploration notes conflict with approved Step 01, Step 02, Step 03, or Step 04 artifacts, the approved numbered artifact wins.
 - If the discussion reveals the work depends on an existing codebase, note that `sldd-99-existing-codebase-understanding-and-context-summary` may be needed before Step 02.
 - For brownfield work, keep exploration open but make the routing explicit: clarify the idea first, then run Step 99 before any Step 02 design work.
 - If the user wants to start the formal workflow, route them to `sldd-01-product-intent-specification`.
@@ -83,6 +84,9 @@ If the shape of the problem is still unclear, keep exploring. If it is clear eno
 ## Approval Protocol
 
 - Exploration outputs are conversational and are not saved as numbered SLDD artifacts by default.
+- Exploration is volatile by default; offer an optional `00-exploration-summary.md` when the discussion is long, has many alternatives, may be resumed later, or the user wants to pause before Step 01.
+- `00-exploration-summary.md` is contextual only: it does not mark progress, replace Step 01, update `SPEC.md` checklist state, or create binding requirements/design decisions.
+- Save `docs/specs/<feature-name>/00-exploration-summary.md` only after explicit approval.
 - If the user asks to formalize outcomes, present the proposed formalization and wait for explicit approval before persisting any artifact.
 - Exploration decisions are not binding requirements until they are explicitly formalized and approved in Step 01.
 - When the user asks to formalize exploration outcomes, convert the relevant decisions into Step 01 content:
@@ -91,7 +95,25 @@ If the shape of the problem is still unclear, keep exploring. If it is clear eno
   - out-of-scope boundaries,
   - risks and assumptions,
   - success metrics.
+- Technical design ideas discussed during exploration are non-binding. Carry them forward only as context, candidate options, assumptions to validate, or alternatives to compare in Step 02 or Step 03.
 - Do not treat unresolved exploration notes, rejected alternatives, or open questions as downstream requirements.
+
+## Optional Exploration Summary
+
+When useful for resume continuity, offer a concise `00-exploration-summary.md` with:
+- Current understanding
+- Candidate product decisions
+- Candidate technical ideas (non-binding)
+- Alternatives discussed
+- Open questions
+- Risks and assumptions
+- Suggested next SLDD step
+
+Use the summary only as contextual memory. Approved numbered artifacts define binding decisions:
+- Step 01 defines product intent, accepted behavior, scope, risks, and success metrics.
+- Step 02 defines high-level technical design.
+- Step 03 defines low-level design, contracts, dependencies, and version policy.
+- Step 04 defines tests derived from approved acceptance criteria and Step 03 scenarios.
 
 ## Output Format
 

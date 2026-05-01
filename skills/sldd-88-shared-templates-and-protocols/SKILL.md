@@ -26,6 +26,7 @@ Use this exact structure:
 ```text
 docs/specs/<feature-name>/
   SPEC.md
+  00-exploration-summary.md (optional contextual memory; not a progress artifact)
   01-product-intent-specification.md
   99-existing-codebase-understanding.md (optional persisted snapshot)
   02-high-level-technical-design.md
@@ -38,8 +39,10 @@ docs/specs/<feature-name>/
 Rules:
 - `SPEC.md` is journal-only (progress + links or save-status notes).
 - Step bodies go only to numbered artifacts.
+- `00-exploration-summary.md` is optional contextual memory only; it does not mark progress, replace Step 01, update the checklist, or create binding requirements/design decisions.
 - Step 99 may be approved without persisting its artifact; if omitted, record only the save status in `SPEC.md` and re-run Step 99 when resuming before Step 02.
 - Never write step content into `SPEC.md`.
+- Approved numbered artifacts take precedence over `00-exploration-summary.md`; when they conflict, ignore the summary or route back to the appropriate numbered step for revision.
 
 ## 2) SPEC.md Journal Template
 
