@@ -67,7 +67,16 @@ Rules:
 
 Violation handling: stop, report missing prerequisite, route back.
 
-## 4) Save + Approval Protocol (Two-Phase Verification)
+## 4) Subagent Usage Policy
+
+- Use subagents when the execution environment supports and authorizes delegation and the task can be safely split.
+- Prefer subagents for codebase exploration, risk analysis, test coverage review, independent verification, and other bounded sidecar tasks.
+- The primary agent remains accountable for gate enforcement, final decisions, artifact content, and user-facing approval requests.
+- Subagents must not bypass approval gates, persist artifacts, update `SPEC.md`, modify files, or run environment-changing commands before the required action plan is explicitly approved.
+- For implementation work, assign clear and disjoint ownership boundaries, and require each subagent to report changed files and evidence.
+- Consolidate all subagent findings into the required SLDD artifact format before asking for approval.
+
+## 5) Save + Approval Protocol (Two-Phase Verification)
 
 For every technical step involving codebase modifications or environment changes:
 
@@ -82,12 +91,12 @@ For every technical step involving codebase modifications or environment changes
 
 Use `sldd-88-approval-helper` for approval messaging.
 
-## 5) Shared Save Decision (apply in all steps)
+## 6) Shared Save Decision (apply in all steps)
 
 - If writes are unavailable, stop and report limitation.
 - If writes are available, save only after explicit approval.
 
-## 6) Compact Step Template Contracts
+## 7) Compact Step Template Contracts
 
 Use these required headings (minimal contract):
 

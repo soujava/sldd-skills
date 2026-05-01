@@ -24,7 +24,7 @@ Capture and approve existing-codebase context for safe Step 02+ work.
 
 ## Draft Output
 
-Create a draft with required Step 99 headings from Step 88 Section 6.
+Create a draft with required Step 99 headings from Step 88 Section 7.
 Wait for approval.
 
 ## Approval Protocol
@@ -40,7 +40,7 @@ Wait for approval.
 4. Verify `SPEC.md` remains journal-only; do not write Step 99 body content into `SPEC.md`.
 5. Use `sldd-88-approval-helper` completion prompt.
 
-Apply Step 88 Section 5 (Shared Save Decision).
+Apply Step 88 Section 6 (Shared Save Decision).
 
 ## Response Format
 

@@ -59,7 +59,7 @@ Present:
 4. Verify `SPEC.md` remains journal-only.
 5. Use `sldd-88-approval-helper` completion prompt.
 
-Apply Step 88 Section 5 (Shared Save Decision).
+Apply Step 88 Section 6 (Shared Save Decision).
 
 ## Response Format
 
