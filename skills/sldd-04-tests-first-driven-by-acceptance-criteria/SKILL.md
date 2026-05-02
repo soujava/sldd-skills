@@ -22,8 +22,7 @@ Execute Step 04 in strict Red phase by creating tests first, proving they fail, 
 ## Strict Red-Phase Contract
 
 - Tests first; no production logic.
-- Allowed stubs: signatures/structure only, raise "not implemented" equivalent.
-- Forbidden: business logic, validation logic, placeholder returns (`0`, `""`, `false`, `null`).
+- Allowed stubs: method or function signatures and class structure only. Every stub method must immediately raise a runtime error or equivalent. No business logic, no validation logic, no placeholder return values, no delegating calls to other stubs.
 - Every Step 04 test run must fail.
 
 ## Draft Output (Two-Phase Protocol)
