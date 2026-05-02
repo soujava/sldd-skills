@@ -48,6 +48,7 @@ Use this skill when the user:
 5. Compare candidate directions if more than one exists.
 6. Call out risks, edge cases, and likely follow-up questions.
 7. Decide whether the idea is ready for `sldd-01-product-intent-specification` or needs more exploration.
+8. **Proactively offer `00-exploration-summary.md`** before formalizing Step 01 if the exploration has generated technical design ideas, complex alternatives, or refined constraints that would benefit Step 02/03.
 
 ## Ground Rules
 
@@ -85,7 +86,7 @@ If the shape of the problem is still unclear, keep exploring. If it is clear eno
 ## Approval Protocol
 
 - Exploration outputs are conversational and are not saved as numbered SLDD artifacts by default.
-- Exploration is volatile by default; offer an optional `00-exploration-summary.md` when the discussion is long, has many alternatives, may be resumed later, or the user wants to pause before Step 01.
+- **Persistence Mandate**: Proactively offer `00-exploration-summary.md` whenever the exploration results in specific technical design ideas, architectural choices, or non-obvious constraints. Do not wait for the user to ask.
 - `00-exploration-summary.md` is contextual only: it does not mark progress, replace Step 01, update `SPEC.md` checklist state, or create binding requirements/design decisions.
 - Save `docs/specs/<feature-name>/00-exploration-summary.md` only after explicit approval.
 - If the user asks to formalize outcomes, present the proposed formalization and wait for explicit approval before persisting any artifact.
@@ -126,3 +127,4 @@ Use the summary only as contextual memory. Approved numbered artifacts define bi
 3. Candidate directions
 4. Key risks
 5. Suggested next step and routing decision
+6. **Summary Recommendation**: Explicitly state if an `00-exploration-summary.md` is recommended to preserve technical memory.
