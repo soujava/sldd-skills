@@ -63,6 +63,32 @@ git clone https://github.com/soujava/sldd-skills.git
 cp -r sldd-skills/skills/sldd-* ~/.agents/skills/
 ```
 
+#### Development Symlink Installation
+
+During development, use the repository script to install SLDD skills as symbolic links instead of copying them:
+
+```bash
+./install-sldd-skills.sh
+```
+
+This is useful when editing the skills locally because changes made under `skills/` are immediately visible to tools that read from `$HOME/.agents/skills`.
+
+After changing a skill, reload or restart the CLI/tool that consumes the skills so it refreshes the loaded skill instructions. The symbolic link updates the file location, but the tool may cache skill content for the current session.
+
+The script:
+
+- uses `skills/` in this repository as the source directory;
+- creates `$HOME/.agents/skills` if it does not exist;
+- removes previous `sldd-*` symbolic links from `$HOME/.agents/skills`;
+- removes previous real `sldd-*` directories from `$HOME/.agents/skills`;
+- skips non-directory files that match `sldd-*`;
+- creates one symbolic link per `skills/sldd-*` directory;
+- prints a summary with removed links, removed directories, skipped files, and created links.
+
+Symbolic links are removed as links only. The script does not delete the files or directories that those links point to.
+
+Use this only for local development. For published or end-user installation, prefer the Skills CLI or the manual copy instructions above.
+
 #### For Other AI Tools
 
 These skills are plain Markdown files with YAML frontmatter. They can be adapted to any AI tool that supports:
