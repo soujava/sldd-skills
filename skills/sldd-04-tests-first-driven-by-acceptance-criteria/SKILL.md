@@ -21,9 +21,11 @@ Execute Step 04 in strict Red phase by creating tests first, proving they fail, 
 
 ## Strict Red-Phase Contract
 
-- Tests first; no production logic.
-- Allowed stubs: method or function signatures and class structure only. Every stub method must immediately raise a runtime error or equivalent. No business logic, no validation logic, no placeholder return values, no delegating calls to other stubs.
-- Every Step 04 test run must fail.
+- **Tests first; no production logic.**
+- **Minimal Stubbing**: Create ONLY the production files and signatures strictly required for the test to compile. Do not implement entire DTO or Entity suites if a single stub suffices for the current test scenario.
+- **Allowed stubs**: method or function signatures and class structure only. Every stub method must immediately raise a runtime error or equivalent. No business logic, no validation logic, no placeholder return values, no delegating calls to other stubs.
+- **Every Step 04 test run must fail.**
+- **No Intermediate Implementation**: After Phase A approval, do not perform any production logic changes or file creations that are not documented in the "Minimal Stubbing" plan.
 
 ## Draft Output (Two-Phase Protocol)
 
@@ -32,6 +34,7 @@ Present proposed test files, scenarios, and commands. Approve before writing tes
 
 ### Phase B: Red-Phase Evidence Report
 After execution, present failing-output evidence. Approve before saving.
+**Mandatory Turn Order**: After Phase A approval, the next response MUST be the Phase B report. Do not interleave turn-based implementation of production structure between these phases.
 
 Use these required Step 04 report headings:
 
