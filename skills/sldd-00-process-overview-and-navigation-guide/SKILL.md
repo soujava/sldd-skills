@@ -27,10 +27,11 @@ Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 0
   - `99-existing-codebase-understanding.md` (optional persisted snapshot)
   - `02-high-level-technical-design.md`
   - `03-low-level-design-and-version-policy.md`
-  - `04-tests-first-report.md`
-  - `05-minimal-implementation-report.md`
+  - Step 04 Red execution state recorded in `SPEC.md` (no mandatory report artifact)
+  - Step 05 Green execution state recorded in `SPEC.md` (no mandatory report artifact)
   - `06-verification-and-feedback-report.md`
 - Approved numbered artifacts take precedence over `00-exploration-summary.md`.
+- Steps 04 and 05 are execution steps that change the codebase. Their current state must be recovered from `SPEC.md`, file changes, and relevant test results.
 
 ## Start/Resume Flow
 
@@ -43,6 +44,17 @@ Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 0
 4. If the spec is still being clarified, route to `sldd-88-spec-exploration-and-clarification`.
 5. If violation exists, stop and route to the missing step.
 6. Route only to the next valid step skill.
+
+## Interrupted Execution Resume
+
+When resuming at Step 04 or Step 05:
+
+1. Inspect `SPEC.md` checklist and short journal notes.
+2. Inspect current test and production file state.
+3. Run or request the relevant test commands when the current Red/Green state cannot be trusted from files alone.
+4. Treat Step 04 as complete only when Red is confirmed or when later passing tests prove Step 05 has already advanced the workflow.
+5. Treat Step 05 as complete only when relevant tests pass and Step 04 test integrity is preserved.
+6. If checklist, files, and test results conflict, stop and ask for direction instead of updating progress.
 
 ## Response Format
 
