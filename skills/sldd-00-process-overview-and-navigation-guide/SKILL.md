@@ -27,13 +27,13 @@ Exploration -> Step 01 + Step 99 (existing codebases only; Step 99 may occur dur
   - `99-existing-codebase-understanding.md` (optional persisted snapshot)
   - `02-high-level-technical-design.md`
   - `03-low-level-design-and-version-policy.md`
-  - Step 04 Red execution state recorded in `SPEC.md` (no mandatory report artifact)
-  - Step 05 Green execution state recorded in `SPEC.md` (no mandatory report artifact)
+  - Step 04 completion marked in `SPEC.md` (no mandatory report artifact)
+  - Step 05 completion marked in `SPEC.md` (no mandatory report artifact)
   - `06-verification-and-feedback-report.md`
 - Approved numbered artifacts take precedence over `00-exploration-summary.md`.
 - A Step 99 artifact approved during exploration can satisfy the existing-codebase gate if resume validation confirms it is still current and relevant to the approved Step 01 scope.
 - If Step 99 was approved without a persisted artifact and `SPEC.md` records a rerun-on-resume note, route to Step 99 again before Step 02.
-- Steps 04 and 05 are execution steps that change the codebase. Their current state must be recovered from `SPEC.md`, file changes, and relevant test results.
+- Steps 04 and 05 are execution steps that change the codebase. Their current state must be re-evaluated from `SPEC.md`, file changes, and relevant test results.
 
 ## Start/Resume Flow
 
@@ -55,12 +55,13 @@ Exploration -> Step 01 + Step 99 (existing codebases only; Step 99 may occur dur
 
 When resuming at Step 04 or Step 05:
 
-1. Inspect `SPEC.md` checklist and short journal notes.
+1. Inspect `SPEC.md` checklist.
 2. Inspect current test and production file state.
 3. Run or request the relevant test commands when the current Red/Green state cannot be trusted from files alone.
-4. Treat Step 04 as complete only when Red is confirmed or when later passing tests prove Step 05 has already advanced the workflow.
-5. Treat Step 05 as complete only when relevant tests pass and Step 04 test integrity is preserved.
-6. If checklist, files, and test results conflict, stop and ask for direction instead of updating progress.
+4. Re-evaluate Step 04 and Step 05 even if `SPEC.md` marks them complete.
+5. Treat Step 04 as complete only when Red is confirmed or when later passing tests prove Step 05 has already advanced the workflow.
+6. Treat Step 05 as complete only when relevant tests pass and Step 04 test integrity is preserved.
+7. If checklist, files, and test results conflict, stop and ask for direction instead of updating progress.
 
 ## Response Format
 
