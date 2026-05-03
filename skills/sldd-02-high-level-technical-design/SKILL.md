@@ -16,6 +16,7 @@ Produce approved Step 02 high-level design aligned to Step 01, including explora
 
 - Require Step 01 approved.
 - For existing codebases, require Step 99 approved.
+- Accept a Step 99 approved during exploration only after validating that it still reflects the current codebase and applies to the approved Step 01 scope.
 - Reject skip-ahead to implementation/tests.
 - Reject inconsistent checklist states.
 
@@ -32,6 +33,7 @@ Create a draft with these required Step 02 headings:
 - High-Level Test Scenario Map
 
 If `00-exploration-summary.md` exists, use it only as contextual memory for rationale, alternatives, assumptions, and candidate technical ideas; do not import its design ideas as approved architecture.
+If Step 99 was completed before Step 01, verify that its context still fits the approved Step 01 scope before drafting Step 02. If it does not, stop and route back to Step 99 for update or rerun.
 The draft must explicitly trace approved Step 01 requirements, including exploration outcomes formalized into Step 01, into the proposed architecture, component responsibilities, data flow, security/observability requirements, trade-offs, and high-level test scenarios.
 Wait for approval.
 

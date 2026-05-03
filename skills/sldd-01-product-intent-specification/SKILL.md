@@ -30,6 +30,7 @@ Create a draft with these required Step 01 headings:
 - Acceptance Criteria (Given/When/Then)
 
 If `00-exploration-summary.md` exists, use it only as contextual memory for product intent, behavior, scope, risks, assumptions, and success metrics; do not import technical design ideas as binding Step 01 decisions.
+If an approved Step 99 exists from brownfield exploration, use it only as contextual memory for risks, assumptions, constraints, dependencies, and out-of-scope boundaries. Do not import architecture or implementation observations as binding product requirements unless the user explicitly approves them as Step 01 product decisions.
 Wait for approval.
 
 ## Approval Protocol

@@ -16,7 +16,9 @@ Help the user turn a rough idea into a clear, testable spec direction before for
 
 - Keep exploration pre-Step-01 unless the user explicitly asks to formalize.
 - Route to Step 01 when the idea is sufficiently clear.
-- For existing codebases, remind that Step 99 is required before Step 02 design work.
+- For existing codebases, inspect the current codebase when codebase understanding is needed to explore scope, constraints, risks, or alternatives.
+- If brownfield exploration depends on reusable codebase context, route to `sldd-99-existing-codebase-understanding-and-context-summary` before formalizing Step 01.
+- A Step 99 completed during exploration may satisfy the later brownfield gate only after resume validation confirms it still matches the current codebase and approved Step 01 scope.
 - Use user-provided paths when available; otherwise default optional summaries to `docs/specs/<feature-name>/00-exploration-summary.md`.
 - Do not update `SPEC.md` progress for exploration summaries.
 - Treat `00-exploration-summary.md` as contextual memory only, not a numbered progress artifact.
@@ -57,8 +59,9 @@ Use this skill when the user:
 - Do not jump into numbered SLDD artifacts unless the user explicitly asks to formalize a decision or begin Step 01.
 - Downstream Steps 02-05 must only follow exploration details that were incorporated into the approved numbered artifact for that decision type.
 - If exploration notes conflict with approved Step 01, Step 02, Step 03, or Step 04 artifacts, the approved numbered artifact wins.
-- If the discussion reveals the work depends on an existing codebase, note that `sldd-99-existing-codebase-understanding-and-context-summary` may be needed before Step 02.
-- For brownfield work, keep exploration open but make the routing explicit: clarify the idea first, then run Step 99 before any Step 02 design work.
+- If the discussion reveals the work depends on an existing codebase, determine whether codebase understanding is needed now for exploration or later before Step 02.
+- For brownfield work, keep exploration grounded in the current codebase when relevant, but do not treat exploratory observations as approved Step 99 context unless Step 99 is explicitly run and approved.
+- If Step 99 is run during exploration, keep Step 88 exploratory and let Step 99 own the approved codebase-context artifact and `SPEC.md` progress entry.
 - If the user wants to start the formal workflow, route them to `sldd-01-product-intent-specification`.
 
 ## What to Surface
@@ -126,5 +129,5 @@ Use the summary only as contextual memory. Approved numbered artifacts define bi
 2. Open questions
 3. Candidate directions
 4. Key risks
-5. Suggested next step and routing decision
+5. Suggested next step and routing decision, including whether Step 99 is needed now, later, or not applicable
 6. **Summary Recommendation**: Explicitly state if an `00-exploration-summary.md` is recommended to preserve technical memory.

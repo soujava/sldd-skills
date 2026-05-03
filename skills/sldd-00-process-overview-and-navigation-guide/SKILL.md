@@ -14,7 +14,7 @@ Determine current state, block invalid jumps, and route to the correct next step
 
 ## Gate Order
 
-Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 03 -> Step 04 -> Step 05 -> Step 06
+Exploration -> Step 01 + Step 99 (existing codebases only; Step 99 may occur during exploration when needed) -> Step 02 -> Step 03 -> Step 04 -> Step 05 -> Step 06
 
 ## Artifact and Resume Rules
 
@@ -31,6 +31,8 @@ Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 0
   - Step 05 Green execution state recorded in `SPEC.md` (no mandatory report artifact)
   - `06-verification-and-feedback-report.md`
 - Approved numbered artifacts take precedence over `00-exploration-summary.md`.
+- A Step 99 artifact approved during exploration can satisfy the existing-codebase gate if resume validation confirms it is still current and relevant to the approved Step 01 scope.
+- If Step 99 was approved without a persisted artifact and `SPEC.md` records a rerun-on-resume note, route to Step 99 again before Step 02.
 - Steps 04 and 05 are execution steps that change the codebase. Their current state must be recovered from `SPEC.md`, file changes, and relevant test results.
 
 ## Start/Resume Flow
@@ -42,8 +44,12 @@ Exploration -> Step 01 -> Step 99 (existing codebases only) -> Step 02 -> Step 0
    - default `docs/specs/<feature-name>/SPEC.md`.
 3. Read checklist and detect out-of-order completions.
 4. If the spec is still being clarified, route to `sldd-88-spec-exploration-and-clarification`.
-5. If violation exists, stop and route to the missing step.
-6. Route only to the next valid step skill.
+5. For existing codebases, check whether Step 99 is required, already approved, and still valid:
+   - if missing, route to Step 99 before Step 02;
+   - if approved during exploration, validate freshness and relevance before reusing it;
+   - if stale, incomplete, or marked rerun-on-resume, route to Step 99 again.
+6. If violation exists, stop and route to the missing step.
+7. Route only to the next valid step skill.
 
 ## Interrupted Execution Resume
 

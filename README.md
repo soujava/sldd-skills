@@ -109,6 +109,8 @@ All executable skills are standalone at runtime. They do not depend on shared he
 │                                                                 │
 │ Optional: sldd-88-spec-exploration-and-clarification            │
 │ Clarify a rough idea before formal Step 01                      │
+│ For brownfield work, may route to Step 99 when codebase context │
+│ is needed for exploration                                       │
 │                                                                 │
 │                              ▼                                  │
 │ Start: sldd-00-process-overview-and-navigation-guide            │
@@ -120,7 +122,8 @@ All executable skills are standalone at runtime. They do not depend on shared he
 │                                                                 │
 │                              ▼                                  │
 │ [Optional] sldd-99: Existing Codebase Understanding             │
-│ (Required for existing codebases, skip for greenfield)          │
+│ (Required for existing codebases before Step 02; may be done    │
+│ during exploration and reused after resume validation)          │
 │                                                                 │
 │                              ▼                                  │
 │ Step 02: sldd-02-high-level-technical-design                    │
@@ -155,6 +158,8 @@ All executable skills are standalone at runtime. They do not depend on shared he
 
 **No implementation prompts (steps 04-05) before intent and design (steps 01-03) are reviewed and approved.**
 
+For brownfield projects, `sldd-99-existing-codebase-understanding-and-context-summary` is required before Step 02. It may run during Step 88 exploration when understanding the current codebase is necessary to clarify scope, constraints, risks, or alternatives. A Step 99 completed during exploration can be reused later only after the agent validates that it still reflects the current codebase and remains relevant to the approved Step 01 scope.
+
 If a gap appears at any step, loop back to the earlier step and revise.
 
 ## Skills Included
@@ -171,7 +176,7 @@ The `skills/` directory contains executable runtime skills only. Non-runtime sha
 | 04 | `sldd-04-tests-first-driven-by-acceptance-criteria` | Write tests first in strict TDD mode |
 | 05 | `sldd-05-minimal-implementation-to-pass-existing-tests` | Minimal code to make tests pass |
 | 06 | `sldd-06-verification-and-feedback-report` | Audit implementation, compliance matrix, go/no-go decision |
-| 99 | `sldd-99-existing-codebase-understanding-and-context-summary` | Read and summarize existing codebase (optional prerequisite) |
+| 99 | `sldd-99-existing-codebase-understanding-and-context-summary` | Read and summarize existing codebase for brownfield exploration and Step 02 readiness |
 
 ## Usage
 
@@ -180,13 +185,15 @@ The `skills/` directory contains executable runtime skills only. Non-runtime sha
 1. If the idea is still rough, use `sldd-88-spec-exploration-and-clarification`.
 2. Begin or resume with `sldd-00-process-overview-and-navigation-guide` to choose the correct next skill.
 3. Run `sldd-01-product-intent-specification` to define product intent.
-4. For existing codebases: run `sldd-99-existing-codebase-understanding-and-context-summary`.
+4. For existing codebases: run `sldd-99-existing-codebase-understanding-and-context-summary` before Step 02, or earlier during exploration if codebase context is needed to clarify the feature.
 5. Follow steps 02-06 in sequence.
 6. Review and approve each step before proceeding.
 
 ### For Existing Codebases
 
-After completing sldd-01 (product intent), run `sldd-99-existing-codebase-understanding-and-context-summary` to ground design decisions in current architecture before proceeding to sldd-02.
+Run `sldd-99-existing-codebase-understanding-and-context-summary` to ground exploration and design decisions in the current architecture. If exploration depends on codebase details, Step 99 may be run before formalizing Step 01. If Step 99 was completed during exploration, `sldd-00-process-overview-and-navigation-guide` should validate freshness and relevance before reusing it for Step 02.
+
+If the saved Step 99 context is stale, incomplete, scoped to a rejected exploration direction, or marked as requiring rerun on resume, update or rerun Step 99 before proceeding to `sldd-02-high-level-technical-design`.
 
 ### For Greenfield Projects
 
