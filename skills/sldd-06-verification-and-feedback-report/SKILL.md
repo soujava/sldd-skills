@@ -8,7 +8,9 @@ metadata:
 
 # Skill: Verification and Feedback Report
 
-Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
+## Objective
+
+Produce approved Step 06 verification with explicit Go/No-Go decision.
 
 ## Gate + Resume Checks
 
@@ -19,15 +21,32 @@ Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, an
 
 ## Draft Output
 
-Create a draft with required Step 06 headings from Step 88 Section 6.
-Wait for explicit approval.
+Create a draft with these required Step 06 headings:
+
+- Compliance Matrix
+- Version and Dependency Validation
+- Test Convention Compliance
+- Risks by Severity
+- Remediation Steps
+- Go/No-Go Decision and Rationale
+
+Wait for approval.
+
+## Approval Protocol
+
+- Save or update artifacts only after explicit approval.
+- On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
+- If writes are unavailable, stop and report the limitation.
 
 ## Save Flow (after approval)
 
-1. Save `docs/specs/<feature-name>/06-verification-and-feedback-report.md`.
-2. Verify artifact contains Step 06 report only.
-3. Update `SPEC.md` Step 06 `[x]` with link.
-4. Verify `SPEC.md` remains journal-only.
-5. Use `sldd-98-approval-helper` completion prompt.
+1. Save only Step 06 report content to `docs/specs/<feature-name>/06-verification-and-feedback-report.md`.
+2. Mark Step 06 complete in journal-only `SPEC.md` with the artifact link.
+3. Ask whether to continue to the next step or hold.
 
-Apply Step 88 Section 5 (Shared Save Decision).
+## Response Format
+
+1. Gate and resume check result
+2. Draft summary with required Step 06 headings
+3. Approval request
+4. Continue/hold prompt

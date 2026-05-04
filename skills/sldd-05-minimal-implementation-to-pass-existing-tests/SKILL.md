@@ -1,6 +1,6 @@
 ---
 name: sldd-05-minimal-implementation-to-pass-existing-tests
-description: Implement minimal production changes to pass Step 04 tests without modifying tests.
+description: Implement minimal production changes to pass Step 04 tests and mark step completion.
 metadata:
   step: "05"
   type: implementation
@@ -8,35 +8,87 @@ metadata:
 
 # Skill: Minimal Implementation to Pass Existing Tests
 
-Use `sldd-88-shared-templates-and-protocols` for shared gates, save decision, and templates.
+## Objective
+
+Implement the minimum production changes required to pass Step 04 tests without modifying tests, respecting approved Step 03 constraints, Step 01 requirements, repository instructions, and agentic instructions present in context, then mark Step 05 complete after Green confirmation.
 
 ## Gate + Resume Checks
 
 - Require Steps 01-04 approved.
-- Require Step 04 failing-test evidence.
+- Require Step 04 completion from `SPEC.md`, current failing test results, or continuous handoff from Step 04.
 - For existing codebases, require Step 99 approved.
+- Require repository instructions and agentic instructions present in context to be inspected and followed before implementation.
 - Reject requests to modify tests or bypass Red/Green order.
 - Reject inconsistent checklist states.
+- On interrupted resume, re-evaluate `SPEC.md`, current files, and relevant test results before deciding whether Step 05 is pending or complete.
 
-## Implementation Contract (Two-Phase Protocol)
+## Interrupted Workflow Resume Rules
 
-### Phase A: Implementation Action Plan
-Present the minimal production changes and logic proposed to pass the existing tests. This plan must be approved before any production code is modified.
+- Always re-evaluate Step 04 and Step 05 on resume, even if `SPEC.md` already marks one or both complete.
+- Run the relevant Step 04 tests before modifying production code when the current state is not already clear.
+- If the tests still fail, continue with the minimal implementation required to make them pass.
+- If the tests already pass and test files were not modified after Step 04 completion, mark Step 05 complete in `SPEC.md`.
+- If Step 04 state is stale or ambiguous, re-run the relevant tests before implementation.
+- If Step 04 tests appear to have been modified after Red confirmation, stop because test integrity may be compromised.
+- If production implementation is partial, continue from the current state without reverting user changes.
+- If checklist state, file state, or test results conflict, stop and ask for direction before modifying files or progress.
 
-### Phase B: Green-Phase Evidence Report
-After implementation and verification, present the final report confirming passing results. Wait for approval before saving the artifact.
+## Execution Protocol
+
+Execute Step 05 directly when Step 04 Red confirmation is approved, current failing tests are clear, Step 03 constraints are sufficient, and repository or context-provided agentic instructions have been inspected.
+
+Implement only production changes required to pass existing Step 04 tests. If implementation requires new behavior, unclear architecture decisions, dependency changes, test changes, convention exceptions, or assumptions not approved by Step 03 and applicable repository or agentic instructions, stop and route back to Step 03 or ask for clarification instead of expanding scope.
+
+After implementation and verification, present passing evidence and repository state.
+
+The execution snapshot must identify which Step 03 contracts, constraints, implementation steps, repository instructions, and context-provided agentic instructions were satisfied. Do not introduce behavior that is not required by Step 04 tests or approved by Step 03. Do not violate project-local conventions, architecture boundaries, file ownership rules, command restrictions, or agent instructions.
+
+## Execution Output
+
+Present:
+- green-phase execution snapshot
+- confirmation that tests were not modified
+
+Use these required Step 05 snapshot headings:
+
+- Production Files Changed
+- Implementation Notes (Minimal Scope)
+- Repository and Agent Instruction Compliance
+- Test Commands Executed
+- Passing Results Summary
+- Assumptions and Constraints
+- Test Integrity Confirmation (No Test Modifications)
+
+## Approval Protocol
+
+- Do not require a separate Step 05 execution approval when approved Step 01, Step 02, Step 03, and Step 04 artifacts clearly define the requirements, constraints, test failures, and implementation scope.
+- Ask for explicit approval before modifying production code or running commands only when Step 05 detects ambiguity, scope expansion, missing applicable repository or agentic instructions, unclear commands, dependency changes, or convention exceptions.
+- Do not require a separate approval after Green confirmation before updating `SPEC.md`.
+- On rejection, requested changes, hold, or ambiguous approval, do not modify code, run, save, or route forward; clarify or wait.
+- If writes are unavailable, stop and report the limitation.
 
 ## Verification
 
 - Run tests and confirm previously failing tests pass.
 - Record commands and results.
 
-## Save Flow (after approval)
+## Save Flow (after Green confirmation)
 
-1. Save `docs/specs/<feature-name>/05-minimal-implementation-report.md`.
-2. Verify artifact contains Step 05 report only.
-3. Update `SPEC.md` Step 05 `[x]` with link.
-4. Verify `SPEC.md` remains journal-only.
-5. Use `sldd-98-approval-helper` completion prompt.
+1. Do not create a mandatory Step 05 report artifact.
+2. Update `SPEC.md` Step 05 `[x]` only.
+3. Keep `SPEC.md` journal-only; do not include logs, report body, or numbered artifact content.
+4. Ask whether to continue to the next step or hold.
 
-Apply Step 88 Section 5 (Shared Save Decision).
+## Response Format
+
+### Execution Response
+1. Gate and resume check result
+2. Green-phase execution snapshot
+3. Test integrity confirmation
+4. `SPEC.md` update summary
+5. Continue/hold prompt
+
+### Blocked Response
+1. Gate and resume check result
+2. Reason Step 05 cannot execute directly
+3. Required clarification, approval, or route back to Step 03
