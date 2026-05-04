@@ -36,17 +36,15 @@ Execute Step 04 in strict Red phase by creating tests first, proving they fail, 
 - **Minimal Stubbing**: Create ONLY the production files and signatures strictly required for the test to compile. Do not implement entire DTO or Entity suites if a single stub suffices for the current test scenario.
 - **Allowed stubs**: method or function signatures and class structure only. Every stub method must immediately raise a runtime error or equivalent. No business logic, no validation logic, no placeholder return values, no delegating calls to other stubs.
 - **Every Step 04 test run must fail.**
-- **No Intermediate Implementation**: After Phase A approval, do not perform any production logic changes or file creations that are not documented in the "Minimal Stubbing" plan.
+- **No Intermediate Implementation**: Do not perform any production logic changes. Production file creation is limited to the minimal stubs strictly required for tests to compile.
 
-## Execution Output (Two-Phase Protocol)
+## Execution Protocol
 
-### Phase A: Test Action Plan
-Present proposed test files, scenarios, and commands. Approve before writing tests or running commands.
-The approval request may ask whether the user authorizes Red-only execution or continuous Red -> Green execution through Step 05. Continuous authorization allows Step 05 to run immediately after Red confirmation without another approval turn.
+Execute Step 04 directly when Step 01 acceptance criteria and Step 03 test scenarios are approved, clear, and sufficient.
 
-### Phase B: Red-Phase Execution Snapshot
+Step 04 may only create executable tests directly traceable to approved Step 01 acceptance criteria and Step 03 test scenarios. If additional behavior, edge cases, test layers, assumptions, or non-obvious stubs are needed beyond those artifacts, stop and route back to Step 01 or Step 03 instead of expanding scope.
+
 After execution, present failing-output evidence and the resulting repository state. This snapshot is conversational execution context and may be used to continue directly to Step 05.
-**Mandatory Turn Order**: After Phase A approval, the next response MUST be the Phase B snapshot. Do not interleave turn-based implementation of production structure between these phases.
 
 Use these required Step 04 snapshot headings:
 
@@ -62,16 +60,16 @@ Use these required Step 04 snapshot headings:
 - Coverage of the Step 03 Test Scenario Catalog
 - Traceability from approved Step 01 behavior and Step 03 test scenarios into concrete tests
 - If `00-exploration-summary.md` exists, use it only as contextual memory for rationale, edge cases, risks, and assumptions; do not create tests from summary-only decisions.
-- At least one edge case per criterion
+- At least one approved or directly implied edge case per criterion; if an edge case requires new behavior or assumptions, stop and route back to Step 01 or Step 03.
 - Exact test commands
 - Failing output summary
 - Explicit Red confirmation
 
 ## Approval Protocol
 
-- Ask for explicit approval of the Phase A test action plan before writing tests or running commands.
-- Do not require a separate approval after Phase B before updating `SPEC.md`; Step 04 execution approval authorizes marking Step 04 complete after Red confirmation.
-- If the user approved continuous execution from Step 04 to Step 05, route directly to `sldd-05-minimal-implementation-to-pass-existing-tests` after Red confirmation without asking for another approval between the steps.
+- Do not require a separate Step 04 execution approval when approved Step 01, Step 02, and Step 03 artifacts clearly define the acceptance criteria, constraints, and test scenarios.
+- Ask for explicit approval before writing tests or running commands only when Step 04 detects ambiguity, scope expansion, missing test scenarios, unclear commands, or non-obvious minimal stubbing needs.
+- If the user requested continuous execution from Step 04 to Step 05, route directly to `sldd-05-minimal-implementation-to-pass-existing-tests` after Red confirmation without asking for another approval between the steps.
 - If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
 - If approval intent is ambiguous, ask for clarification instead of writing, running commands, saving, or routing forward.
 - If writes are unavailable, stop and report the limitation.
@@ -81,17 +79,18 @@ Use these required Step 04 snapshot headings:
 1. Do not create a mandatory Step 04 report artifact.
 2. Update `SPEC.md` Step 04 `[x]` only.
 3. Verify `SPEC.md` remains journal-only and does not contain logs, report body, or numbered artifact content.
-4. If continuous Step 04 -> Step 05 execution was approved, route directly to Step 05.
+4. If continuous Step 04 -> Step 05 execution was requested, route directly to Step 05.
 5. Otherwise, ask whether to continue to the next step or hold.
 
 ## Response Format
 
-### Phase A Response
+### Execution Response
 1. Gate and resume check result
-2. Test action plan
-3. Approval request
+2. Red-phase execution snapshot
+3. `SPEC.md` update summary
+4. Continue/hold prompt, unless continuous Step 04 -> Step 05 execution was already requested
 
-### Phase B Response
-1. Red-phase execution snapshot
-2. `SPEC.md` update summary
-3. Continue/hold prompt, unless continuous Step 04 -> Step 05 execution was already approved
+### Blocked Response
+1. Gate and resume check result
+2. Reason Step 04 cannot execute directly
+3. Required clarification, approval, or route back to Step 01 or Step 03
