@@ -19,8 +19,7 @@ Capture and approve existing-codebase context for brownfield exploration and saf
 - Optional for greenfield projects.
 - Do not mark Step 99 complete without explicit approval.
 - If resuming later, re-evaluate the current codebase before relying on any previous Step 99 summary.
-- Treat a previous Step 99 summary as reusable only if it still reflects the current codebase and remains relevant to the approved Step 01 scope.
-- If the previous summary is stale, incomplete, or scoped to a rejected exploration direction, update or rerun Step 99 before Step 02.
+- Reuse a previous Step 99 only if it still reflects the current codebase and approved Step 01 scope; update or rerun it if stale, incomplete, or scoped to a rejected exploration direction.
 - Reject inconsistent checklist states where Step 02+ is complete while Step 99 is required and incomplete.
 
 ## Draft Output
@@ -38,19 +37,16 @@ Wait for approval.
 
 ## Approval Protocol
 
-- Ask for explicit approval before marking Step 99 complete, saving an artifact, or updating `SPEC.md`.
-- Do not mark complete or save/update without explicit approval.
-- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
-- If approval intent is ambiguous, ask for clarification instead of saving or updating progress.
+- Mark complete, save, or update `SPEC.md` only after explicit approval.
+- On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
 - If writes are unavailable, stop and report the limitation.
 
 ## Save Flow (after approval)
 
 1. Ask whether to persist `docs/specs/<feature-name>/99-existing-codebase-understanding.md`; saving this snapshot is optional.
 2. If persistence is approved, save `docs/specs/<feature-name>/99-existing-codebase-understanding.md`.
-3. Update `SPEC.md` Step 99 `[x]` with either the saved link or a not-saved note requiring re-run on resume.
-4. Verify `SPEC.md` remains journal-only; do not write Step 99 body content into `SPEC.md`.
-5. Ask whether to continue to the next step or hold.
+3. Mark Step 99 complete in journal-only `SPEC.md` with the saved link or a not-saved note requiring re-run on resume.
+4. Ask whether to continue to the next step or hold.
 
 ## Response Format
 

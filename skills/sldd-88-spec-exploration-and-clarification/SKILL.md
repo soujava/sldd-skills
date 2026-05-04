@@ -19,16 +19,14 @@ Help the user turn a rough idea into a clear, testable spec direction before for
 - For existing codebases, inspect the current codebase when codebase understanding is needed to explore scope, constraints, risks, or alternatives.
 - If brownfield exploration depends on reusable codebase context, route to `sldd-99-existing-codebase-understanding-and-context-summary` before formalizing Step 01.
 - A Step 99 completed during exploration may satisfy the later brownfield gate only after resume validation confirms it still matches the current codebase and approved Step 01 scope.
-- Use user-provided paths when available; otherwise default optional summaries to `docs/specs/<feature-name>/00-exploration-summary.md`.
-- Do not update `SPEC.md` progress for exploration summaries.
-- Treat `00-exploration-summary.md` as contextual memory only, not a numbered progress artifact.
+- Optional summaries default to `docs/specs/<feature-name>/00-exploration-summary.md` unless the user provides a path.
+- `00-exploration-summary.md` is contextual memory only: it does not update `SPEC.md`, mark progress, or replace numbered artifacts.
 
-## Stance
+## Exploration Stance
 
 - Explore first, formalize later.
-- Ask questions that clarify the problem, not just the solution.
+- Ask questions that clarify the problem, users, constraints, outcomes, risks, unknowns, and non-goals.
 - Keep the conversation grounded in the actual repo and workflow when relevant.
-- Surface trade-offs, risks, and unknowns instead of forcing a premature decision.
 - Use ASCII diagrams, comparison tables, and simple flow sketches when they make the shape of the problem easier to see.
 
 ## When to Use
@@ -50,29 +48,17 @@ Use this skill when the user:
 5. Compare candidate directions if more than one exists.
 6. Call out risks, edge cases, and likely follow-up questions.
 7. Decide whether the idea is ready for `sldd-01-product-intent-specification` or needs more exploration.
-8. **Proactively offer `00-exploration-summary.md`** before formalizing Step 01 if the exploration has generated technical design ideas, complex alternatives, or refined constraints that would benefit Step 02/03.
+8. Proactively offer `00-exploration-summary.md` before Step 01 when technical design ideas, complex alternatives, or refined constraints should be preserved for Step 02/03.
 
 ## Ground Rules
 
 - Do not implement features.
 - Do not write code.
 - Do not jump into numbered SLDD artifacts unless the user explicitly asks to formalize a decision or begin Step 01.
-- Downstream Steps 02-05 must only follow exploration details that were incorporated into the approved numbered artifact for that decision type.
-- If exploration notes conflict with approved Step 01, Step 02, Step 03, or Step 04 artifacts, the approved numbered artifact wins.
+- Downstream Steps 02-05 may follow only exploration details incorporated into the approved numbered artifact for that decision type; approved numbered artifacts override exploration notes.
 - If the discussion reveals the work depends on an existing codebase, determine whether codebase understanding is needed now for exploration or later before Step 02.
-- For brownfield work, keep exploration grounded in the current codebase when relevant, but do not treat exploratory observations as approved Step 99 context unless Step 99 is explicitly run and approved.
-- If Step 99 is run during exploration, keep Step 88 exploratory and let Step 99 own the approved codebase-context artifact and `SPEC.md` progress entry.
+- For brownfield work, ground exploration in the current codebase when relevant, but treat codebase observations as approved Step 99 context only if Step 99 is explicitly run and approved.
 - If the user wants to start the formal workflow, route them to `sldd-01-product-intent-specification`.
-
-## What to Surface
-
-- The problem statement in plain language.
-- Primary users and their goals.
-- Non-goals and boundaries.
-- Constraints from the repo, process, or environment.
-- Success criteria.
-- Risks, unknowns, and dependencies.
-- Whether the idea is ready for formal SLDD entry.
 
 ## Conversation Shape
 
@@ -89,21 +75,13 @@ If the shape of the problem is still unclear, keep exploring. If it is clear eno
 ## Approval Protocol
 
 - Exploration outputs are conversational and are not saved as numbered SLDD artifacts by default.
-- **Persistence Mandate**: Proactively offer `00-exploration-summary.md` whenever the exploration results in specific technical design ideas, architectural choices, or non-obvious constraints. Do not wait for the user to ask.
-- `00-exploration-summary.md` is contextual only: it does not mark progress, replace Step 01, update `SPEC.md` checklist state, or create binding requirements/design decisions.
+- Proactively offer `00-exploration-summary.md` whenever exploration produces technical design ideas, architectural choices, complex alternatives, or non-obvious constraints.
 - Save `docs/specs/<feature-name>/00-exploration-summary.md` only after explicit approval.
 - If the user asks to formalize outcomes, present the proposed formalization and wait for explicit approval before persisting any artifact.
-- If approval is rejected, requested changes are given, or the user asks to hold, leave files and progress unchanged.
-- If approval intent is ambiguous, ask for clarification instead of saving or routing forward.
+- On rejection, requested changes, hold, or ambiguous approval, do not save or route forward; clarify or wait.
 - If writes are unavailable, stop and report the limitation.
-- Exploration decisions are not binding requirements until they are explicitly formalized and approved in Step 01.
-- When the user asks to formalize exploration outcomes, convert the relevant decisions into Step 01 content:
-  - product intent,
-  - acceptance criteria,
-  - out-of-scope boundaries,
-  - risks and assumptions,
-  - success metrics.
-- Technical design ideas discussed during exploration are non-binding. Carry them forward only as context, candidate options, assumptions to validate, or alternatives to compare in Step 02 or Step 03.
+- Exploration decisions are not binding requirements until explicitly formalized and approved in Step 01 as product intent, acceptance criteria, scope boundaries, risks, assumptions, or success metrics.
+- Technical design ideas are non-binding; carry them forward only as context, candidate options, assumptions to validate, or alternatives for Step 02/03.
 - Do not treat unresolved exploration notes, rejected alternatives, or open questions as downstream requirements.
 
 ## Optional Exploration Summary

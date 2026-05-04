@@ -32,26 +32,22 @@ Create a draft with these required Step 02 headings:
 - Trade-Offs and Alternatives
 - High-Level Test Scenario Map
 
-If `00-exploration-summary.md` exists, use it only as contextual memory for rationale, alternatives, assumptions, and candidate technical ideas; do not import its design ideas as approved architecture.
+Use `00-exploration-summary.md` only as non-binding context for rationale, alternatives, assumptions, and candidate technical ideas; approved numbered artifacts override it.
 If Step 99 was completed before Step 01, verify that its context still fits the approved Step 01 scope before drafting Step 02. If it does not, stop and route back to Step 99 for update or rerun.
-The draft must explicitly trace approved Step 01 requirements, including exploration outcomes formalized into Step 01, into the proposed architecture, component responsibilities, data flow, security/observability requirements, trade-offs, and high-level test scenarios.
+Trace approved Step 01 requirements, including formalized exploration outcomes, into architecture, responsibilities, data flow, security/observability, trade-offs, and high-level test scenarios.
 Wait for approval.
 
 ## Approval Protocol
 
-- Ask for explicit approval before saving or updating any artifact.
-- Save/update only after explicit approval.
-- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
-- If approval intent is ambiguous, ask for clarification instead of saving.
+- Save or update artifacts only after explicit approval.
+- On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
 - If writes are unavailable, stop and report the limitation.
 
 ## Save Flow (after approval)
 
-1. Save `docs/specs/<feature-name>/02-high-level-technical-design.md`.
-2. Verify artifact contains Step 02 content only.
-3. Update `SPEC.md` Step 02 `[x]` with link.
-4. Verify `SPEC.md` remains journal-only.
-5. Ask whether to continue to the next step or hold.
+1. Save only Step 02 content to `docs/specs/<feature-name>/02-high-level-technical-design.md`.
+2. Mark Step 02 complete in journal-only `SPEC.md` with the artifact link.
+3. Ask whether to continue to the next step or hold.
 
 ## Response Format
 

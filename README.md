@@ -102,56 +102,32 @@ Run one skill at a time. Review and approve the output before moving to the next
 
 All executable skills are standalone at runtime. They do not depend on shared helper skills or a separate Step 88 protocol being loaded for gates, approvals, save behavior, or artifact headings.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ SLDD Process Flow                                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│ Optional: sldd-88-spec-exploration-and-clarification            │
-│ Clarify a rough idea before formal Step 01                      │
-│ For brownfield work, may route to Step 99 when codebase context │
-│ is needed for exploration                                       │
-│                                                                 │
-│                              ▼                                  │
-│ Start: sldd-00-process-overview-and-navigation-guide            │
-│ Understand the process, choose the right skill                  │
-│                                                                 │
-│                              ▼                                  │
-│ Step 01: sldd-01-product-intent-specification                   │
-│ Define problem, users, metrics, risks                           │
-│                                                                 │
-│                              ▼                                  │
-│ [Optional] sldd-99: Existing Codebase Understanding             │
-│ (Required for existing codebases before Step 02; may be done    │
-│ during exploration and reused after resume validation)          │
-│                                                                 │
-│                              ▼                                  │
-│ Step 02: sldd-02-high-level-technical-design                    │
-│ Architecture, system boundaries, data flow                      │
-│                                                                 │
-│                              ▼                                  │
-│ Step 03: sldd-03-low-level-design-and-version-policy            │
-│ API contracts, data models, version policy                      │
-│                                                                 │
-│                              ▼                                  │
-│ ─ ─ ─ ─ ─ ─ GATE: Design Review ─ ─ ─ ─ ─ ─                    │
-│                                                                 │
-│                              ▼                                  │
-│ Step 04: sldd-04-tests-first-driven-by-acceptance-criteria      │
-│ Write tests only (TDD), no production code                      │
-│                                                                 │
-│                              ▼                                  │
-│ Step 05: sldd-05-minimal-implementation-to-pass-existing-tests  │
-│ Minimal code to make tests pass                                 │
-│                                                                 │
-│                              ▼                                  │
-│ Step 06: sldd-06-verification-and-feedback-report               │
-│ Audit implementation, go/no-go decision                         │
-│                                                                 │
-│                              ▼                                  │
-│ Production Ready ✓                                              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    S88["Optional: sldd-88-spec-exploration-and-clarification<br/>Clarify a rough idea before formal Step 01"]
+    S00["Start: sldd-00-process-overview-and-navigation-guide<br/>Understand the process and choose the right skill"]
+    S01["Step 01: sldd-01-product-intent-specification<br/>Define problem, users, metrics, risks, and acceptance criteria"]
+    S99["Optional Step 99: sldd-99-existing-codebase-understanding-and-context-summary<br/>Required for existing codebases before Step 02; may run during exploration and be reused after resume validation"]
+    S02["Step 02: sldd-02-high-level-technical-design<br/>Architecture, system boundaries, and data flow"]
+    S03["Step 03: sldd-03-low-level-design-and-version-policy<br/>API contracts, data models, and version policy"]
+    GATE{"Design Review Gate"}
+    S04["Step 04: sldd-04-tests-first-driven-by-acceptance-criteria<br/>Write tests only in Red phase; no production code"]
+    S05["Step 05: sldd-05-minimal-implementation-to-pass-existing-tests<br/>Minimal production changes to pass tests while preserving repo rules"]
+    S06["Step 06: sldd-06-verification-and-feedback-report<br/>Audit implementation and make Go/No-Go decision"]
+    READY["Production Ready"]
+
+    S88 --> S00
+    S88 -. "brownfield context needed" .-> S99
+    S00 --> S01
+    S01 --> S99
+    S01 --> S02
+    S99 --> S02
+    S02 --> S03
+    S03 --> GATE
+    GATE --> S04
+    S04 --> S05
+    S05 --> S06
+    S06 --> READY
 ```
 
 ### Gate Rule
@@ -159,6 +135,8 @@ All executable skills are standalone at runtime. They do not depend on shared he
 **No implementation prompts (steps 04-05) before intent and design (steps 01-03) are reviewed and approved.**
 
 For brownfield projects, `sldd-99-existing-codebase-understanding-and-context-summary` is required before Step 02. It may run during Step 88 exploration when understanding the current codebase is necessary to clarify scope, constraints, risks, or alternatives. A Step 99 completed during exploration can be reused later only after the agent validates that it still reflects the current codebase and remains relevant to the approved Step 01 scope.
+
+Step 04 and Step 05 may execute directly when the approved artifacts make the scope clear. Step 04 must stay Red-only. Step 05 must implement only the minimum production changes required to pass Step 04 tests, must not modify tests, and must inspect and follow applicable repository instructions and agentic instructions present in context.
 
 If a gap appears at any step, loop back to the earlier step and revise.
 
@@ -174,7 +152,7 @@ The `skills/` directory contains executable runtime skills only. Non-runtime sha
 | 02 | `sldd-02-high-level-technical-design` | Architecture diagram, component responsibilities, data flow |
 | 03 | `sldd-03-low-level-design-and-version-policy` | API contracts, data models, error handling, version policy |
 | 04 | `sldd-04-tests-first-driven-by-acceptance-criteria` | Write tests first in strict TDD mode |
-| 05 | `sldd-05-minimal-implementation-to-pass-existing-tests` | Minimal code to make tests pass |
+| 05 | `sldd-05-minimal-implementation-to-pass-existing-tests` | Minimal code to make tests pass while preserving repository and agent instructions |
 | 06 | `sldd-06-verification-and-feedback-report` | Audit implementation, compliance matrix, go/no-go decision |
 | 99 | `sldd-99-existing-codebase-understanding-and-context-summary` | Read and summarize existing codebase for brownfield exploration and Step 02 readiness |
 
@@ -187,7 +165,7 @@ The `skills/` directory contains executable runtime skills only. Non-runtime sha
 3. Run `sldd-01-product-intent-specification` to define product intent.
 4. For existing codebases: run `sldd-99-existing-codebase-understanding-and-context-summary` before Step 02, or earlier during exploration if codebase context is needed to clarify the feature.
 5. Follow steps 02-06 in sequence.
-6. Review and approve each step before proceeding.
+6. Review each step output before proceeding. Artifact-producing steps require explicit approval before persistence; execution steps 04-05 may run directly only when their approved inputs, commands, and scope are clear.
 
 ### For Existing Codebases
 
@@ -275,7 +253,7 @@ This repository keeps the runtime model simple:
 - Preserve gate enforcement, explicit approval before persistence, and `SPEC.md` journal-only behavior.
 - Keep `00-exploration-summary.md` contextual only; approved numbered artifacts define binding decisions.
 - Keep Step 04 tests-first and Red-only before Step 05.
-- Keep Step 05 implementation minimal and do not modify Step 04 tests.
+- Keep Step 05 implementation minimal, do not modify Step 04 tests, and preserve repository or context-provided agent instructions during implementation.
 
 ## Further Reading
 

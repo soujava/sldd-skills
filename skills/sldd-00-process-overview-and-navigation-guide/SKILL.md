@@ -19,8 +19,7 @@ Exploration -> Step 01 + Step 99 (existing codebases only; Step 99 may occur dur
 ## Artifact and Resume Rules
 
 - Use user-provided paths when available; otherwise default to `docs/specs/<feature-name>/SPEC.md`.
-- Treat `SPEC.md` as journal-only: progress checklist plus links or save-status notes.
-- Do not write numbered step body content into `SPEC.md`.
+- Treat `SPEC.md` as journal-only: checklist plus links or save-status notes; never write numbered step body content into it.
 - Expected artifacts:
   - `00-exploration-summary.md` (optional contextual memory; not a progress artifact)
   - `01-product-intent-specification.md`
@@ -33,7 +32,7 @@ Exploration -> Step 01 + Step 99 (existing codebases only; Step 99 may occur dur
 - Approved numbered artifacts take precedence over `00-exploration-summary.md`.
 - A Step 99 artifact approved during exploration can satisfy the existing-codebase gate if resume validation confirms it is still current and relevant to the approved Step 01 scope.
 - If Step 99 was approved without a persisted artifact and `SPEC.md` records a rerun-on-resume note, route to Step 99 again before Step 02.
-- Steps 04 and 05 are execution steps that change the codebase. Their current state must be re-evaluated from `SPEC.md`, file changes, and relevant test results.
+- Steps 04 and 05 change the codebase; re-evaluate their state from `SPEC.md`, file changes, and relevant test results.
 
 ## Start/Resume Flow
 
@@ -44,7 +43,7 @@ Exploration -> Step 01 + Step 99 (existing codebases only; Step 99 may occur dur
    - default `docs/specs/<feature-name>/SPEC.md`.
 3. Read checklist and detect out-of-order completions.
 4. If the spec is still being clarified, route to `sldd-88-spec-exploration-and-clarification`.
-5. For existing codebases, check whether Step 99 is required, already approved, and still valid:
+5. For existing codebases, check whether Step 99 is required, approved, and still valid:
    - if missing, route to Step 99 before Step 02;
    - if approved during exploration, validate freshness and relevance before reusing it;
    - if stale, incomplete, or marked rerun-on-resume, route to Step 99 again.
@@ -74,8 +73,7 @@ When resuming at Step 04 or Step 05:
 
 - This navigation step does not persist numbered artifacts.
 - Before routing forward, ask for explicit confirmation to continue.
-- If the user asks to pause, hold position and wait for instructions.
-- If confirmation intent is ambiguous, ask for clarification instead of routing.
+- On pause or ambiguous confirmation, hold position and clarify instead of routing.
 
 ## Credit
 

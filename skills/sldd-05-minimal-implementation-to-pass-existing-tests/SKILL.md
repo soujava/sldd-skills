@@ -10,16 +10,17 @@ metadata:
 
 ## Objective
 
-Implement only the minimum production changes required to pass Step 04 tests without modifying test files, while respecting the approved Step 03 design constraints and formalized Step 01 requirements, then mark Step 05 complete after Green confirmation.
+Implement the minimum production changes required to pass Step 04 tests without modifying tests, respecting approved Step 03 constraints, Step 01 requirements, repository instructions, and agentic instructions present in context, then mark Step 05 complete after Green confirmation.
 
 ## Gate + Resume Checks
 
 - Require Steps 01-04 approved.
 - Require Step 04 completion from `SPEC.md`, current failing test results, or continuous handoff from Step 04.
 - For existing codebases, require Step 99 approved.
+- Require repository instructions and agentic instructions present in context to be inspected and followed before implementation.
 - Reject requests to modify tests or bypass Red/Green order.
 - Reject inconsistent checklist states.
-- When resuming an interrupted workflow, re-evaluate `SPEC.md`, current files, and relevant test results before deciding whether Step 05 is pending or complete.
+- On interrupted resume, re-evaluate `SPEC.md`, current files, and relevant test results before deciding whether Step 05 is pending or complete.
 
 ## Interrupted Workflow Resume Rules
 
@@ -32,28 +33,27 @@ Implement only the minimum production changes required to pass Step 04 tests wit
 - If production implementation is partial, continue from the current state without reverting user changes.
 - If checklist state, file state, or test results conflict, stop and ask for direction before modifying files or progress.
 
-## Implementation Contract (Two-Phase Protocol)
+## Execution Protocol
 
-### Phase A: Implementation Action Plan
-Present minimal production changes to pass existing tests. Approve before modifying production code.
-If invoked through explicit continuous Step 04 -> Step 05 authorization, present the implementation action plan as part of the execution snapshot and proceed without another approval turn.
+Execute Step 05 directly when Step 04 Red confirmation is approved, current failing tests are clear, Step 03 constraints are sufficient, and repository or context-provided agentic instructions have been inspected.
 
-### Phase B: Green-Phase Execution Snapshot
-After implementation and verification, present passing evidence and the resulting repository state.
+Implement only production changes required to pass existing Step 04 tests. If implementation requires new behavior, unclear architecture decisions, dependency changes, test changes, convention exceptions, or assumptions not approved by Step 03 and applicable repository or agentic instructions, stop and route back to Step 03 or ask for clarification instead of expanding scope.
 
-The implementation plan must identify which Step 03 contracts, constraints, and implementation steps are being satisfied. Do not introduce behavior that is not required by Step 04 tests or approved by Step 03.
+After implementation and verification, present passing evidence and repository state.
+
+The execution snapshot must identify which Step 03 contracts, constraints, implementation steps, repository instructions, and context-provided agentic instructions were satisfied. Do not introduce behavior that is not required by Step 04 tests or approved by Step 03. Do not violate project-local conventions, architecture boundaries, file ownership rules, command restrictions, or agent instructions.
 
 ## Execution Output
 
 Present:
-- Phase A implementation action plan
-- Phase B green-phase execution snapshot
+- green-phase execution snapshot
 - confirmation that tests were not modified
 
 Use these required Step 05 snapshot headings:
 
 - Production Files Changed
 - Implementation Notes (Minimal Scope)
+- Repository and Agent Instruction Compliance
 - Test Commands Executed
 - Passing Results Summary
 - Assumptions and Constraints
@@ -61,11 +61,10 @@ Use these required Step 05 snapshot headings:
 
 ## Approval Protocol
 
-- Ask for explicit approval of the Phase A implementation action plan before modifying production code.
-- Skip the separate Phase A approval only when Step 05 is invoked through explicit continuous Step 04 -> Step 05 authorization.
-- Do not require a separate approval after Phase B before updating `SPEC.md`; Step 05 execution approval authorizes marking Step 05 complete after Green confirmation.
-- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
-- If approval intent is ambiguous, ask for clarification instead of modifying code, running commands, saving, or routing forward.
+- Do not require a separate Step 05 execution approval when approved Step 01, Step 02, Step 03, and Step 04 artifacts clearly define the requirements, constraints, test failures, and implementation scope.
+- Ask for explicit approval before modifying production code or running commands only when Step 05 detects ambiguity, scope expansion, missing applicable repository or agentic instructions, unclear commands, dependency changes, or convention exceptions.
+- Do not require a separate approval after Green confirmation before updating `SPEC.md`.
+- On rejection, requested changes, hold, or ambiguous approval, do not modify code, run, save, or route forward; clarify or wait.
 - If writes are unavailable, stop and report the limitation.
 
 ## Verification
@@ -77,21 +76,19 @@ Use these required Step 05 snapshot headings:
 
 1. Do not create a mandatory Step 05 report artifact.
 2. Update `SPEC.md` Step 05 `[x]` only.
-3. Verify `SPEC.md` remains journal-only and does not contain logs, report body, or numbered artifact content.
+3. Keep `SPEC.md` journal-only; do not include logs, report body, or numbered artifact content.
 4. Ask whether to continue to the next step or hold.
 
 ## Response Format
 
-### Phase A Response
+### Execution Response
 1. Gate and resume check result
-2. Implementation action plan
-3. Approval request
-
-Omit this separate Phase A response only when Step 05 is invoked through explicit continuous Step 04 -> Step 05 authorization.
-
-### Phase B Response
-1. Green-phase execution snapshot
-2. Test integrity confirmation
-3. Implementation action plan summary, when executed through continuous Step 04 -> Step 05 authorization
+2. Green-phase execution snapshot
+3. Test integrity confirmation
 4. `SPEC.md` update summary
 5. Continue/hold prompt
+
+### Blocked Response
+1. Gate and resume check result
+2. Reason Step 05 cannot execute directly
+3. Required clarification, approval, or route back to Step 03

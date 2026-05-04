@@ -34,19 +34,15 @@ Wait for approval.
 
 ## Approval Protocol
 
-- Ask for explicit approval before saving or updating any artifact.
-- Save/update only after explicit approval.
-- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
-- If approval intent is ambiguous, ask for clarification instead of saving.
+- Save or update artifacts only after explicit approval.
+- On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
 - If writes are unavailable, stop and report the limitation.
 
 ## Save Flow (after approval)
 
-1. Save `docs/specs/<feature-name>/06-verification-and-feedback-report.md`.
-2. Verify artifact contains Step 06 report only.
-3. Update `SPEC.md` Step 06 `[x]` with link.
-4. Verify `SPEC.md` remains journal-only.
-5. Ask whether to continue to the next step or hold.
+1. Save only Step 06 report content to `docs/specs/<feature-name>/06-verification-and-feedback-report.md`.
+2. Mark Step 06 complete in journal-only `SPEC.md` with the artifact link.
+3. Ask whether to continue to the next step or hold.
 
 ## Response Format
 

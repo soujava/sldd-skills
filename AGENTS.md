@@ -12,6 +12,8 @@ This repository contains the SLDD (Spec Loops Driven Development) skills — str
 - Write skill content in plain, actionable Markdown. Document behavior, not implementation.
 - Maintain consistency across all skill files (tone, structure, gate enforcement patterns).
 - Ensure every skill has: a clear objective, gate enforcement rules, approval protocol, and output format.
+- Preserve the Step 04/Step 05 Red-Green contract: Step 04 writes tests first only; Step 05 makes minimal production changes, does not modify Step 04 tests, and follows applicable repository or context-provided agent instructions.
+- Update `README.md` when changing user-visible process behavior, sequencing, gates, approval semantics, or skill responsibilities.
 - Use Conventional Commits for commit messages, following the `<type>(optional-scope): <description>` format.
 
 ### Don't

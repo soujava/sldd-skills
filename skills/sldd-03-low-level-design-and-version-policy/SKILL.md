@@ -10,7 +10,7 @@ metadata:
 
 ## Objective
 
-Produce approved Step 03 low-level design and version policy aligned to Step 02 for Steps 04 and 05, including traceability from Step 01 requirements and Step 02 design decisions to contracts, data models, error handling, tests, dependencies, and implementation order.
+Produce approved Step 03 low-level design and version policy aligned to Step 02, tracing Step 01 requirements and Step 02 decisions to contracts, data models, errors, tests, dependencies, and implementation order.
 
 ## Gate + Resume Checks
 
@@ -32,9 +32,8 @@ Create a draft with these required Step 03 headings:
 - Dependency and Version Policy
 - Ordered Implementation Plan
 
-If `00-exploration-summary.md` exists, use it only as contextual memory for rationale, alternatives, assumptions, and candidate technical ideas; do not import its design ideas as approved low-level decisions.
-The draft must explicitly map Step 01 requirements and Step 02 design choices into concrete low-level decisions.
-Include ordered implementation plan.
+Use `00-exploration-summary.md` only as non-binding context for rationale, alternatives, assumptions, and candidate technical ideas; approved numbered artifacts override it.
+Map Step 01 requirements and Step 02 design choices into concrete low-level decisions and an ordered implementation plan.
 The draft must explicitly state:
 - how each approved requirement is covered by API contracts, data models, error handling, tests, or implementation steps
 - which Step 02 design decisions constrain Step 04 tests and Step 05 implementation
@@ -47,19 +46,15 @@ Wait for approval.
 
 ## Approval Protocol
 
-- Ask for explicit approval before saving or updating any artifact.
-- Save/update only after explicit approval.
-- If approval is rejected, requested changes are given, or the user asks to hold, leave progress unchanged and wait.
-- If approval intent is ambiguous, ask for clarification instead of saving.
+- Save or update artifacts only after explicit approval.
+- On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
 - If writes are unavailable, stop and report the limitation.
 
 ## Save Flow (after approval)
 
-1. Save `docs/specs/<feature-name>/03-low-level-design-and-version-policy.md`.
-2. Verify artifact contains Step 03 content only.
-3. Update `SPEC.md` Step 03 `[x]` with link.
-4. Verify `SPEC.md` remains journal-only.
-5. Ask whether to continue to the next step or hold.
+1. Save only Step 03 content to `docs/specs/<feature-name>/03-low-level-design-and-version-policy.md`.
+2. Mark Step 03 complete in journal-only `SPEC.md` with the artifact link.
+3. Ask whether to continue to the next step or hold.
 
 ## Response Format
 
