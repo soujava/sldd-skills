@@ -102,32 +102,57 @@ Run one skill at a time. Review and approve the output before moving to the next
 
 All executable skills are standalone at runtime. They do not depend on shared helper skills or a separate Step 88 protocol being loaded for gates, approvals, save behavior, or artifact headings.
 
-```mermaid
-flowchart TD
-    S88["Optional: sldd-88-spec-exploration-and-clarification<br/>Clarify a rough idea before formal Step 01"]
-    S00["Start: sldd-00-process-overview-and-navigation-guide<br/>Understand the process and choose the right skill"]
-    S01["Step 01: sldd-01-product-intent-specification<br/>Define problem, users, metrics, risks, and acceptance criteria"]
-    S99["Optional Step 99: sldd-99-existing-codebase-understanding-and-context-summary<br/>Required for existing codebases before Step 02; may run during exploration and be reused after resume validation"]
-    S02["Step 02: sldd-02-high-level-technical-design<br/>Architecture, system boundaries, and data flow"]
-    S03["Step 03: sldd-03-low-level-design-and-version-policy<br/>API contracts, data models, and version policy"]
-    GATE{"Design Review Gate"}
-    S04["Step 04: sldd-04-tests-first-driven-by-acceptance-criteria<br/>Write tests only in Red phase; no production code"]
-    S05["Step 05: sldd-05-minimal-implementation-to-pass-existing-tests<br/>Minimal production changes to pass tests while preserving repo rules"]
-    S06["Step 06: sldd-06-verification-and-feedback-report<br/>Audit implementation and make Go/No-Go decision"]
-    READY["Production Ready"]
-
-    S88 --> S00
-    S88 -. "brownfield context needed" .-> S99
-    S00 --> S01
-    S01 --> S99
-    S01 --> S02
-    S99 --> S02
-    S02 --> S03
-    S03 --> GATE
-    GATE --> S04
-    S04 --> S05
-    S05 --> S06
-    S06 --> READY
+```text
++----------------------------------------------------------------+
+| SLDD Process Flow                                              |
++----------------------------------------------------------------+
+|                                                                |
+| Optional: sldd-88-spec-exploration-and-clarification           |
+| Clarify a rough idea before formal Step 01                     |
+| For brownfield work, may route to Step 99 when codebase        |
+| context is needed for exploration                              |
+|                                                                |
+|                              v                                 |
+| Start: sldd-00-process-overview-and-navigation-guide           |
+| Understand the process and choose the right skill              |
+|                                                                |
+|                              v                                 |
+| Step 01: sldd-01-product-intent-specification                  |
+| Define problem, users, metrics, risks, and acceptance criteria |
+|                                                                |
+|                              v                                 |
+| Optional Step 99: Existing Codebase Understanding              |
+| Required for existing codebases before Step 02; may run during |
+| exploration and be reused after resume validation              |
+|                                                                |
+|                              v                                 |
+| Step 02: sldd-02-high-level-technical-design                   |
+| Architecture, system boundaries, and data flow                 |
+|                                                                |
+|                              v                                 |
+| Step 03: sldd-03-low-level-design-and-version-policy           |
+| API contracts, data models, and version policy                 |
+|                                                                |
+|                              v                                 |
+|                     GATE: Design Review                        |
+|                                                                |
+|                              v                                 |
+| Step 04: sldd-04-tests-first-driven-by-acceptance-criteria     |
+| Write tests only in Red phase; no production code              |
+|                                                                |
+|                              v                                 |
+| Step 05: sldd-05-minimal-implementation-to-pass-existing-tests |
+| Minimal production changes to pass tests while preserving      |
+| repository rules                                               |
+|                                                                |
+|                              v                                 |
+| Step 06: sldd-06-verification-and-feedback-report              |
+| Audit implementation and make Go/No-Go decision                |
+|                                                                |
+|                              v                                 |
+| Production Ready                                               |
+|                                                                |
++----------------------------------------------------------------+
 ```
 
 ### Gate Rule
