@@ -1,6 +1,6 @@
 ---
 name: sldd-06-verification-and-feedback-report
-description: Audit completed implementation against the spec and produce a gap report with compliance matrix, risks, remediation steps, and a go/no-go production readiness decision. Use after implementation is complete.
+description: Audit implementation against approved specs and produce final Go/No-Go decision.
 metadata:
   step: "06"
   type: verification
@@ -8,29 +8,45 @@ metadata:
 
 # Skill: Verification and Feedback Report
 
-**Context:**
-You are reviewing completed implementation against the low-level design spec. It is time to audit whether the work matches intent and identify gaps, risks, or compliance issues before release.
+## Objective
 
-Spec: <provide the approved low-level design and product intent specification>
+Produce approved Step 06 verification with explicit Go/No-Go decision.
 
-Implementation summary: <provide the implementation output or reference files>
+## Gate + Resume Checks
 
-**Objective:**
-Produce a gap report that compares the implementation against the spec and identifies what matches, what is missing, what risks remain, and whether the work is production-ready.
+- Require Steps 01-05 approved.
+- For existing codebases, require Step 99 approved.
+- Reject premature verification before implementation completion.
+- Reject inconsistent checklist states.
 
-**Audience:**
-Engineers, tech leads, QA, and release managers deciding whether this work is ready to merge and ship.
+## Draft Output
 
-**Style:**
-Structured report with matrices, lists, and clear status indicators (met/partial/missing). Prioritize risks by severity.
+Create a draft with these required Step 06 headings:
 
-**Tone:**
-Critical and honest. Flag every gap and risk. Provide actionable remediation steps. Give a clear yes/no on production readiness.
+- Compliance Matrix
+- Version and Dependency Validation
+- Test Convention Compliance
+- Risks by Severity
+- Remediation Steps
+- Go/No-Go Decision and Rationale
 
-**Response:**
-Deliver exactly these sections in this order:
-1) Compliance matrix (spec requirement → implementation status: met/partial/missing)
-2) Version and dependency validation (are versions correct and supported?)
-3) Risk list by severity (high/medium/low)
-4) Suggested remediation steps (how to fix gaps before release)
-5) Decision: ready for production? yes/no and why. If no, list the top 3 blockers.
+Wait for approval.
+
+## Approval Protocol
+
+- Save or update artifacts only after explicit approval.
+- On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
+- If writes are unavailable, stop and report the limitation.
+
+## Save Flow (after approval)
+
+1. Save only Step 06 report content to `docs/specs/<feature-name>/06-verification-and-feedback-report.md`.
+2. Mark Step 06 complete in journal-only `SPEC.md` with the artifact link.
+3. Ask whether to continue to the next step or hold.
+
+## Response Format
+
+1. Gate and resume check result
+2. Draft summary with required Step 06 headings
+3. Approval request
+4. Continue/hold prompt

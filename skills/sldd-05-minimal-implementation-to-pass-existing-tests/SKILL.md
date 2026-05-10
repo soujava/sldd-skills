@@ -1,6 +1,6 @@
 ---
 name: sldd-05-minimal-implementation-to-pass-existing-tests
-description: Write the minimal production code needed to make all existing failing tests pass. No extra features, no test modifications, no refactoring. Use after tests are written and confirmed failing.
+description: Implement minimal production changes to pass Step 04 tests and mark step completion.
 metadata:
   step: "05"
   type: implementation
@@ -8,31 +8,87 @@ metadata:
 
 # Skill: Minimal Implementation to Pass Existing Tests
 
-**Context:**
-You are a senior engineer continuing strict TDD. Tests have been written and are currently failing. Your job is to write the minimal production code needed to make all tests pass — nothing more.
+## Objective
 
-Low-level design: <provide the approved low-level design>
+Implement the minimum production changes required to pass Step 04 tests without modifying tests, respecting approved Step 03 constraints, Step 01 requirements, repository instructions, and agentic instructions present in context, then mark Step 05 complete after Green confirmation.
 
-Existing failing tests: <provide the test files or reference their location>
+## Gate + Resume Checks
 
-**Objective:**
-Implement only the production code required to make all existing tests pass. Do not add features not covered by tests. Do not refactor unless tests fail.
+- Require Steps 01-04 approved.
+- Require Step 04 completion from `SPEC.md`, current failing test results, or continuous handoff from Step 04.
+- For existing codebases, require Step 99 approved.
+- Require repository instructions and agentic instructions present in context to be inspected and followed before implementation.
+- Reject requests to modify tests or bypass Red/Green order.
+- Reject inconsistent checklist states.
+- On interrupted resume, re-evaluate `SPEC.md`, current files, and relevant test results before deciding whether Step 05 is pending or complete.
 
-**Audience:**
-Engineers and code reviewers verifying that implementation matches the low-level design and test intentions.
+## Interrupted Workflow Resume Rules
 
-**Style:**
-Production code written in the project's native language. Follow existing code style and architecture conventions. Keep implementation focused and minimal.
+- Always re-evaluate Step 04 and Step 05 on resume, even if `SPEC.md` already marks one or both complete.
+- Run the relevant Step 04 tests before modifying production code when the current state is not already clear.
+- If the tests still fail, continue with the minimal implementation required to make them pass.
+- If the tests already pass and test files were not modified after Step 04 completion, mark Step 05 complete in `SPEC.md`.
+- If Step 04 state is stale or ambiguous, re-run the relevant tests before implementation.
+- If Step 04 tests appear to have been modified after Red confirmation, stop because test integrity may be compromised.
+- If production implementation is partial, continue from the current state without reverting user changes.
+- If checklist state, file state, or test results conflict, stop and ask for direction before modifying files or progress.
 
-**Tone:**
-Strict. Only code that makes tests pass. No speculative features. If tests pass, you are done with this slice.
+## Execution Protocol
 
-**Response:**
-Deliver:
-- Production code files (write implementation code only, no tests)
-- Commands to run the existing tests (to verify they pass)
-- Commands to verify framework/runtime versions (to confirm the environment)
-- Assumptions checklist (what assumptions did you make? are they in the low-level design?)
-- Expected test output summary (show which tests now pass)
+Execute Step 05 directly when Step 04 Red confirmation is approved, current failing tests are clear, Step 03 constraints are sufficient, and repository or context-provided agentic instructions have been inspected.
 
-Imperative: Do not modify the tests. Do not add features. Do not refactor. If the low-level design seems wrong, propose a design amendment instead of changing architecture.
+Implement only production changes required to pass existing Step 04 tests. If implementation requires new behavior, unclear architecture decisions, dependency changes, test changes, convention exceptions, or assumptions not approved by Step 03 and applicable repository or agentic instructions, stop and route back to Step 03 or ask for clarification instead of expanding scope.
+
+After implementation and verification, present passing evidence and repository state.
+
+The execution snapshot must identify which Step 03 contracts, constraints, implementation steps, repository instructions, and context-provided agentic instructions were satisfied. Do not introduce behavior that is not required by Step 04 tests or approved by Step 03. Do not violate project-local conventions, architecture boundaries, file ownership rules, command restrictions, or agent instructions.
+
+## Execution Output
+
+Present:
+- green-phase execution snapshot
+- confirmation that tests were not modified
+
+Use these required Step 05 snapshot headings:
+
+- Production Files Changed
+- Implementation Notes (Minimal Scope)
+- Repository and Agent Instruction Compliance
+- Test Commands Executed
+- Passing Results Summary
+- Assumptions and Constraints
+- Test Integrity Confirmation (No Test Modifications)
+
+## Approval Protocol
+
+- Do not require a separate Step 05 execution approval when approved Step 01, Step 02, Step 03, and Step 04 artifacts clearly define the requirements, constraints, test failures, and implementation scope.
+- Ask for explicit approval before modifying production code or running commands only when Step 05 detects ambiguity, scope expansion, missing applicable repository or agentic instructions, unclear commands, dependency changes, or convention exceptions.
+- Do not require a separate approval after Green confirmation before updating `SPEC.md`.
+- On rejection, requested changes, hold, or ambiguous approval, do not modify code, run, save, or route forward; clarify or wait.
+- If writes are unavailable, stop and report the limitation.
+
+## Verification
+
+- Run tests and confirm previously failing tests pass.
+- Record commands and results.
+
+## Save Flow (after Green confirmation)
+
+1. Do not create a mandatory Step 05 report artifact.
+2. Update `SPEC.md` Step 05 `[x]` only.
+3. Keep `SPEC.md` journal-only; do not include logs, report body, or numbered artifact content.
+4. Ask whether to continue to the next step or hold.
+
+## Response Format
+
+### Execution Response
+1. Gate and resume check result
+2. Green-phase execution snapshot
+3. Test integrity confirmation
+4. `SPEC.md` update summary
+5. Continue/hold prompt
+
+### Blocked Response
+1. Gate and resume check result
+2. Reason Step 05 cannot execute directly
+3. Required clarification, approval, or route back to Step 03

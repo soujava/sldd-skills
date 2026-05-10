@@ -1,6 +1,6 @@
 ---
 name: sldd-99-existing-codebase-understanding-and-context-summary
-description: Read and summarize an existing codebase before any design or implementation work begins. Use as a prerequisite when the project is not greenfield.
+description: Capture existing-codebase context for brownfield exploration and before Step 02.
 metadata:
   step: "99"
   type: appendix
@@ -8,38 +8,49 @@ metadata:
 
 # Skill: Existing Codebase Understanding and Context Summary
 
-This is an optional prerequisite step. For greenfield projects, skip this and proceed directly to sldd-01.
+## Objective
 
-**Context:**
-You are a senior engineer joining a project with an existing codebase. Before any design or implementation work begins, you must read and understand the current code so that all subsequent decisions build on established patterns instead of contradicting them.
+Capture and approve existing-codebase context for brownfield exploration and safe Step 02+ work.
 
-Repository or module scope: <provide path or module names>
+## Gate + Resume Checks
 
-**Objective:**
-Read and summarize the existing codebase so that all subsequent SLDD steps (product intent, design, implementation) are grounded in reality.
+- Required before Step 02 for existing codebases.
+- May be run during Step 88 exploration when codebase understanding is needed to clarify scope, constraints, risks, or alternatives.
+- Optional for greenfield projects.
+- Do not mark Step 99 complete without explicit approval.
+- If resuming later, re-evaluate the current codebase before relying on any previous Step 99 summary.
+- Reuse a previous Step 99 only if it still reflects the current codebase and approved Step 01 scope; update or rerun it if stale, incomplete, or scoped to a rejected exploration direction.
+- Reject inconsistent checklist states where Step 02+ is complete while Step 99 is required and incomplete.
 
-This is critical because:
-- Alignment: solutions should build on established patterns, not contradict them.
-- Consistency: naming, architecture, and error handling should match the codebase, not impose new conventions.
-- Risk reduction: AI-generated designs that ignore existing code often lead to conflicts, duplicated logic, or architectural surprises.
-- Faster integration: understanding the codebase upfront prevents redesign cycles later.
+## Draft Output
 
-**Audience:**
-Engineers and tech leads who will use this summary as shared context for design and implementation prompts.
+Create a draft with these required Step 99 headings:
 
-**Style:**
-Structured and factual. Reference real files and patterns. No speculation.
+- Repository Structure Overview
+- Architecture Summary
+- Conventions to Preserve
+- Integration Points
+- Risks and Unknowns
+- Context to Carry Into Steps 02-06
 
-**Tone:**
-Objective. Report what exists. Flag risks and unknowns clearly.
+Wait for approval.
 
-**Response:**
-Deliver exactly these sections in this order:
-1) Repository structure overview (main folders, entry points, build system)
-2) Architecture summary (layers, modules, boundaries, key abstractions)
-3) Conventions to preserve (naming, error handling, code style, test patterns)
-4) Integration points (APIs, data stores, messaging, external services)
-5) Risks and unknowns (tech debt, drift areas, undocumented decisions)
-6) Context summary to carry into subsequent SLDD steps
+## Approval Protocol
 
-Include this summary as context in all subsequent design and implementation prompts.
+- Mark complete, save, or update `SPEC.md` only after explicit approval.
+- On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
+- If writes are unavailable, stop and report the limitation.
+
+## Save Flow (after approval)
+
+1. Ask whether to persist `docs/specs/<feature-name>/99-existing-codebase-understanding.md`; saving this snapshot is optional.
+2. If persistence is approved, save `docs/specs/<feature-name>/99-existing-codebase-understanding.md`.
+3. Mark Step 99 complete in journal-only `SPEC.md` with the saved link or a not-saved note requiring re-run on resume.
+4. Ask whether to continue to the next step or hold.
+
+## Response Format
+
+1. Gate and resume check result
+2. Draft summary with required Step 99 headings
+3. Persistence choice (save artifact vs. approved-not-saved journal note)
+4. Approval request and continue/hold prompt
