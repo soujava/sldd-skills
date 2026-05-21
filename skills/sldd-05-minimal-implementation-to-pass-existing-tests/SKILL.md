@@ -15,19 +15,19 @@ Implement the minimum production changes required to pass Step 04 tests without 
 ## Gate + Resume Checks
 
 - Require Steps 01-04 approved.
-- Require Step 04 completion from `SPEC.md`, current failing test results, or continuous handoff from Step 04.
+- Require Step 04 completion from `docs/specs/<feature-name>/SPEC.md`, current failing test results, or continuous handoff from Step 04.
 - For existing codebases, require Step 99 approved.
 - Require repository instructions and agentic instructions present in context to be inspected and followed before implementation.
 - Reject requests to modify tests or bypass Red/Green order.
 - Reject inconsistent checklist states.
-- On interrupted resume, re-evaluate `SPEC.md`, current files, and relevant test results before deciding whether Step 05 is pending or complete.
+- On interrupted resume, re-evaluate `docs/specs/<feature-name>/SPEC.md`, current files, and relevant test results before deciding whether Step 05 is pending or complete.
 
 ## Interrupted Workflow Resume Rules
 
-- Always re-evaluate Step 04 and Step 05 on resume, even if `SPEC.md` already marks one or both complete.
+- Always re-evaluate Step 04 and Step 05 on resume, even if `docs/specs/<feature-name>/SPEC.md` already marks one or both complete.
 - Run the relevant Step 04 tests before modifying production code when the current state is not already clear.
 - If the tests still fail, continue with the minimal implementation required to make them pass.
-- If the tests already pass and test files were not modified after Step 04 completion, mark Step 05 complete in `SPEC.md`.
+- If the tests already pass and test files were not modified after Step 04 completion, mark Step 05 complete in `docs/specs/<feature-name>/SPEC.md`.
 - If Step 04 state is stale or ambiguous, re-run the relevant tests before implementation.
 - If Step 04 tests appear to have been modified after Red confirmation, stop because test integrity may be compromised.
 - If production implementation is partial, continue from the current state without reverting user changes.
@@ -63,7 +63,7 @@ Use these required Step 05 snapshot headings:
 
 - Do not require a separate Step 05 execution approval when approved Step 01, Step 02, Step 03, and Step 04 artifacts clearly define the requirements, constraints, test failures, and implementation scope.
 - Ask for explicit approval before modifying production code or running commands only when Step 05 detects ambiguity, scope expansion, missing applicable repository or agentic instructions, unclear commands, dependency changes, or convention exceptions.
-- Do not require a separate approval after Green confirmation before updating `SPEC.md`.
+- Do not require a separate approval after Green confirmation before updating `docs/specs/<feature-name>/SPEC.md`.
 - On rejection, requested changes, hold, or ambiguous approval, do not modify code, run, save, or route forward; clarify or wait.
 - If writes are unavailable, stop and report the limitation.
 
@@ -75,8 +75,8 @@ Use these required Step 05 snapshot headings:
 ## Save Flow (after Green confirmation)
 
 1. Do not create a mandatory Step 05 report artifact.
-2. Update `SPEC.md` Step 05 `[x]` only.
-3. Keep `SPEC.md` journal-only; do not include logs, report body, or numbered artifact content.
+2. Update `docs/specs/<feature-name>/SPEC.md` Step 05 `[x]` only.
+3. Keep `docs/specs/<feature-name>/SPEC.md` journal-only; do not include logs, report body, or numbered artifact content.
 4. Ask whether to continue to the next step or hold.
 
 ## Response Format
@@ -85,7 +85,7 @@ Use these required Step 05 snapshot headings:
 1. Gate and resume check result
 2. Green-phase execution snapshot
 3. Test integrity confirmation
-4. `SPEC.md` update summary
+4. `docs/specs/<feature-name>/SPEC.md` update summary
 5. Continue/hold prompt
 
 ### Blocked Response

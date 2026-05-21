@@ -18,14 +18,14 @@ Execute Step 04 in strict Red phase by creating tests first, proving they fail, 
 - For existing codebases, require Step 99 approved.
 - Reject skip-ahead requests to implementation.
 - Reject inconsistent checklist states.
-- On interrupted resume, re-evaluate `SPEC.md`, current files, and relevant test results before deciding whether Step 04 is pending, complete, or superseded.
+- On interrupted resume, re-evaluate `docs/specs/<feature-name>/SPEC.md`, current files, and relevant test results before deciding whether Step 04 is pending, complete, or superseded.
 
 ## Interrupted Workflow Resume Rules
 
-- Always re-evaluate Step 04 on resume, even if `SPEC.md` already marks Step 04 complete.
+- Always re-evaluate Step 04 on resume, even if `docs/specs/<feature-name>/SPEC.md` already marks Step 04 complete.
 - Inspect existing test files and production changes before writing anything.
 - Run the relevant tests again when the current Red/Green state cannot be determined from files alone.
-- If the relevant tests fail for the expected missing behavior, mark Step 04 complete in `SPEC.md`.
+- If the relevant tests fail for the expected missing behavior, mark Step 04 complete in `docs/specs/<feature-name>/SPEC.md`.
 - If the relevant tests already pass, infer that Step 05 may have been partially or fully executed; route to Step 05 or Step 06 based on checklist state and current verification.
 - If test changes, production changes, or checklist state are ambiguous, stop and ask for direction before modifying files or progress.
 - Never revert user changes while resuming. Work with the current state.
@@ -76,8 +76,8 @@ Use these required Step 04 snapshot headings:
 ## Save Flow (after Red confirmation)
 
 1. Do not create a mandatory Step 04 report artifact.
-2. Update `SPEC.md` Step 04 `[x]` only.
-3. Keep `SPEC.md` journal-only; do not include logs, report body, or numbered artifact content.
+2. Update `docs/specs/<feature-name>/SPEC.md` Step 04 `[x]` only.
+3. Keep `docs/specs/<feature-name>/SPEC.md` journal-only; do not include logs, report body, or numbered artifact content.
 4. If continuous Step 04 -> Step 05 execution was requested, route directly to Step 05.
 5. Otherwise, ask whether to continue to the next step or hold.
 
@@ -86,7 +86,7 @@ Use these required Step 04 snapshot headings:
 ### Execution Response
 1. Gate and resume check result
 2. Red-phase execution snapshot
-3. `SPEC.md` update summary
+3. `docs/specs/<feature-name>/SPEC.md` update summary
 4. Continue/hold prompt, unless continuous Step 04 -> Step 05 execution was already requested
 
 ### Blocked Response

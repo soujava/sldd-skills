@@ -15,7 +15,7 @@ Define and validate Step 01 product intent for downstream steps.
 ## Gate + Resume Checks
 
 - Reject jump-ahead requests to design/tests/implementation.
-- If resuming from `SPEC.md`, reject invalid state where later steps are complete but Step 01 is not.
+- If resuming from `docs/specs/<feature-name>/SPEC.md`, reject invalid state where later steps are complete but Step 01 is not.
 
 ## Draft Output
 
@@ -42,7 +42,7 @@ Wait for approval.
 ## Save Flow (after approval)
 
 1. Save only Step 01 content to `docs/specs/<feature-name>/01-product-intent-specification.md`.
-2. Mark Step 01 complete in journal-only `SPEC.md` with the artifact link.
+2. Mark Step 01 complete in journal-only `docs/specs/<feature-name>/SPEC.md` with the artifact link.
 3. Ask whether to continue to the next step or hold.
 
 ## Response Format

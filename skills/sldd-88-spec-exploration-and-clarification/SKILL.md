@@ -20,7 +20,7 @@ Help the user turn a rough idea into a clear, testable spec direction before for
 - If brownfield exploration depends on reusable codebase context, route to `sldd-99-existing-codebase-understanding-and-context-summary` before formalizing Step 01.
 - A Step 99 completed during exploration may satisfy the later brownfield gate only after resume validation confirms it still matches the current codebase and approved Step 01 scope.
 - Optional summaries default to `docs/specs/<feature-name>/00-exploration-summary.md` unless the user provides a path.
-- `00-exploration-summary.md` is contextual memory only: it does not update `SPEC.md`, mark progress, or replace numbered artifacts.
+- `00-exploration-summary.md` is contextual memory only: it does not update `docs/specs/<feature-name>/SPEC.md`, mark progress, or replace numbered artifacts.
 
 ## Exploration Stance
 

@@ -46,7 +46,7 @@ Wait for approval.
 ## Save Flow (after approval)
 
 1. Save only Step 02 content to `docs/specs/<feature-name>/02-high-level-technical-design.md`.
-2. Mark Step 02 complete in journal-only `SPEC.md` with the artifact link.
+2. Mark Step 02 complete in journal-only `docs/specs/<feature-name>/SPEC.md` with the artifact link.
 3. Ask whether to continue to the next step or hold.
 
 ## Response Format

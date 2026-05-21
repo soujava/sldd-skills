@@ -19,25 +19,25 @@ Exploration -> Step 01 + Step 99 (existing codebases only; Step 99 may occur dur
 ## Artifact and Resume Rules
 
 - Use user-provided paths when available; otherwise default to `docs/specs/<feature-name>/SPEC.md`.
-- Treat `SPEC.md` as journal-only: checklist plus links or save-status notes; never write numbered step body content into it.
+- Treat `docs/specs/<feature-name>/SPEC.md` as journal-only: checklist plus links or save-status notes; never write numbered step body content into it.
 - Expected artifacts:
   - `00-exploration-summary.md` (optional contextual memory; not a progress artifact)
   - `01-product-intent-specification.md`
   - `99-existing-codebase-understanding.md` (optional persisted snapshot)
   - `02-high-level-technical-design.md`
   - `03-low-level-design-and-version-policy.md`
-  - Step 04 completion marked in `SPEC.md` (no mandatory report artifact)
-  - Step 05 completion marked in `SPEC.md` (no mandatory report artifact)
+  - Step 04 completion marked in `docs/specs/<feature-name>/SPEC.md` (no mandatory report artifact)
+  - Step 05 completion marked in `docs/specs/<feature-name>/SPEC.md` (no mandatory report artifact)
   - `06-verification-and-feedback-report.md`
 - Approved numbered artifacts take precedence over `00-exploration-summary.md`.
 - A Step 99 artifact approved during exploration can satisfy the existing-codebase gate if resume validation confirms it is still current and relevant to the approved Step 01 scope.
-- If Step 99 was approved without a persisted artifact and `SPEC.md` records a rerun-on-resume note, route to Step 99 again before Step 02.
-- Steps 04 and 05 change the codebase; re-evaluate their state from `SPEC.md`, file changes, and relevant test results.
+- If Step 99 was approved without a persisted artifact and `docs/specs/<feature-name>/SPEC.md` records a rerun-on-resume note, route to Step 99 again before Step 02.
+- Steps 04 and 05 change the codebase; re-evaluate their state from `docs/specs/<feature-name>/SPEC.md`, file changes, and relevant test results.
 
 ## Start/Resume Flow
 
 1. Detect jump-ahead requests and stop if prerequisites are missing.
-2. Resolve target `SPEC.md`:
+2. Resolve target `docs/specs/<feature-name>/SPEC.md`:
    - user-provided path, or
    - selected file under provided specs root, or
    - default `docs/specs/<feature-name>/SPEC.md`.
@@ -54,10 +54,10 @@ Exploration -> Step 01 + Step 99 (existing codebases only; Step 99 may occur dur
 
 When resuming at Step 04 or Step 05:
 
-1. Inspect `SPEC.md` checklist.
+1. Inspect `docs/specs/<feature-name>/SPEC.md` checklist.
 2. Inspect current test and production file state.
 3. Run or request the relevant test commands when the current Red/Green state cannot be trusted from files alone.
-4. Re-evaluate Step 04 and Step 05 even if `SPEC.md` marks them complete.
+4. Re-evaluate Step 04 and Step 05 even if `docs/specs/<feature-name>/SPEC.md` marks them complete.
 5. Treat Step 04 as complete only when Red is confirmed or when later passing tests prove Step 05 has already advanced the workflow.
 6. Treat Step 05 as complete only when relevant tests pass and Step 04 test integrity is preserved.
 7. If checklist, files, and test results conflict, stop and ask for direction instead of updating progress.

@@ -37,7 +37,7 @@ Wait for approval.
 
 ## Approval Protocol
 
-- Mark complete, save, or update `SPEC.md` only after explicit approval.
+- Mark complete, save, or update `docs/specs/<feature-name>/SPEC.md` only after explicit approval.
 - On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
 - If writes are unavailable, stop and report the limitation.
 
@@ -45,7 +45,7 @@ Wait for approval.
 
 1. Ask whether to persist `docs/specs/<feature-name>/99-existing-codebase-understanding.md`; saving this snapshot is optional.
 2. If persistence is approved, save `docs/specs/<feature-name>/99-existing-codebase-understanding.md`.
-3. Mark Step 99 complete in journal-only `SPEC.md` with the saved link or a not-saved note requiring re-run on resume.
+3. Mark Step 99 complete in journal-only `docs/specs/<feature-name>/SPEC.md` with the saved link or a not-saved note requiring re-run on resume.
 4. Ask whether to continue to the next step or hold.
 
 ## Response Format
