@@ -5,14 +5,16 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_SKILL="$REPO_ROOT/skills/sldd"
 DEFAULT_TARGET_DIR="$HOME/.agents/skills"
 TARGET_DIR="$DEFAULT_TARGET_DIR"
+INSTALL_MODE="symlink"
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [--target DIR] [--help]
+Usage: $(basename "$0") [--copy] [--target DIR] [--help]
 
-Install the local SLDD skill as a symbolic link.
+Install the local SLDD skill as a symbolic link by default.
 
 Options:
+  --copy        Copy the skill files instead of creating a symbolic link.
   --target DIR  Destination skills directory. Default: $DEFAULT_TARGET_DIR
   --help        Show this help message.
 EOF
@@ -20,6 +22,10 @@ EOF
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
+    --copy)
+      INSTALL_MODE="copy"
+      shift
+      ;;
     --target)
       if [ "$#" -lt 2 ] || [ -z "${2:-}" ] || [ "${2#-}" != "$2" ]; then
         echo "Error: --target requires a directory path." >&2
@@ -55,6 +61,7 @@ echo
 echo "SLDD skills development install"
 echo "Source: $SOURCE_SKILL"
 echo "Target: $TARGET_DIR"
+echo "Mode:   $INSTALL_MODE"
 echo
 
 echo "Cleaning previous SLDD entries"
@@ -87,18 +94,32 @@ if [ "$removed_links" -eq 0 ] && [ "$removed_dirs" -eq 0 ] && [ "$skipped_files"
 fi
 
 echo
-echo "Creating symbolic links"
+links_created=0
+copies_created=0
 
-target_link="$TARGET_DIR/sldd"
-ln -s "$SOURCE_SKILL" "$target_link"
-echo "  link            sldd"
-created=1
+case "$INSTALL_MODE" in
+  symlink)
+    echo "Creating symbolic links"
+    target_link="$TARGET_DIR/sldd"
+    ln -s "$SOURCE_SKILL" "$target_link"
+    echo "  link            sldd"
+    links_created=1
+    ;;
+  copy)
+    echo "Copying skill files"
+    target_copy="$TARGET_DIR/sldd"
+    cp -R "$SOURCE_SKILL" "$target_copy"
+    echo "  copy            sldd"
+    copies_created=1
+    ;;
+esac
 
 echo
 echo "Summary"
 echo "  symlinks removed:   $removed_links"
 echo "  directories removed: $removed_dirs"
 echo "  files skipped:       $skipped_files"
-echo "  links created:       $created"
+echo "  links created:       $links_created"
+echo "  copies created:      $copies_created"
 echo
 echo "Done."

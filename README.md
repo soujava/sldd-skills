@@ -49,7 +49,7 @@ git clone https://github.com/soujava/sldd-skills.git
 cp -r sldd-skills/skills/sldd ~/.agents/skills/
 ```
 
-### Development Symlink Installation
+### Development Installation
 
 During local development, install the `sldd` skill as a symbolic link:
 
@@ -63,15 +63,24 @@ To install the symlink into a different skills directory, pass `--target`:
 ./install-sldd-skills.sh --target ~/.claude/skills
 ```
 
+To install a copy instead of a symbolic link, pass `--copy`:
+
+```bash
+./install-sldd-skills.sh --copy
+```
+
+Copied files do not reflect later repository edits until the script is run again.
+
 The script:
 
 - uses `skills/sldd` as the source skill;
 - uses `$HOME/.agents/skills` as the default target;
 - accepts `--target <skills-dir>` for a custom target directory;
+- accepts `--copy` to copy skill files instead of creating a symbolic link;
 - creates the selected target directory if it does not exist;
 - removes previous `sldd` and legacy `sldd-*` entries from the selected target directory;
-- creates one symbolic link at `<target>/sldd`;
-- prints a summary of removed entries and created links.
+- creates one symbolic link or copied directory at `<target>/sldd`;
+- prints a summary of removed entries and created links or copies.
 
 After changing the skill, reload or restart the CLI/tool that consumes skills so it refreshes loaded instructions.
 
