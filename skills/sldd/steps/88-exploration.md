@@ -1,12 +1,4 @@
----
-name: sldd-88-spec-exploration-and-clarification
-description: Explore and clarify a new SLDD spec with the user before Step 01. Use when the user has a fresh idea, wants to shape requirements, scope, risks, success criteria, or wants to think through a new SLDD workflow before writing the product intent spec.
-metadata:
-  step: "88"
-  type: navigation
----
-
-# Skill: Spec Exploration and Clarification
+# Step 88: Spec Exploration and Clarification
 
 ## Objective
 
@@ -17,10 +9,10 @@ Help the user turn a rough idea into a clear, testable spec direction before for
 - Keep exploration pre-Step-01 unless the user explicitly asks to formalize.
 - Route to Step 01 when the idea is sufficiently clear.
 - For existing codebases, inspect the current codebase when codebase understanding is needed to explore scope, constraints, risks, or alternatives.
-- If brownfield exploration depends on reusable codebase context, route to `sldd-99-existing-codebase-understanding-and-context-summary` before formalizing Step 01.
+- If brownfield exploration depends on reusable codebase context, route to Step 99 before formalizing Step 01.
 - A Step 99 completed during exploration may satisfy the later brownfield gate only after resume validation confirms it still matches the current codebase and approved Step 01 scope.
-- Optional summaries default to `docs/specs/<feature-name>/00-exploration-summary.md` unless the user provides a path.
-- `00-exploration-summary.md` is contextual memory only: it does not update `docs/specs/<feature-name>/SPEC.md`, mark progress, or replace numbered artifacts.
+- Optional summaries default to `.sldd/specs/<feature-name>/00-exploration-summary.md` unless the user provides a path.
+- `00-exploration-summary.md` is contextual memory only: it does not update `_spec-journal.json`, mark progress, or replace numbered artifacts.
 
 ## Exploration Stance
 
@@ -31,7 +23,7 @@ Help the user turn a rough idea into a clear, testable spec direction before for
 
 ## When to Use
 
-Use this skill when the user:
+Use this step when the user:
 
 - Has a new feature idea and is not ready to write Step 01 yet.
 - Wants help clarifying requirements, boundaries, constraints, or success criteria.
@@ -47,7 +39,7 @@ Use this skill when the user:
 4. Map the important constraints, users, and outcomes.
 5. Compare candidate directions if more than one exists.
 6. Call out risks, edge cases, and likely follow-up questions.
-7. Decide whether the idea is ready for `sldd-01-product-intent-specification` or needs more exploration.
+7. Decide whether the idea is ready for Step 01 or needs more exploration.
 8. Proactively offer `00-exploration-summary.md` before Step 01 when technical design ideas, complex alternatives, or refined constraints should be preserved for Step 02/03.
 
 ## Ground Rules
@@ -58,7 +50,7 @@ Use this skill when the user:
 - Downstream Steps 02-05 may follow only exploration details incorporated into the approved numbered artifact for that decision type; approved numbered artifacts override exploration notes.
 - If the discussion reveals the work depends on an existing codebase, determine whether codebase understanding is needed now for exploration or later before Step 02.
 - For brownfield work, ground exploration in the current codebase when relevant, but treat codebase observations as approved Step 99 context only if Step 99 is explicitly run and approved.
-- If the user wants to start the formal workflow, route them to `sldd-01-product-intent-specification`.
+- If the user wants to start the formal workflow, route them to Step 01.
 
 ## Conversation Shape
 
@@ -76,7 +68,8 @@ If the shape of the problem is still unclear, keep exploring. If it is clear eno
 
 - Exploration outputs are conversational and are not saved as numbered SLDD artifacts by default.
 - Proactively offer `00-exploration-summary.md` whenever exploration produces technical design ideas, architectural choices, complex alternatives, or non-obvious constraints.
-- Save `docs/specs/<feature-name>/00-exploration-summary.md` only after explicit approval.
+- Load `templates/00-exploration-summary.md` before drafting a persisted summary.
+- Save `00-exploration-summary.md` to the resolved workflow directory only after explicit approval; for new workflows, this is `.sldd/specs/<feature-name>/00-exploration-summary.md`.
 - If the user asks to formalize outcomes, present the proposed formalization and wait for explicit approval before persisting any artifact.
 - On rejection, requested changes, hold, or ambiguous approval, do not save or route forward; clarify or wait.
 - If writes are unavailable, stop and report the limitation.
@@ -86,16 +79,8 @@ If the shape of the problem is still unclear, keep exploring. If it is clear eno
 
 ## Optional Exploration Summary
 
-When useful for resume continuity, offer a concise `00-exploration-summary.md` with:
-- Current understanding
-- Candidate product decisions
-- Candidate technical ideas (non-binding)
-- Alternatives discussed
-- Open questions
-- Risks and assumptions
-- Suggested next SLDD step
-
 Use the summary only as contextual memory. Approved numbered artifacts define binding decisions:
+
 - Step 01 defines product intent, accepted behavior, scope, risks, and success metrics.
 - Step 02 defines high-level technical design.
 - Step 03 defines low-level design, contracts, dependencies, and version policy.
@@ -108,4 +93,4 @@ Use the summary only as contextual memory. Approved numbered artifacts define bi
 3. Candidate directions
 4. Key risks
 5. Suggested next step and routing decision, including whether Step 99 is needed now, later, or not applicable
-6. **Summary Recommendation**: Explicitly state if an `00-exploration-summary.md` is recommended to preserve technical memory.
+6. Summary recommendation: explicitly state if an `00-exploration-summary.md` is recommended to preserve technical memory

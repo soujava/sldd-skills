@@ -2,11 +2,49 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="$REPO_ROOT/skills"
-TARGET_DIR="$HOME/.agents/skills"
+SOURCE_SKILL="$REPO_ROOT/skills/sldd"
+DEFAULT_TARGET_DIR="$HOME/.agents/skills"
+TARGET_DIR="$DEFAULT_TARGET_DIR"
 
-if [ ! -d "$SOURCE_DIR" ]; then
-  echo "Error: skills source directory not found: $SOURCE_DIR" >&2
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [--target DIR] [--help]
+
+Install the local SLDD skill as a symbolic link.
+
+Options:
+  --target DIR  Destination skills directory. Default: $DEFAULT_TARGET_DIR
+  --help        Show this help message.
+EOF
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --target)
+      if [ "$#" -lt 2 ] || [ -z "${2:-}" ] || [ "${2#-}" != "$2" ]; then
+        echo "Error: --target requires a directory path." >&2
+        echo >&2
+        usage >&2
+        exit 2
+      fi
+      TARGET_DIR="$2"
+      shift 2
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Error: unknown option or argument: $1" >&2
+      echo >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [ ! -d "$SOURCE_SKILL" ]; then
+  echo "Error: SLDD skill source directory not found: $SOURCE_SKILL" >&2
   echo "Place this script in the repository root before running it." >&2
   exit 1
 fi
@@ -15,7 +53,7 @@ mkdir -p "$TARGET_DIR"
 
 echo
 echo "SLDD skills development install"
-echo "Source: $SOURCE_DIR"
+echo "Source: $SOURCE_SKILL"
 echo "Target: $TARGET_DIR"
 echo
 
@@ -25,7 +63,7 @@ removed_links=0
 removed_dirs=0
 skipped_files=0
 
-for entry in "$TARGET_DIR"/sldd-*; do
+for entry in "$TARGET_DIR"/sldd "$TARGET_DIR"/sldd-*; do
   [ -e "$entry" ] || [ -L "$entry" ] || continue
 
   entry_name="$(basename "$entry")"
@@ -51,19 +89,10 @@ fi
 echo
 echo "Creating symbolic links"
 
-created=0
-
-for skill_dir in "$SOURCE_DIR"/sldd-*; do
-  [ -d "$skill_dir" ] || continue
-
-  skill_name="$(basename "$skill_dir")"
-  target_link="$TARGET_DIR/$skill_name"
-
-  ln -s "$skill_dir" "$target_link"
-  echo "  link            $skill_name"
-
-  created=$((created + 1))
-done
+target_link="$TARGET_DIR/sldd"
+ln -s "$SOURCE_SKILL" "$target_link"
+echo "  link            sldd"
+created=1
 
 echo
 echo "Summary"
