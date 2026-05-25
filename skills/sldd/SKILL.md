@@ -58,13 +58,12 @@ If slash-style commands reach this skill as text, interpret them as SLDD command
 - `/sldd resume <feature>`: resume a specific workflow.
 - `/sldd resume`: resume the only active workflow, or ask the user to choose when there are multiple.
 - `/sldd continue`: continue the last clear workflow if it can be identified.
-- `/sldd step <NN>`: request a specific step after gate validation.
-- `/sldd run <NN> <feature>`: rerun a specific step for a specific feature after gate validation.
+- `/sldd run step <NN> <feature>`: rerun a specific step for a specific feature after gate validation.
 - `/sldd explore`: load Step 88 exploration.
 
 Slash commands are convenience syntax only. Always enforce the same gates, journal checks, approvals, and resume rules as natural-language requests.
 
-For `/sldd run <NN> <feature>`:
+For `/sldd run step <NN> <feature>`:
 
 1. Require both a valid step id and a feature name. If either is missing or invalid, stop and ask for correction.
 2. Resolve the workflow by checking `.sldd/specs/<feature>/_spec-journal.json` first, then legacy `docs/specs/<feature>/SPEC.md`.
