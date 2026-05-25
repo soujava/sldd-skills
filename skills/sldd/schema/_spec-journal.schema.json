@@ -25,8 +25,16 @@
     "steps": {
       "type": "object",
       "additionalProperties": false,
+      "properties": {
+        "04": {
+          "$ref": "#/$defs/red_step"
+        },
+        "05": {
+          "$ref": "#/$defs/green_step"
+        }
+      },
       "patternProperties": {
-        "^(00|01|02|03|04|05|06|88|99)$": {
+        "^(00|01|02|03|06|88|99)$": {
           "$ref": "#/$defs/step"
         }
       }
@@ -63,6 +71,70 @@
           "format": "date-time"
         }
       }
+    },
+    "red_step": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/step"
+        },
+        {
+          "if": {
+            "required": ["status"],
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            }
+          },
+          "then": {
+            "required": ["evidence"],
+            "properties": {
+              "evidence": {
+                "const": "red_confirmed"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "evidence": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "green_step": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/step"
+        },
+        {
+          "if": {
+            "required": ["status"],
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            }
+          },
+          "then": {
+            "required": ["evidence"],
+            "properties": {
+              "evidence": {
+                "const": "green_confirmed"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "evidence": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

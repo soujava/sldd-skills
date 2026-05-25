@@ -15,7 +15,7 @@ Load `templates/01-product-intent-specification.md` before drafting the artifact
 
 Use `00-exploration-summary.md` only as non-binding context for product intent, behavior, scope, risks, assumptions, and success metrics. Approved numbered artifacts override it.
 
-Use an approved Step 99 from brownfield exploration only as context for risks, assumptions, constraints, dependencies, and out-of-scope boundaries. Do not import architecture or implementation observations as product requirements unless explicitly approved as Step 01 decisions.
+Use an approved and saved Step 99 from brownfield exploration only as context for risks, assumptions, constraints, dependencies, and out-of-scope boundaries. Do not import architecture or implementation observations as product requirements unless explicitly approved as Step 01 decisions.
 
 Wait for approval.
 

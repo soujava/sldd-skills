@@ -17,7 +17,7 @@ Expected new-workflow artifacts:
 
 - `00-exploration-summary.md` (optional contextual memory; not a progress artifact)
 - `01-product-intent-specification.md`
-- `99-existing-codebase-understanding.md` (optional persisted snapshot)
+- `existing-codebase-understanding.md` (required persisted snapshot for brownfield Step 02+ gates)
 - `02-high-level-technical-design.md`
 - `03-low-level-design-and-version-policy.md`
 - Step 04 completion in `_spec-journal.json` with `evidence: "red_confirmed"`
@@ -41,9 +41,26 @@ Approved numbered artifacts take precedence over `00-exploration-summary.md`.
 8. If any violation exists, stop and route to the missing step.
 9. Route only to the next valid step file.
 
+## Specific Step Request Flow
+
+When the command is `/sldd run step <NN>` or its `/sldd step <NN>` alias:
+
+1. Treat it as a gated navigation request, not a rerun.
+2. Require `<NN>`. If the value is missing, malformed, or does not resolve to a supported step, stop and ask for correction.
+3. Resolve the target workflow from user input, current context, or the only active workflow. If multiple workflows are possible, stop and ask the user to choose.
+4. Read journal state and validate all referenced artifacts before loading the target step.
+5. Validate all prerequisites for the requested step exactly as that step requires.
+6. For existing codebases and requested steps after Step 99, block the request if Step 99 is required but missing, incomplete, stale, or scoped to a rejected direction.
+7. For Step 04 and Step 05 requests, re-evaluate current files and relevant test results before trusting journal evidence.
+8. If prerequisite artifacts, journal order, Step 99 freshness, Step 04 evidence, or Step 05 evidence conflict, stop and report the conflict instead of loading the requested step.
+9. If prerequisites are missing or stale, route to the missing prerequisite instead of loading the requested step.
+10. Load the requested step file only when its gates are satisfied.
+
+Do not mark later completed steps as `requires_rerun` after `/sldd run step <NN>` or `/sldd step <NN>`. Use `/sldd rerun step <NN> <feature>` when the user explicitly wants to rerun a step and invalidate dependent later work.
+
 ## Explicit Step Rerun Flow
 
-When the command is `/sldd run <NN> <feature>`:
+When the command is `/sldd rerun step <NN> <feature>`:
 
 1. Treat it as an explicit rerun request, not normal next-step navigation.
 2. Require both `<NN>` and `<feature>`. If either value is missing, malformed, or does not resolve to a supported step/workflow, stop and ask for correction.

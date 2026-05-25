@@ -10,7 +10,7 @@ Help the user turn a rough idea into a clear, testable spec direction before for
 - Route to Step 01 when the idea is sufficiently clear.
 - For existing codebases, inspect the current codebase when codebase understanding is needed to explore scope, constraints, risks, or alternatives.
 - If brownfield exploration depends on reusable codebase context, route to Step 99 before formalizing Step 01.
-- A Step 99 completed during exploration may satisfy the later brownfield gate only after resume validation confirms it still matches the current codebase and approved Step 01 scope.
+- A persisted Step 99 completed during exploration may satisfy the later brownfield gate only after resume validation confirms it still matches the current codebase and approved Step 01 scope.
 - Optional summaries default to `.sldd/specs/<feature-name>/00-exploration-summary.md` unless the user provides a path.
 - `00-exploration-summary.md` is contextual memory only: it does not update `_spec-journal.json`, mark progress, or replace numbered artifacts.
 
@@ -49,7 +49,7 @@ Use this step when the user:
 - Do not jump into numbered SLDD artifacts unless the user explicitly asks to formalize a decision or begin Step 01.
 - Downstream Steps 02-05 may follow only exploration details incorporated into the approved numbered artifact for that decision type; approved numbered artifacts override exploration notes.
 - If the discussion reveals the work depends on an existing codebase, determine whether codebase understanding is needed now for exploration or later before Step 02.
-- For brownfield work, ground exploration in the current codebase when relevant, but treat codebase observations as approved Step 99 context only if Step 99 is explicitly run and approved.
+- For brownfield work, ground exploration in the current codebase when relevant, but treat codebase observations as approved Step 99 context only if Step 99 is explicitly run, approved, and saved.
 - If the user wants to start the formal workflow, route them to Step 01.
 
 ## Conversation Shape

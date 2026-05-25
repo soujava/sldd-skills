@@ -47,6 +47,7 @@ Allowed step statuses:
 
 Step 04 completion requires `evidence: "red_confirmed"`.
 Step 05 completion requires `evidence: "green_confirmed"`.
+For Step 04 and Step 05, non-complete statuses must omit `evidence` or set it to `null`.
 
 ## Command Interface
 
@@ -58,12 +59,23 @@ If slash-style commands reach this skill as text, interpret them as SLDD command
 - `/sldd resume <feature>`: resume a specific workflow.
 - `/sldd resume`: resume the only active workflow, or ask the user to choose when there are multiple.
 - `/sldd continue`: continue the last clear workflow if it can be identified.
-- `/sldd run step <NN> <feature>`: rerun a specific step for a specific feature after gate validation.
+- `/sldd run step <NN>`: request a specific step in the resolved workflow after gate validation.
+- `/sldd step <NN>`: alias for `/sldd run step <NN>`.
+- `/sldd rerun step <NN> <feature>`: rerun a specific step for a specific feature after gate validation.
 - `/sldd explore`: load Step 88 exploration.
 
 Slash commands are convenience syntax only. Always enforce the same gates, journal checks, approvals, and resume rules as natural-language requests.
 
-For `/sldd run step <NN> <feature>`:
+For `/sldd run step <NN>` and its `/sldd step <NN>` alias:
+
+1. Require a valid step id. If it is missing or invalid, stop and ask for correction.
+2. Resolve the workflow from user input, current context, or the only active workflow. If the workflow is ambiguous, ask the user to choose.
+3. Validate prerequisites, referenced artifacts, Step 99 freshness when applicable, and Step 04/Step 05 evidence before loading the target step.
+4. If prerequisites are missing or stale, stop and route to the missing prerequisite instead of loading the requested step.
+5. Load the requested step file only when its gates are satisfied.
+6. Treat this as navigation, not rerun; do not mark later completed steps as `requires_rerun`.
+
+For `/sldd rerun step <NN> <feature>`:
 
 1. Require both a valid step id and a feature name. If either is missing or invalid, stop and ask for correction.
 2. Resolve the workflow by checking `.sldd/specs/<feature>/_spec-journal.json` first, then legacy `docs/specs/<feature>/SPEC.md`.
@@ -90,6 +102,7 @@ When responding to `/sldd help`, summarize:
 Exploration -> Step 01 + Step 99 when needed -> Step 02 -> Step 03 -> Step 04 -> Step 05 -> Step 06
 
 Step 99 is required before Step 02 for existing codebases. It may run during exploration when codebase context is needed.
+Step 99 completion requires an approved and saved `existing-codebase-understanding.md` artifact.
 
 ## Resume Rules
 
@@ -126,7 +139,7 @@ If journal, artifacts, repository state, or test results conflict, stop and ask 
 |---|---|
 | `00-exploration-summary.md` | `templates/00-exploration-summary.md` |
 | `01-product-intent-specification.md` | `templates/01-product-intent-specification.md` |
-| `99-existing-codebase-understanding.md` | `templates/99-existing-codebase-understanding.md` |
+| `existing-codebase-understanding.md` | `templates/existing-codebase-understanding.md` |
 | `02-high-level-technical-design.md` | `templates/02-high-level-technical-design.md` |
 | `03-low-level-design-and-version-policy.md` | `templates/03-low-level-design-and-version-policy.md` |
 | `06-verification-and-feedback-report.md` | `templates/06-verification-and-feedback-report.md` |

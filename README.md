@@ -117,7 +117,7 @@ New SLDD workflows store versioned artifacts under:
   02-high-level-technical-design.md
   03-low-level-design-and-version-policy.md
   06-verification-and-feedback-report.md
-  99-existing-codebase-understanding.md
+  existing-codebase-understanding.md
 ```
 
 `.sldd/specs` is intended to be committed to Git and reviewed with the code changes it governs.
@@ -132,6 +132,8 @@ Allowed journal statuses:
 
 Step 04 uses `status: "complete"` with `evidence: "red_confirmed"`.
 Step 05 uses `status: "complete"` with `evidence: "green_confirmed"`.
+When Step 04 or Step 05 is not complete, `evidence` must be omitted or `null`.
+Step 99 uses `status: "complete"` only when `existing-codebase-understanding.md` is approved and saved.
 
 Legacy workflows using `docs/specs/<feature-name>/SPEC.md` remain readable for resume compatibility. When the skill resumes a legacy workflow, it keeps writing in that legacy directory unless the user explicitly asks to migrate.
 
@@ -222,14 +224,17 @@ When slash-style commands are passed to the skill as text, the `sldd` skill inte
 /sldd resume <feature>
 /sldd resume
 /sldd continue
+/sldd run step <NN>
 /sldd step <NN>
-/sldd run <NN> <feature>
+/sldd rerun step <NN> <feature>
 /sldd explore
 ```
 
-Slash commands are convenience syntax only. They do not bypass gates. For example, `/sldd step 05` and `/sldd run 05 user-auth` still require Step 01, Step 02, Step 03, and Step 04 Red confirmation.
+Slash commands are convenience syntax only. They do not bypass gates. For example, `/sldd run step 05`, `/sldd step 05`, and `/sldd rerun step 05 user-auth` still require Step 01, Step 02, Step 03, and Step 04 Red confirmation.
 
-`/sldd run <NN> <feature>` reexecutes a specific step for a specific workflow. It resolves `.sldd/specs/<feature>/_spec-journal.json` first, falls back to legacy `docs/specs/<feature>/SPEC.md`, validates prerequisites, loads the requested step, and marks later completed steps as `requires_rerun` after the rerun completes.
+`/sldd run step <NN>` requests a specific step in the resolved workflow. It validates prerequisites and does not invalidate later completed steps. `/sldd step <NN>` is an alias for the same behavior.
+
+`/sldd rerun step <NN> <feature>` reexecutes a specific step for a specific workflow. It resolves `.sldd/specs/<feature>/_spec-journal.json` first, falls back to legacy `docs/specs/<feature>/SPEC.md`, validates prerequisites, loads the requested step, and marks later completed steps as `requires_rerun` after the rerun completes.
 
 `/sldd help` is informational only. It explains the skill, the gated flow, `.sldd/specs` storage, `_spec-journal.json`, legacy `SPEC.md` resume compatibility, and available commands without creating or changing workflow state.
 
@@ -264,15 +269,15 @@ The skill reads `_spec-journal.json`, verifies referenced artifacts, re-checks S
 ### Requesting a Specific Step
 
 ```text
-/sldd step 04
+/sldd run step 04
 ```
 
-The skill validates all prerequisites before loading Step 04. If prerequisites are missing, it blocks and routes to the required earlier step.
+The skill validates all prerequisites before loading Step 04. If prerequisites are missing, it blocks and routes to the required earlier step. `/sldd step 04` is accepted as an alias.
 
 ### Reexecuting a Specific Step
 
 ```text
-/sldd run 02 user-auth
+/sldd rerun step 02 user-auth
 ```
 
 The skill resolves the `user-auth` workflow, validates Step 02 prerequisites, and loads Step 02 for rerun. After the rerun is approved and saved, later completed steps such as Step 03, Step 04, Step 05, and Step 06 are marked `requires_rerun` because they may depend on the updated design.
@@ -281,7 +286,9 @@ The skill resolves the `user-auth` workflow, validates Step 02 prerequisites, an
 
 For brownfield work, Step 99 is required before Step 02. Step 99 may run during exploration when codebase understanding is needed to clarify scope, constraints, risks, or alternatives.
 
-A Step 99 completed during exploration can be reused later only after the skill validates that it still reflects the current codebase and remains relevant to the approved Step 01 scope.
+A Step 99 completed during exploration can be reused later only after the skill validates that its saved artifact still reflects the current codebase and remains relevant to the approved Step 01 scope.
+
+Conversational or unsaved codebase context does not satisfy the Step 99 brownfield gate. To proceed to Step 02+, Step 99 must be approved, saved as `existing-codebase-understanding.md`, and marked `complete` in `_spec-journal.json`.
 
 ### Greenfield Projects
 
