@@ -1,6 +1,6 @@
 ---
 name: sldd
-description: Run the SLDD workflow with gate validation, progressive step loading, structured journal resume, and legacy SPEC.md compatibility.
+description: Start, resume, inspect, or continue SLDD spec-driven development workflows, including /sldd slash-style commands, gated intent/design/test/implementation steps, structured journals, and legacy SPEC.md compatibility.
 metadata:
   type: workflow
 ---
