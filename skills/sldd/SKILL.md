@@ -59,31 +59,31 @@ If slash-style commands reach this skill as text, interpret them as SLDD command
 - `/sldd resume <feature>`: resume a specific workflow.
 - `/sldd resume`: resume the only active workflow, or ask the user to choose when there are multiple.
 - `/sldd continue`: continue the last clear workflow if it can be identified.
-- `/sldd run step <NN>`: request a specific step in the resolved workflow after gate validation.
+- `/sldd run step <NN> <feature>`: request a specific step for a specific workflow after gate validation.
+- `/sldd run step <NN>`: request a specific step in the resolved workflow when the workflow is unambiguous.
 - `/sldd step <NN>`: alias for `/sldd run step <NN>`.
-- `/sldd rerun step <NN> <feature>`: rerun a specific step for a specific feature after gate validation.
 - `/sldd explore`: load Step 88 exploration.
 
 Slash commands are convenience syntax only. Always enforce the same gates, journal checks, approvals, and resume rules as natural-language requests.
 
-For `/sldd run step <NN>` and its `/sldd step <NN>` alias:
+For `/sldd run step <NN> <feature>`, `/sldd run step <NN>`, and the `/sldd step <NN>` alias:
 
 1. Require a valid step id. If it is missing or invalid, stop and ask for correction.
-2. Resolve the workflow from user input, current context, or the only active workflow. If the workflow is ambiguous, ask the user to choose.
+2. Resolve the workflow from the feature argument, user input, current context, or the only active workflow. If the workflow is ambiguous, ask the user to choose.
 3. Validate prerequisites, referenced artifacts, Step 99 freshness when applicable, and Step 04/Step 05 evidence before loading the target step.
 4. If prerequisites are missing or stale, stop and route to the missing prerequisite instead of loading the requested step.
-5. Load the requested step file only when its gates are satisfied.
-6. Treat this as navigation, not rerun; do not mark later completed steps as `requires_rerun`.
+5. If the target step is `pending`, load the requested step file only when its gates are satisfied.
+6. If the target step is `requires_rerun`, load the requested step file only when its gates are satisfied. After it completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
+7. If the target step is `complete`, stop before loading the step and ask the user to choose:
+   - `1. Run it again only.` Warn that later completed steps will not be marked `requires_rerun`; use only when the user accepts downstream consistency risk.
+   - `2. Run it again and mark later completed steps as requires_rerun.`
+   - `3. Do nothing.`
+8. For option 1, run the step only after explicit confirmation. Do not automatically invalidate later steps. If the target step artifact, files, or journal entry changes, add a journal-only note that Step `<NN>` was run again without downstream invalidation by explicit user choice.
+9. For option 2, run the step only after explicit confirmation. After the target step completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
+10. For each invalidated later step, set `reason` to `Step <NN> was run again; this later step must be reviewed again.`
+11. When invalidating Step 04 or Step 05, clear its `evidence`; keep any existing `artifact` link as a historical reference.
 
-For `/sldd rerun step <NN> <feature>`:
-
-1. Require both a valid step id and a feature name. If either is missing or invalid, stop and ask for correction.
-2. Resolve the workflow by checking `.sldd/specs/<feature>/_spec-journal.json` first, then legacy `docs/specs/<feature>/SPEC.md`.
-3. Validate prerequisites, referenced artifacts, Step 99 freshness when applicable, and Step 04/Step 05 evidence before loading the target step.
-4. Load the requested step file, not the next automatic step.
-5. After the target step completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
-6. For each invalidated later step, set `reason` to `Step <NN> was rerun; this later step must be reviewed again.`
-7. When invalidating Step 04 or Step 05, clear its `evidence`; keep any existing `artifact` link as a historical reference.
+All completed-step choices remain subject to the target step's gate checks, approval protocol, save flow, and hard Red/Green contracts.
 
 `/sldd help` is informational only. It must not load a step file, create or mutate `_spec-journal.json`, route workflow state, inspect repositories, or write artifacts unless the user separately asks for status, resume, or a specific step.
 

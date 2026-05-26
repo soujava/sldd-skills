@@ -224,17 +224,19 @@ When slash-style commands are passed to the skill as text, the `sldd` skill inte
 /sldd resume <feature>
 /sldd resume
 /sldd continue
+/sldd run step <NN> <feature>
 /sldd run step <NN>
 /sldd step <NN>
-/sldd rerun step <NN> <feature>
 /sldd explore
 ```
 
-Slash commands are convenience syntax only. They do not bypass gates. For example, `/sldd run step 05`, `/sldd step 05`, and `/sldd rerun step 05 user-auth` still require Step 01, Step 02, Step 03, and Step 04 Red confirmation.
+Slash commands are convenience syntax only. They do not bypass gates. For example, `/sldd run step 05 user-auth`, `/sldd run step 05`, and `/sldd step 05` still require Step 01, Step 02, Step 03, and Step 04 Red confirmation.
 
-`/sldd run step <NN>` requests a specific step in the resolved workflow. It validates prerequisites and does not invalidate later completed steps. `/sldd step <NN>` is an alias for the same behavior.
+`/sldd run step <NN> <feature>` requests a specific step for a specific workflow. `/sldd run step <NN>` is allowed when the workflow can be resolved unambiguously. `/sldd step <NN>` is an alias for the same behavior.
 
-`/sldd rerun step <NN> <feature>` reexecutes a specific step for a specific workflow. It resolves `.sldd/specs/<feature>/_spec-journal.json` first, falls back to legacy `docs/specs/<feature>/SPEC.md`, validates prerequisites, loads the requested step, and marks later completed steps as `requires_rerun` after the rerun completes.
+When the requested step is already complete, the skill stops before loading the step and asks whether to run it again only, run it again and mark later completed steps as `requires_rerun`, or do nothing. The run-again-only option is an explicit user override and records a journal-only note if the target step changes without downstream invalidation.
+
+All choices still enforce the target step's gates, approval protocol, save flow, and Red/Green contracts.
 
 `/sldd help` is informational only. It explains the skill, the gated flow, `.sldd/specs` storage, `_spec-journal.json`, legacy `SPEC.md` resume compatibility, and available commands without creating or changing workflow state.
 
@@ -269,18 +271,12 @@ The skill reads `_spec-journal.json`, verifies referenced artifacts, re-checks S
 ### Requesting a Specific Step
 
 ```text
-/sldd run step 04
+/sldd run step 04 user-auth
 ```
 
-The skill validates all prerequisites before loading Step 04. If prerequisites are missing, it blocks and routes to the required earlier step. `/sldd step 04` is accepted as an alias.
+The skill validates all prerequisites before loading Step 04. If prerequisites are missing, it blocks and routes to the required earlier step. `/sldd run step 04` and `/sldd step 04` are accepted when the workflow can be resolved unambiguously.
 
-### Reexecuting a Specific Step
-
-```text
-/sldd rerun step 02 user-auth
-```
-
-The skill resolves the `user-auth` workflow, validates Step 02 prerequisites, and loads Step 02 for rerun. After the rerun is approved and saved, later completed steps such as Step 03, Step 04, Step 05, and Step 06 are marked `requires_rerun` because they may depend on the updated design.
+If Step 04 is already complete, the skill asks whether to run it again only, run it again and invalidate later completed steps, or do nothing.
 
 ### Existing Codebases
 
