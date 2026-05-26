@@ -62,9 +62,20 @@ If slash-style commands reach this skill as text, interpret them as SLDD command
 - `/sldd run step <NN> <feature>`: request a specific step for a specific workflow after gate validation.
 - `/sldd run step <NN>`: request a specific step in the resolved workflow when the workflow is unambiguous.
 - `/sldd step <NN>`: alias for `/sldd run step <NN>`.
-- `/sldd explore`: load Step 88 exploration.
+- `/sldd explore [idea]`: load Step 88 exploration. If idea text follows the command, use it as the initial exploration seed.
 
 Slash commands are convenience syntax only. Always enforce the same gates, journal checks, approvals, and resume rules as natural-language requests.
+
+For `/sldd explore [idea]`:
+
+1. Load Step 88 without creating or mutating journals, workflow state, or artifacts by default.
+2. If an inline idea is provided, treat the text after `/sldd explore` as the initial exploration seed.
+3. If no idea is provided, ask the user for the rough idea before continuing.
+4. Establish lightweight project context before asking idea-specific clarification questions.
+5. If a context or clarification question can be answered by read-only repository inspection, inspect the repository instead of asking the user.
+6. Ask one focused clarification question at a time, provide a recommended answer or default assumption, and ask the user to accept, revise, or reject it.
+7. Keep exploration conversational until the user explicitly chooses to formalize, save an optional exploration summary, route to Step 99, or stop.
+8. Do not route to Step 01, route to Step 99, or save `00-exploration-summary.md` without explicit user approval.
 
 For `/sldd run step <NN> <feature>`, `/sldd run step <NN>`, and the `/sldd step <NN>` alias:
 

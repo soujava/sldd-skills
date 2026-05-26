@@ -227,10 +227,12 @@ When slash-style commands are passed to the skill as text, the `sldd` skill inte
 /sldd run step <NN> <feature>
 /sldd run step <NN>
 /sldd step <NN>
-/sldd explore
+/sldd explore [idea]
 ```
 
 Slash commands are convenience syntax only. They do not bypass gates. For example, `/sldd run step 05 user-auth`, `/sldd run step 05`, and `/sldd step 05` still require Step 01, Step 02, Step 03, and Step 04 Red confirmation.
+
+`/sldd explore [idea]` starts Step 88 exploration. When idea text is provided inline, the skill treats it as the initial exploration seed, establishes lightweight project context, inspects the repository instead of asking questions the codebase can answer, then asks one focused clarification question at a time with a recommended answer or default assumption. Exploration stays pre-Step-01 until the user explicitly chooses to formalize, save an optional summary, route to Step 99, or stop without saving.
 
 `/sldd run step <NN> <feature>` requests a specific step for a specific workflow. `/sldd run step <NN>` is allowed when the workflow can be resolved unambiguously. `/sldd step <NN>` is an alias for the same behavior.
 
@@ -241,6 +243,14 @@ All choices still enforce the target step's gates, approval protocol, save flow,
 `/sldd help` is informational only. It explains the skill, the gated flow, `.sldd/specs` storage, `_spec-journal.json`, legacy `SPEC.md` resume compatibility, and available commands without creating or changing workflow state.
 
 ## Usage
+
+### Exploring an Idea
+
+```text
+/sldd explore Add a lightweight onboarding checklist for new project contributors.
+```
+
+The skill starts an interview from the inline idea, establishes project context first, and asks targeted questions one at a time to clarify the target outcome. Each question includes a recommended answer or default assumption. If the current repository can answer a question, the skill inspects it instead of asking. The skill offers explicit exits: continue exploring, formalize Step 01, save an optional `00-exploration-summary.md` after approval, route to Step 99 when reusable codebase context is needed, or stop without saving.
 
 ### Starting a New Feature
 
