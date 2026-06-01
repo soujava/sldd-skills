@@ -20,6 +20,8 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Preserve `.sldd/specs/<feature-name>/_spec-journal.json` as the canonical journal for new workflows.
 - Preserve legacy resume compatibility for `docs/specs/<feature-name>/SPEC.md` unless explicitly removed.
 - Preserve `/sldd help` as an informational command that explains the skill and does not mutate journals, artifacts, or workflow state.
+- Preserve `/sldd explore [idea]` as Step 88 exploration: establish lightweight project context first, inspect the repository instead of asking questions the codebase can answer, ask one focused clarification question at a time, include a recommended answer or default assumption, and offer explicit exits.
+- Preserve the Step 88/Step 99 boundary: Step 88 repository observations are conversational context only; Step 99 is the approved and saved brownfield context gate for Step 02+.
 - Preserve the Step 04/Step 05 Red-Green contract: Step 04 writes tests first only; Step 05 makes minimal production changes, does not modify Step 04 tests, and follows applicable repository or context-provided agent instructions.
 - Update `README.md` when changing user-visible process behavior, sequencing, gates, approval semantics, commands, journal fields, storage, templates, installer options, or step responsibilities.
 - Use Conventional Commits for commit messages, following the `<type>(optional-scope): <description>` format.
@@ -29,6 +31,8 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Do not add runtime application code, build scripts, package configuration, or CI/CD changes.
 - Do not introduce conventions, frameworks, or patterns not already present in the SLDD skill architecture.
 - Do not create additional executable SLDD skill entrypoints without explicit user instruction.
+- Do not turn Step 88 exploration into Step 02/Step 03 design work or binding requirements before Step 01 approval.
+- Do not treat Step 88 conversational context, repository observations, or `00-exploration-summary.md` as satisfying Step 99.
 - Do not store numbered artifact body content, command logs, or implementation reports in `_spec-journal.json`.
 - Do not modify `LICENSE` unless explicitly asked.
 
