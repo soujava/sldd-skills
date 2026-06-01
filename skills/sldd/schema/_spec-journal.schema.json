@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://soujava.github.io/sldd-skills/_spec-journal.schema.json",
+  "title": "SLDD Spec Journal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "feature", "workflow", "steps"],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "feature": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workflow": {
+      "type": "string",
+      "const": "sldd"
+    },
+    "current_step": {
+      "type": "string",
+      "pattern": "^(00|01|02|03|04|05|06|88|99)$"
+    },
+    "steps": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "04": {
+          "$ref": "#/$defs/red_step"
+        },
+        "05": {
+          "$ref": "#/$defs/green_step"
+        }
+      },
+      "patternProperties": {
+        "^(00|01|02|03|06|88|99)$": {
+          "$ref": "#/$defs/step"
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "complete", "requires_rerun"]
+        },
+        "artifact": {
+          "type": ["string", "null"]
+        },
+        "evidence": {
+          "type": ["string", "null"],
+          "enum": ["red_confirmed", "green_confirmed", null]
+        },
+        "reason": {
+          "type": ["string", "null"]
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "red_step": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/step"
+        },
+        {
+          "if": {
+            "required": ["status"],
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            }
+          },
+          "then": {
+            "required": ["evidence"],
+            "properties": {
+              "evidence": {
+                "const": "red_confirmed"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "evidence": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "green_step": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/step"
+        },
+        {
+          "if": {
+            "required": ["status"],
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            }
+          },
+          "then": {
+            "required": ["evidence"],
+            "properties": {
+              "evidence": {
+                "const": "green_confirmed"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "evidence": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

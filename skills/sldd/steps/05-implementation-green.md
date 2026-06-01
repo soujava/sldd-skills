@@ -1,37 +1,29 @@
----
-name: sldd-05-minimal-implementation-to-pass-existing-tests
-description: Implement minimal production changes to pass Step 04 tests and mark step completion.
-metadata:
-  step: "05"
-  type: implementation
----
-
-# Skill: Minimal Implementation to Pass Existing Tests
+# Step 05: Minimal Green Implementation
 
 ## Objective
 
-Implement the minimum production changes required to pass Step 04 tests without modifying tests, respecting approved Step 03 constraints, Step 01 requirements, repository instructions, and agentic instructions present in context, then mark Step 05 complete after Green confirmation.
+Implement the minimum production changes required to pass Step 04 tests without modifying tests, respecting approved Step 03 constraints, Step 01 requirements, repository instructions, and agentic instructions present in context. Mark Step 05 complete after Green confirmation.
 
 ## Gate + Resume Checks
 
-- Require Steps 01-04 approved.
-- Require Step 04 completion from `docs/specs/<feature-name>/SPEC.md`, current failing test results, or continuous handoff from Step 04.
-- For existing codebases, require Step 99 approved.
+- Require Steps 01-04 complete.
+- Require Step 04 completion from `_spec-journal.json`, current failing test results, or continuous handoff from Step 04.
+- For existing codebases, require Step 99 complete and current.
 - Require repository instructions and agentic instructions present in context to be inspected and followed before implementation.
 - Reject requests to modify tests or bypass Red/Green order.
-- Reject inconsistent checklist states.
-- On interrupted resume, re-evaluate `docs/specs/<feature-name>/SPEC.md`, current files, and relevant test results before deciding whether Step 05 is pending or complete.
+- Reject inconsistent journal states.
+- On interrupted resume, re-evaluate the journal, current files, and relevant test results before deciding whether Step 05 is pending or complete.
 
 ## Interrupted Workflow Resume Rules
 
-- Always re-evaluate Step 04 and Step 05 on resume, even if `docs/specs/<feature-name>/SPEC.md` already marks one or both complete.
+- Always re-evaluate Step 04 and Step 05 on resume, even if `_spec-journal.json` or legacy `SPEC.md` marks one or both complete.
 - Run the relevant Step 04 tests before modifying production code when the current state is not already clear.
 - If the tests still fail, continue with the minimal implementation required to make them pass.
-- If the tests already pass and test files were not modified after Step 04 completion, mark Step 05 complete in `docs/specs/<feature-name>/SPEC.md`.
+- If the tests already pass and test files were not modified after Step 04 completion, mark Step 05 complete with `status: "complete"` and `evidence: "green_confirmed"`.
 - If Step 04 state is stale or ambiguous, re-run the relevant tests before implementation.
 - If Step 04 tests appear to have been modified after Red confirmation, stop because test integrity may be compromised.
 - If production implementation is partial, continue from the current state without reverting user changes.
-- If checklist state, file state, or test results conflict, stop and ask for direction before modifying files or progress.
+- If journal state, file state, or test results conflict, stop and ask for direction before modifying files or progress.
 
 ## Execution Protocol
 
@@ -46,6 +38,7 @@ The execution snapshot must identify which Step 03 contracts, constraints, imple
 ## Execution Output
 
 Present:
+
 - green-phase execution snapshot
 - confirmation that tests were not modified
 
@@ -63,7 +56,7 @@ Use these required Step 05 snapshot headings:
 
 - Do not require a separate Step 05 execution approval when approved Step 01, Step 02, Step 03, and Step 04 artifacts clearly define the requirements, constraints, test failures, and implementation scope.
 - Ask for explicit approval before modifying production code or running commands only when Step 05 detects ambiguity, scope expansion, missing applicable repository or agentic instructions, unclear commands, dependency changes, or convention exceptions.
-- Do not require a separate approval after Green confirmation before updating `docs/specs/<feature-name>/SPEC.md`.
+- Do not require a separate approval after Green confirmation before updating `_spec-journal.json`.
 - On rejection, requested changes, hold, or ambiguous approval, do not modify code, run, save, or route forward; clarify or wait.
 - If writes are unavailable, stop and report the limitation.
 
@@ -72,23 +65,27 @@ Use these required Step 05 snapshot headings:
 - Run tests and confirm previously failing tests pass.
 - Record commands and results.
 
-## Save Flow (after Green confirmation)
+## Save Flow After Green Confirmation
 
 1. Do not create a mandatory Step 05 report artifact.
-2. Update `docs/specs/<feature-name>/SPEC.md` Step 05 `[x]` only.
-3. Keep `docs/specs/<feature-name>/SPEC.md` journal-only; do not include logs, report body, or numbered artifact content.
+2. Update `_spec-journal.json` Step 05 to `status: "complete"` and `evidence: "green_confirmed"`.
+3. Keep `_spec-journal.json` journal-only; do not include logs, report body, or numbered artifact content.
 4. Ask whether to continue to the next step or hold.
+
+For legacy or user-provided workflow paths, update progress in the resolved journal instead.
 
 ## Response Format
 
 ### Execution Response
+
 1. Gate and resume check result
 2. Green-phase execution snapshot
 3. Test integrity confirmation
-4. `docs/specs/<feature-name>/SPEC.md` update summary
+4. Journal update summary
 5. Continue/hold prompt
 
 ### Blocked Response
+
 1. Gate and resume check result
 2. Reason Step 05 cannot execute directly
 3. Required clarification, approval, or route back to Step 03
