@@ -8,6 +8,8 @@ Help the user turn a rough idea into a clear, testable spec direction before for
 
 - Keep exploration pre-Step-01 unless the user explicitly asks to formalize.
 - Route to Step 01 when the idea is sufficiently clear.
+- Recommend workflow-set planning before Step 01 when the idea has multiple capabilities, clear dependencies, parallelizable workstreams, or would create an oversized Step 01.
+- Do not create workflow-set artifacts from exploration without explicit user approval.
 - When invoked as `/sldd explore <idea>`, treat `<idea>` as the initial exploration seed and begin project-context intake plus clarification immediately.
 - When invoked without an idea, ask for the rough idea first.
 - Establish lightweight project context before asking idea-specific clarification questions.
@@ -82,7 +84,8 @@ Use this step when the user:
 8. Compare candidate directions if more than one exists.
 9. Call out risks, edge cases, and likely follow-up questions.
 10. Decide whether the idea is ready for Step 01 or needs more exploration.
-11. Proactively offer `00-exploration-summary.md` before Step 01 when technical design ideas, complex alternatives, or refined constraints should be preserved for Step 02/03.
+11. If decomposition is clearly useful, ask whether to switch to workflow-set planning instead of starting a normal Step 01.
+12. Proactively offer `00-exploration-summary.md` before Step 01 when technical design ideas, complex alternatives, or refined constraints should be preserved for Step 02/03.
 
 ## Ground Rules
 
@@ -91,6 +94,7 @@ Use this step when the user:
 - Do not jump into numbered SLDD artifacts unless the user explicitly asks to formalize a decision or begin Step 01.
 - Downstream Steps 02-05 may follow only exploration details incorporated into the approved numbered artifact for that decision type; approved numbered artifacts override exploration notes.
 - If the discussion reveals the work depends on an existing codebase, determine whether codebase understanding is needed now for exploration or later before Step 02.
+- If the discussion reveals multiple independent capabilities or predecessor relationships, recommend workflow-set planning but wait for explicit approval before writing files.
 - For brownfield work, ground exploration in the current codebase when relevant, but treat codebase observations as approved Step 99 context only if Step 99 is explicitly run, approved, and saved.
 - If the user wants to start the formal workflow, route them to Step 01.
 

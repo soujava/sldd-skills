@@ -8,6 +8,8 @@ Define and validate product intent for downstream steps.
 
 - Reject jump-ahead requests to design, tests, or implementation.
 - If resuming from `_spec-journal.json` or legacy `SPEC.md`, reject invalid state where later steps are complete but Step 01 is not.
+- Before creating a normal Step 01 for a new large idea, recommend workflow-set planning when decomposition clearly improves safety, clarity, or parallel execution.
+- For a scaffolded child workflow, verify required predecessor journals before marking Step 01 complete.
 
 ## Draft Output
 
@@ -16,6 +18,10 @@ Load `templates/01-product-intent-specification.md` before drafting the artifact
 Use `00-exploration-summary.md` only as non-binding context for product intent, behavior, scope, risks, assumptions, and success metrics. Approved numbered artifacts override it.
 
 Use an approved and saved Step 99 from brownfield exploration only as context for risks, assumptions, constraints, dependencies, and out-of-scope boundaries. Do not import architecture or implementation observations as product requirements unless explicitly approved as Step 01 decisions.
+
+For a child workflow scaffolded from a workflow-set, use the existing Step 01 draft as the starting point. Do not mark Step 01 complete until every predecessor journal listed in `relationships.predecessors` has Step 06 verification complete.
+
+If any predecessor is missing or incomplete, the child Step 01 may be reviewed or revised, but it must remain pending.
 
 Wait for approval.
 

@@ -98,6 +98,13 @@ skills/sldd/
 
 `SKILL.md` is the workflow router. It resolves the current SLDD workflow, validates gates, interprets natural language or slash-style commands, and loads only the step file needed for the next action.
 
+SLDD supports two workflow kinds:
+
+- `feature`: the normal gated feature workflow.
+- `workflow-set`: a parent workflow that decomposes a large idea into child feature workflows.
+
+Missing `kind` in an existing journal is treated as `feature` for backward compatibility. Existing workflows are not renamed or migrated automatically.
+
 The skill uses progressive disclosure:
 
 - `SKILL.md` contains global routing, storage, journal, and gate rules.
@@ -134,6 +141,8 @@ Step 04 uses `status: "complete"` with `evidence: "red_confirmed"`.
 Step 05 uses `status: "complete"` with `evidence: "green_confirmed"`.
 When Step 04 or Step 05 is not complete, `evidence` must be omitted or `null`.
 Step 99 uses `status: "complete"` only when `existing-codebase-understanding.md` is approved and saved.
+
+Workflow-set journals may also record `workflowSet.children`, child scaffold state, relationships, and scaffold origin metadata. Parent workflow-sets must not persist child execution progress; child status is read from child journals when needed.
 
 Legacy workflows using `docs/specs/<feature-name>/SPEC.md` remain readable for resume compatibility. When the skill resumes a legacy workflow, it keeps writing in that legacy directory unless the user explicitly asks to migrate.
 
@@ -198,6 +207,32 @@ Step 04 must stay Red-only. Step 05 must implement only the minimum production c
 
 If a gap appears at any step, loop back to the earlier step and revise.
 
+### Workflow Decomposition
+
+For large ideas, SLDD may recommend workflow-set planning before starting a normal Step 01. This is useful when a request has multiple capabilities, clear dependencies, parallelizable workstreams, or would create an oversized Step 01.
+
+A workflow-set uses this parent flow:
+
+```text
+01-workflow-set-plan -> 02-scaffold-children -> 03-verify-workflow-set
+```
+
+The parent workflow-set plans and scaffolds child workflows. It does not execute children or track child execution progress.
+
+Child workflows are normal `feature` workflows. When scaffolded, each child starts with Step 01 `pending` and `origin.type: "workflow-set-scaffold"`. A child Step 01 cannot be approved until every predecessor workflow has completed Step 06 verification.
+
+First-version guardrails:
+
+- Workflow-set planning requires explicit approval.
+- A new workflow-set parent journal may be created only after explicit approval; existing feature journals are not converted automatically.
+- Completing a workflow-set plan does not approve child scaffolding.
+- Scaffold is all-or-nothing for all proposed children in the approved plan.
+- Scaffold states are `proposed`, `created`, and `conflict`.
+- Invalid plans keep `02-scaffold-children` pending and create no child files. Filesystem collisions or unsafe overwrite risks may be recorded as `conflict` only after explicit approval.
+- A workflow-set verification may complete with accepted conflicts only when the user explicitly accepts that those children were not scaffolded and should remain recorded for later resolution.
+- Existing artifacts are not overwritten without explicit approval.
+- Status and resume output may compute a child overview from child journals, but that computed progress is not written into the parent journal.
+
 ## Steps Included
 
 | Step | File | Description |
@@ -211,6 +246,14 @@ If a gap appears at any step, loop back to the earlier step and revise.
 | 04 | `steps/04-tests-red.md` | Write tests first and confirm Red |
 | 05 | `steps/05-implementation-green.md` | Implement minimal production changes and confirm Green |
 | 06 | `steps/06-verification.md` | Audit compliance and produce Go/No-Go decision |
+
+Workflow-set parent steps:
+
+| Step | File | Description |
+|---|---|---|
+| 01-workflow-set-plan | `steps/01-workflow-set-plan.md` | Define the decomposition plan and approval state |
+| 02-scaffold-children | `steps/02-scaffold-children.md` | Create approved child workflow drafts |
+| 03-verify-workflow-set | `steps/03-verify-workflow-set.md` | Verify coordination consistency |
 
 ## Commands
 
@@ -241,6 +284,8 @@ When the requested step is already complete, the skill stops before loading the 
 All choices still enforce the target step's gates, approval protocol, save flow, and Red/Green contracts.
 
 `/sldd help` is informational only. It explains the skill, the gated flow, `.sldd/specs` storage, `_spec-journal.json`, legacy `SPEC.md` resume compatibility, and available commands without creating or changing workflow state.
+
+When resuming a workflow-set, SLDD resumes pending parent steps first. After the parent is complete, it lists child workflows by reading child journals and does not auto-select a child when multiple children are pending.
 
 ## Usage
 

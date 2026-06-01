@@ -9,7 +9,7 @@ metadata:
 
 ## Objective
 
-Route SLDD work safely through exploration, intent, design, Red tests, Green implementation, and verification.
+Route SLDD work safely through exploration, intent, workflow decomposition, design, Red tests, Green implementation, and verification.
 
 ## Runtime Model
 
@@ -49,6 +49,13 @@ Step 04 completion requires `evidence: "red_confirmed"`.
 Step 05 completion requires `evidence: "green_confirmed"`.
 For Step 04 and Step 05, non-complete statuses must omit `evidence` or set it to `null`.
 
+Supported workflow kinds:
+
+- `feature`
+- `workflow-set`
+
+Missing kind means feature. Existing journals without `kind` must be treated as normal feature workflows and must not be rewritten solely to add `kind`.
+
 ## Command Interface
 
 If slash-style commands reach this skill as text, interpret them as SLDD commands:
@@ -76,6 +83,10 @@ For `/sldd explore [idea]`:
 6. Ask one focused clarification question at a time, provide a recommended answer or default assumption, and ask the user to accept, revise, or reject it.
 7. Keep exploration conversational until the user explicitly chooses to formalize, save an optional exploration summary, route to Step 99, or stop.
 8. Do not route to Step 01, route to Step 99, or save `00-exploration-summary.md` without explicit user approval.
+
+Before starting Step 01 for a new request, evaluate whether the idea is too large for one workflow. Recommend workflow-set planning when the request has multiple capabilities, clear dependencies, parallelizable workstreams, or would produce an oversized Step 01. Do not force decomposition. If the user rejects decomposition, continue with the normal single-workflow SLDD flow.
+
+Workflow-set planning may propose structure, but only explicit user approval may create or modify workflow files. If the user approves creating a new workflow-set and no parent journal exists, route to `01-workflow-set-plan`; that step may create the parent journal with `kind: "workflow-set"` after approval. Existing journals without `kind` remain feature workflows and must not be converted automatically. Completing a workflow-set plan does not authorize child scaffolding unless scaffold is explicitly approved.
 
 For `/sldd run step <NN> <feature>`, `/sldd run step <NN>`, and the `/sldd step <NN>` alias:
 
@@ -107,6 +118,7 @@ When responding to `/sldd help`, summarize:
 - legacy `docs/specs/<feature-name>/SPEC.md` resume compatibility
 - available slash-style commands
 - the fact that commands do not bypass gates
+- workflow-set planning for large ideas, including that child workflows run independently through normal SLDD gates
 
 ## Gate Order
 
@@ -115,6 +127,14 @@ Exploration -> Step 01 + Step 99 when needed -> Step 02 -> Step 03 -> Step 04 ->
 Step 99 is required before Step 02 for existing codebases. It may run during exploration when codebase context is needed.
 Step 99 completion requires an approved and saved `existing-codebase-understanding.md` artifact.
 
+Workflow-set workflows use this compact parent flow:
+
+```text
+01-workflow-set-plan -> 02-scaffold-children -> 03-verify-workflow-set
+```
+
+Workflow-set parents plan and scaffold child workflows. They do not execute children, approve child Step 01, enforce child implementation gates, or persist child execution progress.
+
 ## Resume Rules
 
 When resuming:
@@ -122,11 +142,15 @@ When resuming:
 1. Resolve the feature and journal path from user input, current context, or available specs.
 2. Prefer `.sldd/specs/<feature-name>/_spec-journal.json`.
 3. If no new journal exists, allow legacy resume from `docs/specs/<feature-name>/SPEC.md`.
-4. Validate that referenced Markdown artifacts exist.
-5. Detect out-of-order completions or missing prerequisites.
-6. For Step 99, validate freshness and relevance before reuse.
-7. For Step 04 and Step 05, re-evaluate repository state and relevant test results before trusting the journal.
-8. Load only the required step file.
+4. If the user explicitly approved creating a new workflow-set and no parent journal exists, route to `01-workflow-set-plan` instead of treating the missing journal as a resume failure.
+5. Validate that referenced Markdown artifacts exist.
+6. Detect out-of-order completions or missing prerequisites.
+7. Infer `kind: "feature"` when the journal has no `kind`.
+8. For `kind: "workflow-set"`, resume pending parent workflow-set steps first.
+9. If a workflow-set parent is complete, compute a read-only child overview by reading child journals; do not write child progress to the parent journal or auto-select a child when multiple are pending.
+10. For Step 99, validate freshness and relevance before reuse.
+11. For Step 04 and Step 05, re-evaluate repository state and relevant test results before trusting the journal.
+12. Load only the required step file.
 
 If journal, artifacts, repository state, or test results conflict, stop and ask for direction before writing or routing forward.
 
@@ -144,6 +168,14 @@ If journal, artifacts, repository state, or test results conflict, stop and ask 
 | 05 | `steps/05-implementation-green.md` | Minimal Green implementation |
 | 06 | `steps/06-verification.md` | Verification and Go/No-Go |
 
+Workflow-set step files:
+
+| Step | File | Purpose |
+|---|---|---|
+| 01-workflow-set-plan | `steps/01-workflow-set-plan.md` | Parent decomposition plan |
+| 02-scaffold-children | `steps/02-scaffold-children.md` | Create approved child workflow drafts |
+| 03-verify-workflow-set | `steps/03-verify-workflow-set.md` | Verify coordination consistency |
+
 ## Template Map
 
 | Artifact | Template |
@@ -154,12 +186,18 @@ If journal, artifacts, repository state, or test results conflict, stop and ask 
 | `02-high-level-technical-design.md` | `templates/02-high-level-technical-design.md` |
 | `03-low-level-design-and-version-policy.md` | `templates/03-low-level-design-and-version-policy.md` |
 | `06-verification-and-feedback-report.md` | `templates/06-verification-and-feedback-report.md` |
+| `01-workflow-set-plan.md` | `templates/01-workflow-set-plan.md` |
+| `01-product-intent-specification.md` from workflow-set scaffold | `templates/01-product-intent-from-workflow-set.md` |
 
 ## Global Gate Rule
 
 No implementation prompts or code changes before Step 01, Step 02, and Step 03 are approved. For existing codebases, Step 99 must also be complete and current before Step 02.
 
 Step 04 must stay Red-only. Step 05 must make the minimum production changes needed to pass Step 04 tests, must not modify Step 04 tests, and must follow applicable repository or context-provided agent instructions.
+
+Child workflows scaffolded from a workflow-set start with Step 01 pending. Before approving a scaffolded child Step 01, verify that every predecessor journal listed in the child journal exists and has Step 06 verification complete.
+
+Workflow-set child scaffold states are only `proposed`, `created`, and `conflict`. These states describe materialization only, not child execution progress.
 
 ## Response Format
 

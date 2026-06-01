@@ -34,12 +34,28 @@ Approved numbered artifacts take precedence over `00-exploration-summary.md`.
    - user-provided path, or
    - `.sldd/specs/<feature-name>/_spec-journal.json`, or
    - legacy `docs/specs/<feature-name>/SPEC.md`.
-4. Read journal state and validate referenced artifacts.
-5. Detect out-of-order completions.
-6. If the spec is still being clarified, route to Step 88.
-7. For existing codebases, check whether Step 99 is required, complete, and still valid.
-8. If any violation exists, stop and route to the missing step.
-9. Route only to the next valid step file.
+4. If the user explicitly approved creating a new workflow-set and the target journal does not exist, route to `01-workflow-set-plan`; that step may create the parent journal after approval.
+5. Read journal state and validate referenced artifacts.
+6. Infer missing `kind` as `feature`; do not rewrite old journals solely to add `kind`.
+7. Detect out-of-order completions.
+8. If the spec is still being clarified, route to Step 88.
+9. For `kind: "workflow-set"`, route through `01-workflow-set-plan`, `02-scaffold-children`, and `03-verify-workflow-set`.
+10. For `kind: "feature"`, preserve the normal feature flow.
+11. For existing codebases, check whether Step 99 is required, complete, and still valid.
+12. If any violation exists, stop and route to the missing step.
+13. Route only to the next valid step file.
+
+## Workflow-Set Navigation
+
+When the resolved journal has `kind: "workflow-set"`:
+
+- Resume pending parent workflow-set steps before showing child workflow execution state.
+- If parent steps are complete, compute a read-only child overview by reading child journals referenced by the parent.
+- Do not persist child execution progress in the parent journal.
+- Do not auto-select a child when multiple children are pending or actionable.
+- If exactly one child is clearly unblocked and pending, ask before switching context to that child.
+
+When `kind` is missing, treat the workflow as `feature` for compatibility.
 
 ## Specific Step Run Flow
 
