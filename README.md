@@ -144,6 +144,19 @@ Step 99 uses `status: "complete"` only when `existing-codebase-understanding.md`
 
 Workflow-set journals may also record `workflowSet.children`, child scaffold state, relationships, and scaffold origin metadata. Parent workflow-sets must not persist child execution progress; child status is read from child journals when needed.
 
+### Journal Field Summary
+
+Common journal fields:
+
+- `kind`: `feature` for normal workflows or `workflow-set` for parent decomposition workflows. Missing `kind` is treated as `feature`.
+- `current_step`: the current SLDD step id, including workflow-set step ids when applicable.
+- `relationships.parents`: parent workflow references for scaffolded child workflows.
+- `relationships.predecessors`: predecessor workflow journal paths that must complete Step 06 before this workflow can complete Step 01 or route to Step 02+.
+- `workflowSet.children`: parent workflow-set child definitions and scaffold state.
+- `origin.type`: `workflow-set-scaffold` on scaffolded child Step 01 entries.
+- `evidence`: `red_confirmed` for completed Step 04 and `green_confirmed` for completed Step 05.
+- `requires_rerun`: marks a previously completed step that must be reviewed again after an earlier step changes.
+
 Legacy workflows using `docs/specs/<feature-name>/SPEC.md` remain readable for resume compatibility. When the skill resumes a legacy workflow, it keeps writing in that legacy directory unless the user explicitly asks to migrate.
 
 ## The Process Flow
@@ -205,6 +218,8 @@ Use `/sldd` to start, inspect, or resume the workflow. The skill routes to the n
 
 Step 04 must stay Red-only. Step 05 must implement only the minimum production changes required to pass Step 04 tests, must not modify Step 04 tests, and must inspect and follow applicable repository or context-provided agent instructions.
 
+Step 04 and Step 05 do not create mandatory Markdown report artifacts. Step 04 records Red confirmation in `_spec-journal.json`; Step 05 records Green confirmation in `_spec-journal.json`. The conversational execution snapshot may be used to continue the workflow, but the journal remains the canonical progress record for these phases.
+
 If a gap appears at any step, loop back to the earlier step and revise.
 
 ### Workflow Decomposition
@@ -217,7 +232,7 @@ A workflow-set uses this parent flow:
 01-workflow-set-plan -> 02-scaffold-children -> 03-verify-workflow-set
 ```
 
-The parent workflow-set plans and scaffolds child workflows. It does not execute children or track child execution progress.
+The parent workflow-set plans and scaffolds child workflows. It does not execute children, approve child Step 01, enforce child implementation gates, or track child execution progress.
 
 Child workflows are normal `feature` workflows. When scaffolded, each child starts with Step 01 `pending` and `origin.type: "workflow-set-scaffold"`. A child Step 01 cannot be approved until every predecessor workflow has completed Step 06 verification.
 
@@ -337,7 +352,7 @@ If Step 04 is already complete, the skill asks whether to run it again only, run
 
 For brownfield work, Step 99 is required before Step 02. Step 99 may run during exploration when codebase understanding is needed to clarify scope, constraints, risks, or alternatives.
 
-A Step 99 completed during exploration can be reused later only after the skill validates that its saved artifact still reflects the current codebase and remains relevant to the approved Step 01 scope.
+A Step 99 drafted during exploration is conversational context until explicitly approved and saved. A completed Step 99 from exploration can be reused later only after the skill validates that its saved artifact still reflects the current codebase and remains relevant to the approved Step 01 scope.
 
 Conversational or unsaved codebase context does not satisfy the Step 99 brownfield gate. To proceed to Step 02+, Step 99 must be approved, saved as `existing-codebase-understanding.md`, and marked `complete` in `_spec-journal.json`.
 

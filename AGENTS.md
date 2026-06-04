@@ -23,6 +23,13 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Preserve `/sldd explore [idea]` as Step 88 exploration: establish lightweight project context first, inspect the repository instead of asking questions the codebase can answer, ask one focused clarification question at a time, include a recommended answer or default assumption, and offer explicit exits.
 - Preserve the Step 88/Step 99 boundary: Step 88 repository observations are conversational context only; Step 99 is the approved and saved brownfield context gate for Step 02+.
 - Preserve the Step 04/Step 05 Red-Green contract: Step 04 writes tests first only; Step 05 makes minimal production changes, does not modify Step 04 tests, and follows applicable repository or context-provided agent instructions.
+- Preserve Step 04 and Step 05 as journal-evidence phases, not mandatory Markdown report artifact phases: Step 04 records `evidence: "red_confirmed"` and Step 05 records `evidence: "green_confirmed"` in `_spec-journal.json`.
+- Preserve workflow-set parent sequencing: `01-workflow-set-plan -> 02-scaffold-children -> 03-verify-workflow-set`.
+- Preserve workflow-set parent boundaries: parents plan and scaffold child workflows, but do not execute children, approve child Step 01, enforce child implementation gates, or persist child execution progress.
+- Preserve predecessor gates: when `relationships.predecessors` exists, Step 01 completion and Step 02+ routing are blocked until every listed predecessor journal has Step 06 complete.
+- Preserve completed-step rerun choices: run again only, run again and mark later completed steps `requires_rerun`, or do nothing.
+- Preserve workflow-set scaffold states: `proposed`, `created`, and `conflict`.
+- Preserve journal schema concepts used by the current skill: `kind`, `current_step`, `relationships`, `workflowSet.children`, `origin.type`, `evidence`, `reason`, and `requires_rerun`.
 - Update `README.md` when changing user-visible process behavior, sequencing, gates, approval semantics, commands, journal fields, storage, templates, installer options, or step responsibilities.
 - Use Conventional Commits for commit messages, following the `<type>(optional-scope): <description>` format.
 
@@ -34,6 +41,9 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Do not turn Step 88 exploration into Step 02/Step 03 design work or binding requirements before Step 01 approval.
 - Do not treat Step 88 conversational context, repository observations, or `00-exploration-summary.md` as satisfying Step 99.
 - Do not store numbered artifact body content, command logs, or implementation reports in `_spec-journal.json`.
+- Do not persist child workflow execution progress into a workflow-set parent journal; compute child progress by reading child journals when needed.
+- Do not infer child scaffolding approval from workflow-set plan approval.
+- Do not auto-convert existing feature journals into workflow-set journals.
 - Do not modify `LICENSE` unless explicitly asked.
 
 ## Repository Content Policy

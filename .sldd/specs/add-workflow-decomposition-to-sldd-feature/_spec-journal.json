@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "feature": "add-workflow-decomposition-to-sldd-feature",
+  "workflow": "sldd",
+  "current_step": "06",
+  "steps": {
+    "01": {
+      "status": "complete",
+      "artifact": "01-product-intent-specification.md",
+      "updated_at": "2026-06-01T06:06:45Z"
+    },
+    "99": {
+      "status": "complete",
+      "artifact": "existing-codebase-understanding.md",
+      "updated_at": "2026-06-01T06:08:08Z"
+    },
+    "02": {
+      "status": "complete",
+      "artifact": "02-high-level-technical-design.md",
+      "updated_at": "2026-06-01T06:08:08Z"
+    },
+    "03": {
+      "status": "complete",
+      "artifact": "03-low-level-design-and-version-policy.md",
+      "updated_at": "2026-06-01T06:08:08Z"
+    },
+    "04": {
+      "status": "complete",
+      "artifact": "04-red-checks.md",
+      "evidence": "red_confirmed",
+      "updated_at": "2026-06-01T06:14:33Z"
+    },
+    "05": {
+      "status": "complete",
+      "evidence": "green_confirmed",
+      "updated_at": "2026-06-01T06:17:14Z"
+    },
+    "06": {
+      "status": "complete",
+      "artifact": "06-verification-and-feedback-report.md",
+      "updated_at": "2026-06-01T06:18:41Z"
+    }
+  },
+  "notes": [
+    "Step 01 approved by user using workflow-decomposition-refinement.md, now stored beside this journal as historical source input, Refinements 50, 51, and 52 as source of decision.",
+    "Step 99, Step 02, and Step 03 approved by user and persisted in sequence.",
+    "Step 04 red checks failed as expected before workflow-set files and schema support existed.",
+    "Step 05 completed minimal skill, template, schema, and README changes needed to pass Step 04 checks.",
+    "Step 06 verification completed with Go decision."
+  ]
+}
