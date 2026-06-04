@@ -49,6 +49,8 @@ Step 04 completion requires `evidence: "red_confirmed"`.
 Step 05 completion requires `evidence: "green_confirmed"`.
 For Step 04 and Step 05, non-complete statuses must omit `evidence` or set it to `null`.
 
+If a journal has `relationships.predecessors`, every listed predecessor journal must exist and have Step 06 complete before this workflow can mark Step 01 complete or route to Step 02+. Predecessor-gated workflows may draft and save Step 01 or Step 99 artifacts for review, but those steps must remain `pending` with a `reason` until the predecessor gate is satisfied.
+
 Supported workflow kinds:
 
 - `feature`
@@ -92,7 +94,7 @@ For `/sldd run step <NN> <feature>`, `/sldd run step <NN>`, and the `/sldd step 
 
 1. Require a valid step id. If it is missing or invalid, stop and ask for correction.
 2. Resolve the workflow from the feature argument, user input, current context, or the only active workflow. If the workflow is ambiguous, ask the user to choose.
-3. Validate prerequisites, referenced artifacts, Step 99 freshness when applicable, and Step 04/Step 05 evidence before loading the target step.
+3. Validate prerequisites, referenced artifacts, predecessor completion, Step 99 freshness when applicable, and Step 04/Step 05 evidence before loading the target step.
 4. If prerequisites are missing or stale, stop and route to the missing prerequisite instead of loading the requested step.
 5. If the target step is `pending`, load the requested step file only when its gates are satisfied.
 6. If the target step is `requires_rerun`, load the requested step file only when its gates are satisfied. After it completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
@@ -127,6 +129,8 @@ Exploration -> Step 01 + Step 99 when needed -> Step 02 -> Step 03 -> Step 04 ->
 Step 99 is required before Step 02 for existing codebases. It may run during exploration when codebase context is needed.
 Step 99 completion requires an approved and saved `existing-codebase-understanding.md` artifact.
 
+For any workflow with `relationships.predecessors`, Step 01 completion and all Step 02+ routing are blocked until every predecessor workflow has Step 06 complete. Draft artifacts may be saved for review, but they are not gating-complete while predecessors are incomplete.
+
 Workflow-set workflows use this compact parent flow:
 
 ```text
@@ -144,13 +148,16 @@ When resuming:
 3. If no new journal exists, allow legacy resume from `docs/specs/<feature-name>/SPEC.md`.
 4. If the user explicitly approved creating a new workflow-set and no parent journal exists, route to `01-workflow-set-plan` instead of treating the missing journal as a resume failure.
 5. Validate that referenced Markdown artifacts exist.
-6. Detect out-of-order completions or missing prerequisites.
-7. Infer `kind: "feature"` when the journal has no `kind`.
-8. For `kind: "workflow-set"`, resume pending parent workflow-set steps first.
-9. If a workflow-set parent is complete, compute a read-only child overview by reading child journals; do not write child progress to the parent journal or auto-select a child when multiple are pending.
-10. For Step 99, validate freshness and relevance before reuse.
-11. For Step 04 and Step 05, re-evaluate repository state and relevant test results before trusting the journal.
-12. Load only the required step file.
+6. Validate `relationships.predecessors`, if present: every predecessor journal must exist and have Step 06 complete before this workflow can mark Step 01 complete or route to Step 02+.
+7. Detect out-of-order completions or missing prerequisites.
+8. Infer `kind: "feature"` when the journal has no `kind`.
+9. For `kind: "workflow-set"`, resume pending parent workflow-set steps first.
+10. If a workflow-set parent is complete, compute a read-only child overview by reading child journals; do not write child progress to the parent journal or auto-select a child when multiple are pending.
+11. For Step 99, validate freshness and relevance before reuse.
+12. For Step 04 and Step 05, re-evaluate repository state and relevant test results before trusting the journal.
+13. Load only the required step file.
+
+If predecessor validation fails, stop and route the user to the incomplete predecessor workflow. If the blocked workflow already marks Step 01 or later steps complete, treat the journal as inconsistent and ask whether to repair those steps to `pending` with a predecessor-gate reason.
 
 If journal, artifacts, repository state, or test results conflict, stop and ask for direction before writing or routing forward.
 
@@ -193,9 +200,11 @@ Workflow-set step files:
 
 No implementation prompts or code changes before Step 01, Step 02, and Step 03 are approved. For existing codebases, Step 99 must also be complete and current before Step 02.
 
+For any workflow with `relationships.predecessors`, every predecessor journal must exist and have Step 06 complete before Step 01 may be marked complete or Step 02+ may be loaded. If any predecessor is missing or incomplete, keep Step 01 and any drafted Step 99 context pending, preserve artifact links as drafts, record the predecessor-gate reason, and route to the predecessor instead of advancing.
+
 Step 04 must stay Red-only. Step 05 must make the minimum production changes needed to pass Step 04 tests, must not modify Step 04 tests, and must follow applicable repository or context-provided agent instructions.
 
-Child workflows scaffolded from a workflow-set start with Step 01 pending. Before approving a scaffolded child Step 01, verify that every predecessor journal listed in the child journal exists and has Step 06 verification complete.
+Child workflows scaffolded from a workflow-set start with Step 01 pending. The same general predecessor gate applies to them: before approving a scaffolded child Step 01, verify that every predecessor journal listed in the child journal exists and has Step 06 verification complete.
 
 Workflow-set child scaffold states are only `proposed`, `created`, and `conflict`. These states describe materialization only, not child execution progress.
 

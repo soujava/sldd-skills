@@ -36,14 +36,17 @@ Approved numbered artifacts take precedence over `00-exploration-summary.md`.
    - legacy `docs/specs/<feature-name>/SPEC.md`.
 4. If the user explicitly approved creating a new workflow-set and the target journal does not exist, route to `01-workflow-set-plan`; that step may create the parent journal after approval.
 5. Read journal state and validate referenced artifacts.
-6. Infer missing `kind` as `feature`; do not rewrite old journals solely to add `kind`.
-7. Detect out-of-order completions.
-8. If the spec is still being clarified, route to Step 88.
-9. For `kind: "workflow-set"`, route through `01-workflow-set-plan`, `02-scaffold-children`, and `03-verify-workflow-set`.
-10. For `kind: "feature"`, preserve the normal feature flow.
-11. For existing codebases, check whether Step 99 is required, complete, and still valid.
-12. If any violation exists, stop and route to the missing step.
-13. Route only to the next valid step file.
+6. If `relationships.predecessors` exists, verify every predecessor journal exists and has Step 06 complete before allowing Step 01 completion or Step 02+ routing.
+7. Infer missing `kind` as `feature`; do not rewrite old journals solely to add `kind`.
+8. Detect out-of-order completions.
+9. If the spec is still being clarified, route to Step 88.
+10. For `kind: "workflow-set"`, route through `01-workflow-set-plan`, `02-scaffold-children`, and `03-verify-workflow-set`.
+11. For `kind: "feature"`, preserve the normal feature flow.
+12. For existing codebases, check whether Step 99 is required, complete, and still valid.
+13. If any violation exists, stop and route to the missing step.
+14. Route only to the next valid step file.
+
+If predecessor validation fails, stop and route to the incomplete predecessor workflow. Draft artifacts in the blocked workflow may remain linked, but Step 01 and Step 99 must stay `pending` with a predecessor-gate `reason` until all predecessors complete Step 06.
 
 ## Workflow-Set Navigation
 
@@ -66,12 +69,13 @@ When the command is `/sldd run step <NN> <feature>`, `/sldd run step <NN>`, or t
 3. Resolve the target workflow from the feature argument, user input, current context, or the only active workflow. If multiple workflows are possible, stop and ask the user to choose.
 4. Read journal state and validate all referenced artifacts before loading the target step.
 5. Validate all prerequisites for the requested step exactly as that step requires.
-6. For existing codebases and requested steps after Step 99, block the request if Step 99 is required but missing, incomplete, stale, or scoped to a rejected direction.
-7. For Step 04 and Step 05 requests, re-evaluate current files and relevant test results before trusting journal evidence.
-8. If prerequisite artifacts, journal order, Step 99 freshness, Step 04 evidence, or Step 05 evidence conflict, stop and report the conflict instead of loading the requested step.
-9. If prerequisites are missing or stale, route to the missing prerequisite instead of loading the requested step.
-10. If the target step is `pending`, load the requested step file only when its gates are satisfied.
-11. If the target step is `requires_rerun`, load the requested step file only when its gates are satisfied. After it completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
+6. If `relationships.predecessors` exists, block Step 01 completion and Step 02+ requests until every predecessor journal exists and has Step 06 complete.
+7. For existing codebases and requested steps after Step 99, block the request if Step 99 is required but missing, incomplete, stale, or scoped to a rejected direction.
+8. For Step 04 and Step 05 requests, re-evaluate current files and relevant test results before trusting journal evidence.
+9. If prerequisite artifacts, predecessor completion, journal order, Step 99 freshness, Step 04 evidence, or Step 05 evidence conflict, stop and report the conflict instead of loading the requested step.
+10. If prerequisites are missing or stale, route to the missing prerequisite instead of loading the requested step.
+11. If the target step is `pending`, load the requested step file only when its gates are satisfied.
+12. If the target step is `requires_rerun`, load the requested step file only when its gates are satisfied. After it completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
 
 If the target step is already `complete`, stop before loading the step and ask:
 
