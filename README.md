@@ -97,7 +97,7 @@ The router uses progressive disclosure:
 ```text
 SKILL.md
   -> workflows/<kind>.md
-    -> steps/<kind>/<current-step>.md
+    -> steps/<kind>/<current step of the workflow kind>.md
       -> templates/<artifact>.md only when writing that artifact
 ```
 
