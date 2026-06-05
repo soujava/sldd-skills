@@ -21,8 +21,8 @@ Expected new-workflow artifacts:
 - `existing-codebase-understanding.md` (required persisted snapshot for brownfield Step 02+ gates)
 - `02-high-level-technical-design.md`
 - `03-low-level-design-and-version-policy.md`
-- Step 04 completion in `_spec-journal.json` with `evidence: "red_confirmed"`
-- Step 05 completion in `_spec-journal.json` with `evidence: "green_confirmed"`
+- `04-tests-red` completion in `_spec-journal.json` with `evidence: "red_confirmed"`
+- `05-implementation-green` completion in `_spec-journal.json` with `evidence: "green_confirmed"`
 - `06-verification-and-feedback-report.md`
 
 Approved numbered artifacts take precedence over `00-exploration-summary.md`.
@@ -69,10 +69,10 @@ When `name` or `kind` is missing, stop and report the journal as invalid.
 
 ## Specific Step Run Flow
 
-When the command is `/sldd run step <NN> <feature>`, `/sldd run step <NN>`, or the `/sldd step <NN>` alias:
+When the command is `/sldd run step <step-id> <feature>`, `/sldd run step <step-id>`, or the `/sldd step <step-id>` alias:
 
 1. Treat it as a gated targeted step request.
-2. Require `<NN>`. If the value is missing, malformed, or does not resolve to a supported step, stop and ask for correction.
+2. Require `<step-id>`. Accept numeric shorthand like `01` only as a convenience that resolves to the workflow's canonical basename step ID, such as `01-product-intent`. If the value is missing, malformed, or does not resolve to a supported step, stop and ask for correction.
 3. Resolve the target workflow from the feature argument, user input, current context, or the only active workflow. If multiple workflows are possible, stop and ask the user to choose.
 4. Read journal state and validate all referenced artifacts before loading the target step.
 5. Validate all prerequisites for the requested step exactly as that step requires.
@@ -87,7 +87,7 @@ When the command is `/sldd run step <NN> <feature>`, `/sldd run step <NN>`, or t
 If the target step is already `complete`, stop before loading the step and ask:
 
 ```text
-Step <NN> is already complete.
+Step <step-id> is already complete.
 
 1. Run it again only.
    Risk: later completed steps will not be marked requires_rerun. Use this only when you accept downstream consistency risk.
@@ -99,9 +99,9 @@ Step <NN> is already complete.
 
 After the user chooses:
 
-1. For option 1, run the step only after explicit confirmation. Do not automatically invalidate later completed steps. If the target step artifact, files, or journal entry changes, add a journal-only note: `Step <NN> was run again without downstream invalidation by explicit user choice.`
+1. For option 1, run the step only after explicit confirmation. Do not automatically invalidate later completed steps. If the target step artifact, files, or journal entry changes, add a journal-only note: `Step <step-id> was run again without downstream invalidation by explicit user choice.`
 2. For option 2, run the step only after explicit confirmation. After the target step completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
-3. For each invalidated later step, set `reason` to `Step <NN> was run again; this later step must be reviewed again.`
+3. For each invalidated later step, set `reason` to `Step <step-id> was run again; this later step must be reviewed again.`
 4. When invalidating Step 04 or Step 05, clear `evidence`; keep any existing `artifact` link as a historical reference.
 5. For option 3, do not load the step, write artifacts, run commands, or update the journal.
 

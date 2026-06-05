@@ -10,7 +10,7 @@ Plan and scaffold a set of related child feature workflows for large initiatives
 01-workflow-set-plan -> 02-scaffold-children -> 03-verify-workflow-set
 ```
 
-Workflow-set parents plan and scaffold child workflows. They do not execute children, approve child Step 01, enforce child implementation gates, or persist child execution progress.
+Workflow-set parents plan and scaffold child workflows. They do not execute children, approve child Step 01 (`01-product-intent`), enforce child implementation gates, or persist child execution progress.
 
 ## Step Files
 
@@ -40,7 +40,7 @@ Load only the template needed by the selected step:
 - Child scaffolding requires `01-workflow-set-plan` complete and separate explicit scaffold approval.
 - Scaffold is all-or-nothing for all proposed children in the approved plan.
 - Child workflows scaffolded from a workflow-set are `feature` workflows.
-- Scaffolded child Step 01 entries must remain `pending` and include `origin.type: "workflow-set-scaffold"`.
+- Scaffolded child `01-product-intent` entries must remain `pending` and include `origin.type: "workflow-set-scaffold"`.
 - Parent journals must not persist child execution progress. Compute child progress by reading child journals when needed.
 
 Workflow-set child scaffold states are only:

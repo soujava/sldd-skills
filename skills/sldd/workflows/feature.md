@@ -7,13 +7,13 @@ Run the normal SLDD feature workflow for isolated features, bugfixes, endpoints,
 ## Flow
 
 ```text
-88 exploration (optional) -> 00 navigation -> 01 -> 99 when needed -> 02 -> 03 -> 04 -> 05 -> 06
+88-exploration (optional) -> 00-navigation -> 01-product-intent -> 99-codebase-context when needed -> 02-high-level-design -> 03-low-level-design -> 04-tests-red -> 05-implementation-green -> 06-verification
 ```
 
 The formal feature gate order is:
 
 ```text
-01 -> 99 -> 02 -> 03 -> 04 -> 05 -> 06
+01-product-intent -> 99-codebase-context -> 02-high-level-design -> 03-low-level-design -> 04-tests-red -> 05-implementation-green -> 06-verification
 ```
 
 Step 99 is required before Step 02 for existing codebases. It may run during Step 88 when brownfield context is needed. Step 99 completion requires an approved and saved `existing-codebase-understanding.md` artifact.
@@ -22,17 +22,17 @@ Step 99 is required before Step 02 for existing codebases. It may run during Ste
 
 Load exactly one file from this map after this workflow has selected the current step:
 
-| Step | File | Purpose |
+| Step ID | File | Purpose |
 |---|---|---|
-| 88 | `steps/feature/88-exploration.md` | Explore rough ideas before Step 01 |
-| 00 | `steps/feature/00-navigation.md` | Inspect state and route |
-| 01 | `steps/feature/01-product-intent.md` | Product intent and acceptance criteria |
-| 99 | `steps/feature/99-codebase-context.md` | Existing-codebase context |
-| 02 | `steps/feature/02-high-level-design.md` | High-level technical design |
-| 03 | `steps/feature/03-low-level-design.md` | Low-level design and version policy |
-| 04 | `steps/feature/04-tests-red.md` | Tests-first Red phase |
-| 05 | `steps/feature/05-implementation-green.md` | Minimal Green implementation |
-| 06 | `steps/feature/06-verification.md` | Verification and Go/No-Go |
+| `88-exploration` | `steps/feature/88-exploration.md` | Explore rough ideas before Step 01 |
+| `00-navigation` | `steps/feature/00-navigation.md` | Inspect state and route |
+| `01-product-intent` | `steps/feature/01-product-intent.md` | Product intent and acceptance criteria |
+| `99-codebase-context` | `steps/feature/99-codebase-context.md` | Existing-codebase context |
+| `02-high-level-design` | `steps/feature/02-high-level-design.md` | High-level technical design |
+| `03-low-level-design` | `steps/feature/03-low-level-design.md` | Low-level design and version policy |
+| `04-tests-red` | `steps/feature/04-tests-red.md` | Tests-first Red phase |
+| `05-implementation-green` | `steps/feature/05-implementation-green.md` | Minimal Green implementation |
+| `06-verification` | `steps/feature/06-verification.md` | Verification and Go/No-Go |
 
 ## Template Map
 
@@ -55,7 +55,7 @@ Load only the template needed by the selected step:
 - If any predecessor is missing or incomplete, keep Step 01 and any drafted Step 99 context pending, preserve artifact links as drafts, record the predecessor-gate reason, and route to the predecessor instead of advancing.
 - Step 04 must stay Red-only.
 - Step 05 must make the minimum production changes needed to pass Step 04 tests, must not modify Step 04 tests, and must follow applicable repository or context-provided agent instructions.
-- Child workflows scaffolded from a workflow-set are normal feature workflows. They start with Step 01 pending and `origin.type: "workflow-set-scaffold"`.
+- Child workflows scaffolded from a workflow-set are normal feature workflows. They start with `01-product-intent` pending and `origin.type: "workflow-set-scaffold"`.
 
 ## Resume Rules
 

@@ -48,9 +48,9 @@ Writing or completing the plan does not approve child scaffolding unless the use
    - `name: "<workflow-set-name>"`
    - `kind: "workflow-set"`
    - `current_step: "01-workflow-set-plan"`
-   - `steps.01-workflow-set-plan`
-   - `steps.02-scaffold-children`
-   - `steps.03-verify-workflow-set`
+   - `steps["01-workflow-set-plan"]`
+   - `steps["02-scaffold-children"]`
+   - `steps["03-verify-workflow-set"]`
    - `workflowSet.children` from the proposed plan, with scaffold state `proposed`
 4. For write-complete mode, mark `01-workflow-set-plan` complete and keep `02-scaffold-children` pending.
 5. For write-draft mode, keep `01-workflow-set-plan` pending.

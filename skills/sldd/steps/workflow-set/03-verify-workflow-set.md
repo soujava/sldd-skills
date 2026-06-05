@@ -9,7 +9,7 @@ Verify workflow-set coordination consistency after planning and scaffolding.
 - Require parent journal `name` and `kind: "workflow-set"`.
 - Require `01-workflow-set-plan` complete.
 - Require `02-scaffold-children` complete, or require the user to explicitly accept recorded conflicts before verification can complete.
-- Do not require child workflows to complete Step 01 or Step 06.
+- Do not require child workflows to complete Step 01 (`01-product-intent`) or Step 06 (`06-verification`).
 - Do not create a dedicated verification artifact in the first version.
 
 ## Verification Checks
@@ -21,8 +21,8 @@ Confirm:
 - Parent child entries use scaffold states `proposed`, `created`, or `conflict`.
 - Created child journals exist.
 - Created child journals have `name` and `kind: "feature"`.
-- Created child Step 01 entries are pending unless independently approved by the child workflow later.
-- Created child Step 01 entries include `origin.type: "workflow-set-scaffold"`.
+- Created child `01-product-intent` entries are pending unless independently approved by the child workflow later.
+- Created child `01-product-intent` entries include `origin.type: "workflow-set-scaffold"`.
 - Conflict child entries have an explicit reason and represent accepted non-creation, not successful scaffold.
 - Child predecessor paths are stored in child journals.
 - The parent does not persist child execution progress.

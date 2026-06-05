@@ -40,7 +40,7 @@ Wait for approval.
 ## Save Flow After Approval
 
 1. Save only Step 03 content to the resolved workflow directory as `03-low-level-design-and-version-policy.md`; for new workflows, this is `.sldd/specs/<feature-name>/03-low-level-design-and-version-policy.md`.
-2. Mark Step 03 as `complete` in journal-only `_spec-journal.json` with the artifact link.
+2. Mark `03-low-level-design` as `complete` in journal-only `_spec-journal.json` with the artifact link.
 3. Ask whether to continue to the next step or hold.
 
 For legacy or user-provided workflow paths, save and update progress in the resolved directory instead.

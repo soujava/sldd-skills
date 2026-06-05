@@ -75,13 +75,15 @@ For existing journals, use `name` as the workflow/spec name and `kind` as the wo
 
 `workflowSet` is exclusive to `kind: "workflow-set"`. Journals with `kind: "feature"` must not include `workflowSet`.
 
+Journal step keys and `current_step` values use the step file basename without `.md`. For example, feature Step 01 uses `01-product-intent`, feature Step 04 uses `04-tests-red`, and workflow-set Step 01 uses `01-workflow-set-plan`.
+
 Allowed step statuses:
 
 - `pending`
 - `complete`
 - `requires_rerun`
 
-Step 04 completion requires `evidence: "red_confirmed"`. Step 05 completion requires `evidence: "green_confirmed"`. For Step 04 and Step 05, non-complete statuses must omit `evidence` or set it to `null`.
+Step 04 (`04-tests-red`) completion requires `evidence: "red_confirmed"`. Step 05 (`05-implementation-green`) completion requires `evidence: "green_confirmed"`. For Step 04 and Step 05, non-complete statuses must omit `evidence` or set it to `null`.
 
 If a journal has `relationships.predecessors`, every listed predecessor journal must exist and have Step 06 complete before this workflow can mark Step 01 complete or route to Step 02+.
 
@@ -117,9 +119,9 @@ If slash-style commands reach this skill as text, interpret them as SLDD command
 - `/sldd resume <feature>`: resume a specific workflow.
 - `/sldd resume`: resume the only active workflow, or ask the user to choose when there are multiple.
 - `/sldd continue`: continue the last clear workflow if it can be identified.
-- `/sldd run step <NN> <feature>`: request a specific step for a specific workflow after gate validation.
-- `/sldd run step <NN>`: request a specific step in the resolved workflow when the workflow is unambiguous.
-- `/sldd step <NN>`: alias for `/sldd run step <NN>`.
+- `/sldd run step <step-id> <feature>`: request a specific step for a specific workflow after gate validation. Accept numeric shorthand like `01` only as a convenience that resolves to the workflow's canonical basename step ID.
+- `/sldd run step <step-id>`: request a specific step in the resolved workflow when the workflow is unambiguous.
+- `/sldd step <step-id>`: alias for `/sldd run step <step-id>`.
 - `/sldd explore [idea]`: route to the feature workflow's exploration step unless the user explicitly chooses workflow-set planning.
 
 Slash commands are convenience syntax only. Always enforce the same gates, journal checks, approvals, and resume rules as natural-language requests.
@@ -133,7 +135,7 @@ Slash commands are convenience syntax only. Always enforce the same gates, journ
 5. Load exactly one step file from the selected workflow's `steps/<kind>/` step map.
 6. Load a template only when that step produces or updates the matching Markdown artifact.
 
-For `/sldd run step <NN>`, stop before loading a completed step and ask whether to:
+For `/sldd run step <step-id>`, stop before loading a completed step and ask whether to:
 
 1. Run it again only.
 2. Run it again and mark later completed steps as `requires_rerun`.

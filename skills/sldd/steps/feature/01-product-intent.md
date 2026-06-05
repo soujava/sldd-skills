@@ -34,8 +34,8 @@ Wait for approval.
 ## Save Flow After Approval
 
 1. Save only Step 01 content to the resolved workflow directory as `01-product-intent-specification.md`; for new workflows, this is `.sldd/specs/<feature-name>/01-product-intent-specification.md`.
-2. If `relationships.predecessors` exists and any predecessor is missing or incomplete, keep Step 01 as `pending`, preserve the artifact link, set `reason` to the predecessor-gate explanation, and route to the incomplete predecessor instead of continuing.
-3. Otherwise, mark Step 01 as `complete` in journal-only `_spec-journal.json` with the artifact link.
+2. If `relationships.predecessors` exists and any predecessor is missing or incomplete, keep `01-product-intent` as `pending`, preserve the artifact link, set `reason` to the predecessor-gate explanation, and route to the incomplete predecessor instead of continuing.
+3. Otherwise, mark `01-product-intent` as `complete` in journal-only `_spec-journal.json` with the artifact link.
 4. Ask whether to continue to the next step or hold.
 
 For legacy or user-provided workflow paths, save and update progress in the resolved directory instead.

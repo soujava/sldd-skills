@@ -68,7 +68,7 @@ Use these required Step 05 snapshot headings:
 ## Save Flow After Green Confirmation
 
 1. Do not create a mandatory Step 05 report artifact.
-2. Update `_spec-journal.json` Step 05 to `status: "complete"` and `evidence: "green_confirmed"`.
+2. Update `_spec-journal.json` step `05-implementation-green` to `status: "complete"` and `evidence: "green_confirmed"`.
 3. Keep `_spec-journal.json` journal-only; do not include logs, report body, or numbered artifact content.
 4. Ask whether to continue to the next step or hold.
 

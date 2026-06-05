@@ -34,6 +34,7 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Preserve completed-step rerun choices: run again only, run again and mark later completed steps `requires_rerun`, or do nothing.
 - Preserve workflow-set scaffold states: `proposed`, `created`, and `conflict`.
 - Preserve journal schema concepts used by the current skill: `kind`, `current_step`, `relationships`, `workflowSet.children`, `origin.type`, `evidence`, `reason`, and `requires_rerun`.
+- Preserve kind-specific journal step keys as step file basenames without `.md`; `kind: "feature"` journals may use only feature step basenames, and `kind: "workflow-set"` journals may use only workflow-set parent step basenames.
 - Preserve `name` as the workflow/spec name field in `_spec-journal.json`; do not use or accept `feature` as a journal-name field.
 - Preserve `workflowSet` as exclusive to `kind: "workflow-set"`; `kind: "feature"` journals must not include it.
 - Update `README.md` when changing user-visible process behavior, sequencing, gates, approval semantics, commands, journal fields, storage, templates, installer options, or step responsibilities.

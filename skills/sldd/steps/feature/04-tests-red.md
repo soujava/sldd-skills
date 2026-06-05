@@ -72,7 +72,7 @@ If an edge case requires new behavior or assumptions, stop and route back to Ste
 ## Save Flow After Red Confirmation
 
 1. Do not create a mandatory Step 04 report artifact.
-2. Update `_spec-journal.json` Step 04 to `status: "complete"` and `evidence: "red_confirmed"`.
+2. Update `_spec-journal.json` step `04-tests-red` to `status: "complete"` and `evidence: "red_confirmed"`.
 3. Keep `_spec-journal.json` journal-only; do not include logs, report body, or numbered artifact content.
 4. If continuous Step 04 -> Step 05 execution was requested, route directly to Step 05.
 5. Otherwise, ask whether to continue to the next step or hold.

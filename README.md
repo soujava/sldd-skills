@@ -60,13 +60,15 @@ SLDD accepts slash-style commands when they reach the skill as text:
 /sldd resume <feature>
 /sldd resume
 /sldd continue
-/sldd run step <NN> <feature>
-/sldd run step <NN>
-/sldd step <NN>
+/sldd run step <step-id> <feature>
+/sldd run step <step-id>
+/sldd step <step-id>
 /sldd explore [idea]
 ```
 
 Commands are routing shortcuts. They do not bypass workflow gates, approval rules, journal checks, or Red/Green contracts.
+
+Numeric step values are accepted as shorthand and resolve to the canonical step ID for the workflow kind. Journal `steps` keys and `current_step` values use the canonical step ID, which is the step file basename without `.md`.
 
 Use `/sldd help` for a non-mutating overview. It must not load workflow or step files and must not create or change workflow state.
 
@@ -148,17 +150,17 @@ Step 99 is required before Step 02 for existing codebases. It may run during Ste
 
 Feature step files:
 
-| Step | File | Purpose |
+| Step ID | File | Purpose |
 |---|---|---|
-| 88 | `steps/feature/88-exploration.md` | Clarify rough ideas before formal Step 01 |
-| 00 | `steps/feature/00-navigation.md` | Inspect state and route |
-| 01 | `steps/feature/01-product-intent.md` | Product intent and acceptance criteria |
-| 99 | `steps/feature/99-codebase-context.md` | Existing-codebase context |
-| 02 | `steps/feature/02-high-level-design.md` | High-level technical design |
-| 03 | `steps/feature/03-low-level-design.md` | Low-level design and version policy |
-| 04 | `steps/feature/04-tests-red.md` | Tests-first Red phase |
-| 05 | `steps/feature/05-implementation-green.md` | Minimal Green implementation |
-| 06 | `steps/feature/06-verification.md` | Verification and Go/No-Go |
+| `88-exploration` | `steps/feature/88-exploration.md` | Clarify rough ideas before formal Step 01 |
+| `00-navigation` | `steps/feature/00-navigation.md` | Inspect state and route |
+| `01-product-intent` | `steps/feature/01-product-intent.md` | Product intent and acceptance criteria |
+| `99-codebase-context` | `steps/feature/99-codebase-context.md` | Existing-codebase context |
+| `02-high-level-design` | `steps/feature/02-high-level-design.md` | High-level technical design |
+| `03-low-level-design` | `steps/feature/03-low-level-design.md` | Low-level design and version policy |
+| `04-tests-red` | `steps/feature/04-tests-red.md` | Tests-first Red phase |
+| `05-implementation-green` | `steps/feature/05-implementation-green.md` | Minimal Green implementation |
+| `06-verification` | `steps/feature/06-verification.md` | Verification and Go/No-Go |
 
 Core feature rules:
 
@@ -203,7 +205,7 @@ Child scaffolding requires:
 
 Scaffold is all-or-nothing for the proposed children in the approved plan. Invalid plans create no children and keep `02-scaffold-children` pending. Filesystem collisions or unsafe overwrite risks may be recorded as `conflict` only after explicit user approval.
 
-Created child workflows are normal `feature` workflows. Each child starts with Step 01 `pending` and `origin.type: "workflow-set-scaffold"`. Child predecessor gates require listed predecessor journals to complete Step 06 before the child can complete Step 01 or route to Step 02+.
+Created child workflows are normal `feature` workflows. Each child starts with `01-product-intent` `pending` and `origin.type: "workflow-set-scaffold"`. Child predecessor gates require listed predecessor journals to complete Step 06 before the child can complete Step 01 or route to Step 02+.
 
 Parent status may compute child progress by reading child journals, but computed child progress is never written into the parent journal.
 
@@ -282,7 +284,11 @@ created
 conflict
 ```
 
-For `kind: "workflow-set"`, the schema requires workflow-set step keys, workflow-set `current_step` values, and `workflowSet.children`. For `kind: "feature"`, the schema rejects any top-level `workflowSet`.
+Step keys and `current_step` values use the step file basename without `.md`.
+
+For `kind: "feature"`, the schema accepts only feature step keys and feature `current_step` values from the feature step map: `88-exploration`, `00-navigation`, `01-product-intent`, `99-codebase-context`, `02-high-level-design`, `03-low-level-design`, `04-tests-red`, `05-implementation-green`, and `06-verification`. It also rejects any top-level `workflowSet`.
+
+For `kind: "workflow-set"`, the schema accepts only workflow-set step keys and workflow-set `current_step` values from the workflow-set step map: `01-workflow-set-plan`, `02-scaffold-children`, and `03-verify-workflow-set`. It also requires `workflowSet.children`.
 
 ## Reruns
 

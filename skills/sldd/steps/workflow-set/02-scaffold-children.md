@@ -10,7 +10,7 @@ Create approved child feature workflow drafts from a completed workflow-set plan
 - Require `01-workflow-set-plan` complete.
 - Require explicit approval to scaffold children after the plan is complete.
 - Scaffold all proposed children in the approved plan, or create none when preflight validation fails.
-- Do not mark child Step 01 complete.
+- Do not mark child Step 01 (`01-product-intent`) complete.
 - Do not overwrite existing workflow artifacts without explicit approval.
 
 If the user approves scaffold while `01-workflow-set-plan` is still pending,
@@ -45,7 +45,7 @@ For each child, create:
 
 Use `templates/01-product-intent-from-workflow-set.md` for the child Step 01 draft.
 
-Each child Step 01 must be `pending` and include `origin.type: "workflow-set-scaffold"`.
+Each child `01-product-intent` step must be `pending` and include `origin.type: "workflow-set-scaffold"`.
 
 ## Conflict Rules
 
@@ -60,7 +60,7 @@ On name collision, missing origin metadata, unsafe overwrite risk, or inconsiste
 ## Save Flow After Scaffold
 
 1. Create child Step 01 draft content.
-2. Create child `_spec-journal.json` with `name`, `kind: "feature"`, and concrete predecessor journal paths.
+2. Create child `_spec-journal.json` with `name`, `kind: "feature"`, `current_step: "01-product-intent"`, `steps["01-product-intent"]`, and concrete predecessor journal paths.
 3. Update parent child scaffold state to `created` only after child files exist.
 4. Update parent child scaffold state to `conflict` only for conflicts the user explicitly accepted for recording.
 5. Mark `02-scaffold-children` complete only when every proposed child is either created successfully or explicitly recorded as an accepted conflict.
