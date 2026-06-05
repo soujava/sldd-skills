@@ -34,23 +34,28 @@ Approved numbered artifacts take precedence over `00-exploration-summary.md`.
    - user-provided path, or
    - `.sldd/specs/<feature-name>/_spec-journal.json`, or
    - legacy `docs/specs/<feature-name>/SPEC.md`.
-4. If the user explicitly approved creating a new workflow-set and the target journal does not exist, route to `01-workflow-set-plan`; that step may create the parent journal after approval.
-5. Read journal state and validate referenced artifacts.
-6. If `relationships.predecessors` exists, verify every predecessor journal exists and has Step 06 complete before allowing Step 01 completion or Step 02+ routing.
-7. Infer missing `kind` as `feature`; do not rewrite old journals solely to add `kind`.
-8. Detect out-of-order completions.
-9. If the spec is still being clarified, route to Step 88.
-10. For `kind: "workflow-set"`, route through `01-workflow-set-plan`, `02-scaffold-children`, and `03-verify-workflow-set`.
-11. For `kind: "feature"`, preserve the normal feature flow.
+4. If the target journal exists, use `kind` as the source of truth. If `kind` is missing, treat it as `feature` for compatibility and do not rewrite the journal solely to add `kind`.
+5. If no target journal exists, classify the request before creating one:
+   - Use `feature` for isolated features, bugfixes, endpoints, business rules, local refactors, local brownfield changes, or component documentation.
+   - Use `workflow-set` for large initiatives, full products, epics, multiple modules, multiple related features, broad system plans, decomposition requests, or child-workflow needs.
+   - Prefer `feature` when ambiguous.
+6. If the detected or recovered kind is `workflow-set`, stop feature navigation and route through `workflows/workflow-set.md`.
+7. Read journal state and validate referenced artifacts.
+8. If `relationships.predecessors` exists, verify every predecessor journal exists and has Step 06 complete before allowing Step 01 completion or Step 02+ routing.
+9. Detect out-of-order completions.
+10. If the spec is still being clarified, route to Step 88.
+11. Preserve the normal feature flow for `kind: "feature"`.
 12. For existing codebases, check whether Step 99 is required, complete, and still valid.
 13. If any violation exists, stop and route to the missing step.
-14. Route only to the next valid step file.
+14. Route only to the next valid feature step file.
 
 If predecessor validation fails, stop and route to the incomplete predecessor workflow. Draft artifacts in the blocked workflow may remain linked, but Step 01 and Step 99 must stay `pending` with a predecessor-gate `reason` until all predecessors complete Step 06.
 
 ## Workflow-Set Navigation
 
-When the resolved journal has `kind: "workflow-set"`:
+When the resolved journal has `kind: "workflow-set"`, this file should not continue feature routing. Load `workflows/workflow-set.md` and then the matching `steps/workflow-set/<current-step>.md`.
+
+When the workflow-set parent is complete:
 
 - Resume pending parent workflow-set steps before showing child workflow execution state.
 - If parent steps are complete, compute a read-only child overview by reading child journals referenced by the parent.

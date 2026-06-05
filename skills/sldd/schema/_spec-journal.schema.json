@@ -4,7 +4,7 @@
   "title": "SLDD Spec Journal",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "feature", "workflow", "steps"],
+  "required": ["schema_version", "feature", "workflow", "kind", "steps"],
   "properties": {
     "schema_version": {
       "type": "integer",
@@ -86,6 +86,46 @@
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "const": "workflow-set"
+          }
+        }
+      },
+      "then": {
+        "required": ["current_step", "workflowSet"],
+        "properties": {
+          "current_step": {
+            "type": "string",
+            "enum": [
+              "01-workflow-set-plan",
+              "02-scaffold-children",
+              "03-verify-workflow-set"
+            ]
+          },
+          "steps": {
+            "required": [
+              "01-workflow-set-plan",
+              "02-scaffold-children",
+              "03-verify-workflow-set"
+            ]
+          },
+          "workflowSet": {
+            "required": ["children"],
+            "properties": {
+              "children": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "step": {
       "type": "object",
@@ -134,7 +174,7 @@
     "workflow_set_child": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "kind", "scaffold"],
+      "required": ["name", "title", "kind", "scaffold"],
       "properties": {
         "name": {
           "type": "string",

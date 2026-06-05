@@ -29,13 +29,14 @@ Ask how to handle the plan:
 2. Write it as a draft and wait for review.
 3. Do not write files yet.
 
-Writing or completing the plan does not approve child scaffolding unless the user explicitly approves scaffold.
+Writing or completing the plan does not approve child scaffolding unless the user explicitly approves scaffold. Scaffold approval never substitutes for completing the plan; Step 02 may run only after `01-workflow-set-plan` is complete.
 
 ## Approval Protocol
 
 - Save or update artifacts only after explicit approval.
 - On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
 - Do not infer approval to scaffold children from approval to write or complete the plan.
+- If the user approves scaffold while the plan is still pending, ask whether to mark the plan complete first and keep Step 02 blocked until that completion is approved and saved.
 - If writes are unavailable, stop and report the limitation.
 
 ## Save Flow After Approval

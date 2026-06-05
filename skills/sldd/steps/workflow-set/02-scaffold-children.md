@@ -7,11 +7,15 @@ Create approved child feature workflow drafts from a completed workflow-set plan
 ## Gate + Resume Checks
 
 - Require parent journal `kind: "workflow-set"`.
-- Require `01-workflow-set-plan` complete or explicitly approved for scaffold.
-- Require explicit approval to scaffold children.
+- Require `01-workflow-set-plan` complete.
+- Require explicit approval to scaffold children after the plan is complete.
 - Scaffold all proposed children in the approved plan, or create none when preflight validation fails.
 - Do not mark child Step 01 complete.
 - Do not overwrite existing workflow artifacts without explicit approval.
+
+If the user approves scaffold while `01-workflow-set-plan` is still pending,
+stop and ask whether to complete the workflow-set plan first. Do not route to
+Step 02 or create child files until the plan is complete.
 
 ## Preflight Validation
 
