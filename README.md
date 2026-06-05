@@ -72,6 +72,8 @@ Use `/sldd help` for a non-mutating overview. It must not load workflow or step 
 
 Use `/sldd explore [idea]` for Step 88 exploration before formal Step 01. Exploration establishes project context, inspects the repository before asking questions the codebase can answer, asks one focused question at a time, and offers explicit exits: continue exploring, formalize Step 01, save an optional summary after approval, route to Step 99, or stop without saving.
 
+When exploration reveals multiple capabilities, dependencies, parallel workstreams, or an oversized Step 01, SLDD recommends workflow-set planning. Exploration does not create workflow-set artifacts without explicit approval.
+
 ## Architecture
 
 SLDD is one executable skill:
@@ -102,6 +104,8 @@ SKILL.md
 ```
 
 Do not create additional executable SLDD skills. `skills/sldd/SKILL.md` remains the only entrypoint.
+
+The current runtime package has no application code, package manager, build pipeline, or secondary runtime entrypoint. It is a documentation-first skill package made of the router, workflow files, step files, artifact templates, the journal schema, repository documentation, evaluations, and the local installer.
 
 ## Workflow Kinds
 
@@ -187,6 +191,8 @@ Workflow-set parent steps:
 
 Workflow-set parents plan and scaffold children. They do not execute child workflows, approve child Step 01, enforce child implementation gates, or persist child execution progress.
 
+Creating or updating a workflow-set parent requires explicit approval. A new parent journal is created only through `01-workflow-set-plan`; existing journals without `kind` remain legacy-compatible `feature` workflows and are not auto-converted into workflow-sets. Existing `kind: "feature"` journals stop the workflow-set path unless the user chooses another workflow-set name or gives explicit direction.
+
 Child scaffolding requires:
 
 - a completed `01-workflow-set-plan`;
@@ -200,6 +206,8 @@ Scaffold is all-or-nothing for the proposed children in the approved plan. Inval
 Created child workflows are normal `feature` workflows. Each child starts with Step 01 `pending` and `origin.type: "workflow-set-scaffold"`. Child predecessor gates require listed predecessor journals to complete Step 06 before the child can complete Step 01 or route to Step 02+.
 
 Parent status may compute child progress by reading child journals, but computed child progress is never written into the parent journal.
+
+`03-verify-workflow-set` verifies coordination state in the conversation and journal only. It does not create a dedicated verification report artifact in the current workflow-set version. Verification may complete with accepted scaffold conflicts only when the user explicitly accepts preserving those conflicts for later resolution.
 
 ## Storage
 
@@ -231,6 +239,8 @@ Workflow-set parents also use:
 ```text
 01-workflow-set-plan.md
 ```
+
+Workflow-set Step 03 does not write a separate verification artifact. Scaffolded child workflows write their own `01-product-intent-specification.md` from `templates/01-product-intent-from-workflow-set.md`.
 
 Child workflows scaffolded from a workflow-set get their own `.sldd/specs/<child-name>/` directory and journal.
 
