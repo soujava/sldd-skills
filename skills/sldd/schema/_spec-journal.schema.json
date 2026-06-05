@@ -26,10 +26,6 @@
       "type": "string",
       "minLength": 1
     },
-    "current_step": {
-      "type": "string",
-      "pattern": "^(88-exploration|00-navigation|01-product-intent|99-codebase-context|02-high-level-design|03-low-level-design|04-tests-red|05-implementation-green|06-verification|01-workflow-set-plan|02-scaffold-children|03-verify-workflow-set)$"
-    },
     "steps": {
       "type": "object",
       "additionalProperties": false,
@@ -97,11 +93,8 @@
         }
       },
       "then": {
-        "required": ["current_step", "workflowSet"],
+        "required": ["workflowSet"],
         "properties": {
-          "current_step": {
-            "$ref": "#/$defs/workflow_set_step_name"
-          },
           "steps": {
             "required": [
               "01-workflow-set-plan",
@@ -137,9 +130,6 @@
           "required": ["workflowSet"]
         },
         "properties": {
-          "current_step": {
-            "$ref": "#/$defs/feature_step_name"
-          },
           "steps": {
             "propertyNames": {
               "$ref": "#/$defs/feature_step_name"

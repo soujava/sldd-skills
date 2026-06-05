@@ -75,7 +75,7 @@ For existing journals, use `name` as the workflow/spec name and `kind` as the wo
 
 `workflowSet` is exclusive to `kind: "workflow-set"`. Journals with `kind: "feature"` must not include `workflowSet`.
 
-Journal step keys and `current_step` values use the step file basename without `.md`. For example, feature Step 01 uses `01-product-intent`, feature Step 04 uses `04-tests-red`, and workflow-set Step 01 uses `01-workflow-set-plan`.
+Journal step keys use the step file basename without `.md`. For example, feature Step 01 uses `01-product-intent`, feature Step 04 uses `04-tests-red`, and workflow-set Step 01 uses `01-workflow-set-plan`. Do not persist a separate `current_step`; derive the current step from `steps` and the selected workflow's gate rules.
 
 Allowed step statuses:
 
@@ -131,7 +131,7 @@ Slash commands are convenience syntax only. Always enforce the same gates, journ
 1. Resolve the workflow directory and journal path from user input, current context, or available specs.
 2. Detect `name` and `kind` for new journals or read required `name` and `kind` from existing journals using the Journal Contract and Workflow Detection rules.
 3. Load exactly one workflow instruction file from `workflows/<kind>.md`.
-4. Let that workflow file validate gate order and determine `current_step`.
+4. Let that workflow file validate gate order and derive the current step from `steps`.
 5. Load exactly one step file from the selected workflow's `steps/<kind>/` step map.
 6. Load a template only when that step produces or updates the matching Markdown artifact.
 

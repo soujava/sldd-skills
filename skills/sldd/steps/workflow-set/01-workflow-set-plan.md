@@ -47,7 +47,6 @@ Writing or completing the plan does not approve child scaffolding unless the use
 3. When creating a new parent journal, initialize it with:
    - `name: "<workflow-set-name>"`
    - `kind: "workflow-set"`
-   - `current_step: "01-workflow-set-plan"`
    - `steps["01-workflow-set-plan"]`
    - `steps["02-scaffold-children"]`
    - `steps["03-verify-workflow-set"]`

@@ -33,7 +33,7 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Preserve predecessor gates: when `relationships.predecessors` exists, Step 01 completion and Step 02+ routing are blocked until every listed predecessor journal has Step 06 complete.
 - Preserve completed-step rerun choices: run again only, run again and mark later completed steps `requires_rerun`, or do nothing.
 - Preserve workflow-set scaffold states: `proposed`, `created`, and `conflict`.
-- Preserve journal schema concepts used by the current skill: `kind`, `current_step`, `relationships`, `workflowSet.children`, `origin.type`, `evidence`, `reason`, and `requires_rerun`.
+- Preserve journal schema concepts used by the current skill: `kind`, `steps`, `relationships`, `workflowSet.children`, `origin.type`, `evidence`, `reason`, and `requires_rerun`.
 - Preserve kind-specific journal step keys as step file basenames without `.md`; `kind: "feature"` journals may use only feature step basenames, and `kind: "workflow-set"` journals may use only workflow-set parent step basenames.
 - Preserve `name` as the workflow/spec name field in `_spec-journal.json`; do not use or accept `feature` as a journal-name field.
 - Preserve `workflowSet` as exclusive to `kind: "workflow-set"`; `kind: "feature"` journals must not include it.
@@ -48,6 +48,7 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Do not turn Step 88 exploration into Step 02/Step 03 design work or binding requirements before Step 01 approval.
 - Do not treat Step 88 conversational context, repository observations, or `00-exploration-summary.md` as satisfying Step 99.
 - Do not store numbered artifact body content, command logs, or implementation reports in `_spec-journal.json`.
+- Do not persist `current_step` in `_spec-journal.json`; derive the current step from `steps` and workflow gate rules.
 - Do not persist child workflow execution progress into a workflow-set parent journal; compute child progress by reading child journals when needed.
 - Do not infer child scaffolding approval from workflow-set plan approval.
 - Do not auto-convert existing feature journals into workflow-set journals.

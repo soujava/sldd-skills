@@ -68,7 +68,7 @@ SLDD accepts slash-style commands when they reach the skill as text:
 
 Commands are routing shortcuts. They do not bypass workflow gates, approval rules, journal checks, or Red/Green contracts.
 
-Numeric step values are accepted as shorthand and resolve to the canonical step ID for the workflow kind. Journal `steps` keys and `current_step` values use the canonical step ID, which is the step file basename without `.md`.
+Numeric step values are accepted as shorthand and resolve to the canonical step ID for the workflow kind. Journal `steps` keys use the canonical step ID, which is the step file basename without `.md`. The current step is derived from `steps` and workflow gate rules instead of being persisted separately.
 
 Use `/sldd help` for a non-mutating overview. It must not load workflow or step files and must not create or change workflow state.
 
@@ -264,7 +264,9 @@ Required top-level fields in the current schema:
 
 `feature` is not a valid top-level journal field. Use `name` for the workflow/spec name and `kind: "feature"` for normal feature workflows.
 
-Other supported fields include `title`, `current_step`, `relationships.parents`, `relationships.predecessors`, `workflowSet.children`, and `notes`. `workflowSet` is valid only with `kind: "workflow-set"` and is invalid with `kind: "feature"`.
+Other supported fields include `title`, `relationships.parents`, `relationships.predecessors`, `workflowSet.children`, and `notes`. `workflowSet` is valid only with `kind: "workflow-set"` and is invalid with `kind: "feature"`.
+
+`current_step` is not a supported journal field. SLDD derives the current step from `steps` and the selected workflow's gate rules, so the journal does not persist a second source of progress truth.
 
 Allowed step statuses:
 
@@ -284,11 +286,11 @@ created
 conflict
 ```
 
-Step keys and `current_step` values use the step file basename without `.md`.
+Step keys use the step file basename without `.md`.
 
-For `kind: "feature"`, the schema accepts only feature step keys and feature `current_step` values from the feature step map: `88-exploration`, `00-navigation`, `01-product-intent`, `99-codebase-context`, `02-high-level-design`, `03-low-level-design`, `04-tests-red`, `05-implementation-green`, and `06-verification`. It also rejects any top-level `workflowSet`.
+For `kind: "feature"`, the schema accepts only feature step keys from the feature step map: `88-exploration`, `00-navigation`, `01-product-intent`, `99-codebase-context`, `02-high-level-design`, `03-low-level-design`, `04-tests-red`, `05-implementation-green`, and `06-verification`. It also rejects any top-level `workflowSet`.
 
-For `kind: "workflow-set"`, the schema accepts only workflow-set step keys and workflow-set `current_step` values from the workflow-set step map: `01-workflow-set-plan`, `02-scaffold-children`, and `03-verify-workflow-set`. It also requires `workflowSet.children`.
+For `kind: "workflow-set"`, the schema accepts only workflow-set step keys from the workflow-set step map: `01-workflow-set-plan`, `02-scaffold-children`, and `03-verify-workflow-set`. It also requires `workflowSet.children`.
 
 ## Reruns
 
@@ -308,7 +310,7 @@ Option 1 is an explicit override. Option 2 marks later completed steps in the se
 - Keep artifact formats under `skills/sldd/templates/`.
 - Keep journal schema files under `skills/sldd/schema/`.
 - Preserve YAML frontmatter in `skills/sldd/SKILL.md`: `name`, `description`, and `metadata.type`.
-- Preserve progressive disclosure from router to workflow to one current step.
+- Preserve progressive disclosure from router to workflow to one derived current step.
 - Preserve `.sldd/specs/<feature-name>/_spec-journal.json` as the canonical journal for new workflows.
 - Preserve `name` and `kind` as required journal fields; journals without either field are invalid.
 - Preserve `/sldd help` as informational and non-mutating.
