@@ -1,6 +1,6 @@
 ---
 name: sldd
-description: Start, resume, inspect, or continue SLDD spec-driven development workflows, including /sldd slash-style commands, gated intent/design/test/implementation steps, structured journals, and legacy SPEC.md compatibility.
+description: Start, resume, inspect, or continue SLDD spec-driven development workflows, including /sldd slash-style commands, gated intent/design/test/implementation steps, structured journals, and workflow kind routing.
 metadata:
   type: workflow
 ---
@@ -44,30 +44,36 @@ The canonical journal for new workflows is:
 
 Markdown artifacts are stored beside the journal.
 
-Legacy workflows using `docs/specs/<feature-name>/SPEC.md` remain readable for resume only. When resuming a legacy workflow, keep writing in the legacy directory unless the user explicitly requests migration.
+Legacy `docs/specs/<feature-name>/SPEC.md` files are not `_spec-journal.json` files and do not satisfy the current journal contract.
 
 ## Journal Contract
 
-Use `_spec-journal.json` as journal-only state. It records progress, artifact links, evidence, relationships, workflow kind, and rerun notes. It must not contain numbered artifact body content, command logs, or implementation reports.
+Use `_spec-journal.json` as journal-only state. It records the workflow name, progress, artifact links, evidence, relationships, workflow kind, and rerun notes. It must not contain numbered artifact body content, command logs, or implementation reports.
+
+Every `_spec-journal.json` must include `name` and `kind`. `name` is the workflow/spec name. Journals without `name` or `kind` are invalid and must not be routed, resumed, or treated as `feature`.
+
+Do not use `feature` as a top-level journal field. `feature` remains only the workflow kind value `kind: "feature"` and the feature workflow concept.
 
 Supported workflow kinds:
 
-- `feature`
-- `workflow-set`
+- `feature`: normal feature workflows for isolated features, bugfixes, endpoints, business rules, local refactors, component documentation, and other single-workflow changes.
+- `workflow-set`: decomposition and coordination workflows for large initiatives, epics, products, multi-module work, broad system plans, or work that needs child workflows.
 
-For new journals, persist `kind` immediately after detecting the workflow:
+Persist `name` and `kind` immediately when creating a journal:
 
 ```json
-{ "kind": "feature" }
+{ "name": "pix-transfer", "kind": "feature" }
 ```
 
 or:
 
 ```json
-{ "kind": "workflow-set" }
+{ "name": "marketplace-platform", "kind": "workflow-set" }
 ```
 
-If a journal already exists and contains `kind`, use that value as the source of truth. Do not reclassify it from user wording or current intent. If an existing journal has no `kind`, treat it as `feature` for legacy compatibility and do not rewrite it solely to add `kind`.
+For existing journals, use `name` as the workflow/spec name and `kind` as the workflow type source of truth. Do not reclassify `kind` from user wording or current intent. If `name` or `kind` is missing, stop and report the journal as invalid.
+
+`workflowSet` is exclusive to `kind: "workflow-set"`. Journals with `kind: "feature"` must not include `workflowSet`.
 
 Allowed step statuses:
 
@@ -84,8 +90,8 @@ If a journal has `relationships.predecessors`, every listed predecessor journal 
 When the journal exists:
 
 1. Read `_spec-journal.json`.
-2. If `kind` exists, route by that value.
-3. If `kind` is missing, treat the workflow as `feature` and do not mutate the journal just to add `kind`.
+2. If `name` and `kind` are present and valid, route by `kind`.
+3. If `name` or `kind` is missing or invalid, stop and report the journal as invalid.
 
 When no journal exists:
 
@@ -105,7 +111,7 @@ When ambiguous, prefer `feature`, except when the request clearly involves decom
 
 If slash-style commands reach this skill as text, interpret them as SLDD commands:
 
-- `/sldd help`: explain the SLDD skill, workflow router, gated workflow, managed storage, journal, legacy compatibility, and available commands. This command must not load workflow or step files and must not mutate state.
+- `/sldd help`: explain the SLDD skill, workflow router, gated workflow, managed storage, required journal `name` and `kind`, and available commands. This command must not load workflow or step files and must not mutate state.
 - `/sldd` or `/sldd status`: inspect available specs and route to the next valid workflow and step.
 - `/sldd start <feature>`: start a new workflow under `.sldd/specs/<feature>/`.
 - `/sldd resume <feature>`: resume a specific workflow.
@@ -120,8 +126,8 @@ Slash commands are convenience syntax only. Always enforce the same gates, journ
 
 ## Routing Procedure
 
-1. Resolve the workflow directory and journal path from user input, current context, available specs, or legacy `SPEC.md`.
-2. Detect or recover `kind` using the Journal Contract and Workflow Detection rules.
+1. Resolve the workflow directory and journal path from user input, current context, or available specs.
+2. Detect `name` and `kind` for new journals or read required `name` and `kind` from existing journals using the Journal Contract and Workflow Detection rules.
 3. Load exactly one workflow instruction file from `workflows/<kind>.md`.
 4. Let that workflow file validate gate order and determine `current_step`.
 5. Load exactly one step file from the selected workflow's `steps/<kind>/` step map.

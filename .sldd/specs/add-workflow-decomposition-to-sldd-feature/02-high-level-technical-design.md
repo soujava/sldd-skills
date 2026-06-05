@@ -2,7 +2,7 @@
 
 | Requirement | High-Level Design Response |
 |---|---|
-| Existing journals without `kind` behave as `feature` | Add kind inference in routing/status logic without rewriting old journals. |
+| Existing journals without `name` or `kind` are invalid | Add required journal contract validation before routing/status logic. |
 | Large ideas trigger decomposition recommendation | Add a large-idea heuristic before normal Step 01 and during exploration. |
 | User can reject decomposition | Keep normal feature workflow as the fallback path. |
 | Workflow-set parent can be created | Add `workflow-set` as a recognized workflow kind with compact parent steps. |
@@ -22,7 +22,7 @@ User request / SLDD command
 skills/sldd/SKILL.md
   - command routing
   - journal resolution
-  - kind inference
+  - required `name` and `kind` validation
   - step map selection
         |
         +------------------------------+

@@ -6,7 +6,7 @@ Verify workflow-set coordination consistency after planning and scaffolding.
 
 ## Gate + Resume Checks
 
-- Require parent journal `kind: "workflow-set"`.
+- Require parent journal `name` and `kind: "workflow-set"`.
 - Require `01-workflow-set-plan` complete.
 - Require `02-scaffold-children` complete, or require the user to explicitly accept recorded conflicts before verification can complete.
 - Do not require child workflows to complete Step 01 or Step 06.
@@ -16,11 +16,11 @@ Verify workflow-set coordination consistency after planning and scaffolding.
 
 Confirm:
 
-- The parent journal exists and has `kind: "workflow-set"`.
+- The parent journal exists and has `name` and `kind: "workflow-set"`.
 - `01-workflow-set-plan.md` exists and reflects the approved decomposition.
 - Parent child entries use scaffold states `proposed`, `created`, or `conflict`.
 - Created child journals exist.
-- Created child journals have `kind: "feature"`.
+- Created child journals have `name` and `kind: "feature"`.
 - Created child Step 01 entries are pending unless independently approved by the child workflow later.
 - Created child Step 01 entries include `origin.type: "workflow-set-scaffold"`.
 - Conflict child entries have an explicit reason and represent accepted non-creation, not successful scaffold.

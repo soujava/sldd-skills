@@ -75,7 +75,7 @@ Workflow-set journal shape, first version:
 ```json
 {
   "schema_version": 1,
-  "feature": "publishing-product-set",
+  "name": "publishing-product-set",
   "workflow": "sldd",
   "kind": "workflow-set",
   "title": "Publishing Product",
@@ -113,7 +113,7 @@ Child feature journal shape, first version:
 ```json
 {
   "schema_version": 1,
-  "feature": "article-authoring-feature",
+  "name": "article-authoring-feature",
   "workflow": "sldd",
   "kind": "feature",
   "title": "Article Authoring",
@@ -191,8 +191,8 @@ No runtime application tests or CI changes are required by this design.
 
 # Test Scenario Catalog
 
-1. Existing journal without `kind` is accepted as feature.
-2. Existing feature workflow is not renamed or rewritten solely to add `kind`.
+1. Existing journal without `name` or `kind` is rejected as invalid.
+2. Existing feature workflow is not renamed or rewritten solely to add missing journal fields.
 3. `workflow-set` journal routes to workflow-set steps.
 4. Unknown `kind` is rejected.
 5. Large idea recommendation text is present before Step 01 or in exploration behavior.
@@ -224,8 +224,8 @@ Disallowed dependency-related changes:
 
 # Ordered Implementation Plan
 
-1. Update `skills/sldd/schema/_spec-journal.schema.json` to allow optional `kind`, `title`, `workflowSet`, `relationships`, workflow-set step keys, and step `origin` metadata while preserving existing journals.
-2. Update `skills/sldd/SKILL.md` to document workflow kinds, missing-kind inference, workflow-set steps, decomposition guardrails, and updated step/template maps.
+1. Update `skills/sldd/schema/_spec-journal.schema.json` to require `name` and `kind`, allow `title`, `workflowSet`, `relationships`, workflow-set step keys, and step `origin` metadata.
+2. Update `skills/sldd/SKILL.md` to document workflow kinds, required journal validation, workflow-set steps, decomposition guardrails, and updated step/template maps.
 3. Add `skills/sldd/steps/01-workflow-set-plan.md` with objective, gates, materialization modes, approval protocol, save flow, and response format.
 4. Add `skills/sldd/steps/02-scaffold-children.md` with plan validation, all-or-nothing scaffold rules, write order, conflict handling, journal updates, and completion criteria.
 5. Add `skills/sldd/steps/03-verify-workflow-set.md` with coordination-only verification and no dedicated artifact requirement.

@@ -24,6 +24,6 @@ grep -q 'workflow-set' README.md
 - Workflow-set step files exist.
 - Workflow-set templates exist.
 - Router documentation recognizes `workflow-set`.
-- Router documentation preserves missing-kind-as-feature compatibility.
+- Router documentation rejects journals without required `name` and `kind`.
 - Journal schema supports workflow-set and scaffold origin metadata.
 - User-facing README documents workflow decomposition.

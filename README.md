@@ -82,7 +82,7 @@ SLDD is one executable skill:
 skills/sldd/SKILL.md
 ```
 
-`SKILL.md` is the router. It detects or recovers the workflow kind, validates journal state, interprets commands, and loads only the workflow and step needed for the current action.
+`SKILL.md` is the router. It detects the workflow name and kind for new journals, reads required `name` and `kind` from existing journals, validates journal state, interprets commands, and loads only the workflow and step needed for the current action.
 
 Runtime content is split by responsibility:
 
@@ -116,7 +116,7 @@ SLDD supports two workflow kinds:
 | `feature` | Isolated features, bugfixes, endpoints, business rules, local refactors, component documentation, and other single-workflow changes |
 | `workflow-set` | Large initiatives, products, epics, multi-module work, broad system plans, decomposition requests, and work that needs child workflows |
 
-New journals persist `kind` as soon as the workflow is created. Existing journals with `kind` use that value as the source of truth. Existing journals without `kind` are treated as `feature` for legacy compatibility and are not rewritten solely to add `kind`.
+Every `_spec-journal.json` must include `name` and `kind`. `name` is the workflow/spec name. New journals persist `name` and `kind` as soon as the workflow is created, and existing journals use `kind` as the workflow type source of truth. Journals without `name` or `kind` are invalid; SLDD does not provide a fallback to `feature` or a legacy compatibility mode for missing `kind`.
 
 When the request is ambiguous, SLDD chooses `feature` unless the user clearly asks for decomposition or the work has multiple independent deliverables.
 
@@ -191,7 +191,7 @@ Workflow-set parent steps:
 
 Workflow-set parents plan and scaffold children. They do not execute child workflows, approve child Step 01, enforce child implementation gates, or persist child execution progress.
 
-Creating or updating a workflow-set parent requires explicit approval. A new parent journal is created only through `01-workflow-set-plan`; existing journals without `kind` remain legacy-compatible `feature` workflows and are not auto-converted into workflow-sets. Existing `kind: "feature"` journals stop the workflow-set path unless the user chooses another workflow-set name or gives explicit direction.
+Creating or updating a workflow-set parent requires explicit approval. A new parent journal is created only through `01-workflow-set-plan`. Existing journals without `name` or `kind` are invalid and must be corrected before routing. Existing `kind: "feature"` journals stop the workflow-set path unless the user chooses another workflow-set name or gives explicit direction.
 
 Child scaffolding requires:
 
@@ -244,7 +244,7 @@ Workflow-set Step 03 does not write a separate verification artifact. Scaffolded
 
 Child workflows scaffolded from a workflow-set get their own `.sldd/specs/<child-name>/` directory and journal.
 
-Legacy workflows using `docs/specs/<feature-name>/SPEC.md` remain readable for resume compatibility. When resuming a legacy workflow, SLDD keeps writing in that legacy directory unless the user explicitly requests migration.
+Legacy `docs/specs/<feature-name>/SPEC.md` files are not `_spec-journal.json` files and do not satisfy the current journal contract.
 
 ## Journal Contract
 
@@ -255,12 +255,14 @@ Required top-level fields in the current schema:
 | Field | Contract |
 |---|---|
 | `schema_version` | Must be `1` |
-| `feature` | Workflow name |
+| `name` | Workflow/spec name |
 | `workflow` | Must be `sldd` |
 | `kind` | `feature` or `workflow-set` |
 | `steps` | Step status map |
 
-Other supported fields include `title`, `current_step`, `relationships.parents`, `relationships.predecessors`, `workflowSet.children`, and `notes`.
+`feature` is not a valid top-level journal field. Use `name` for the workflow/spec name and `kind: "feature"` for normal feature workflows.
+
+Other supported fields include `title`, `current_step`, `relationships.parents`, `relationships.predecessors`, `workflowSet.children`, and `notes`. `workflowSet` is valid only with `kind: "workflow-set"` and is invalid with `kind: "feature"`.
 
 Allowed step statuses:
 
@@ -280,7 +282,7 @@ created
 conflict
 ```
 
-For `kind: "workflow-set"`, the schema requires workflow-set step keys, workflow-set `current_step` values, and `workflowSet.children`.
+For `kind: "workflow-set"`, the schema requires workflow-set step keys, workflow-set `current_step` values, and `workflowSet.children`. For `kind: "feature"`, the schema rejects any top-level `workflowSet`.
 
 ## Reruns
 
@@ -302,7 +304,7 @@ Option 1 is an explicit override. Option 2 marks later completed steps in the se
 - Preserve YAML frontmatter in `skills/sldd/SKILL.md`: `name`, `description`, and `metadata.type`.
 - Preserve progressive disclosure from router to workflow to one current step.
 - Preserve `.sldd/specs/<feature-name>/_spec-journal.json` as the canonical journal for new workflows.
-- Preserve legacy `docs/specs/<feature-name>/SPEC.md` resume compatibility until explicitly removed.
+- Preserve `name` and `kind` as required journal fields; journals without either field are invalid.
 - Preserve `/sldd help` as informational and non-mutating.
 - Preserve the Step 88/Step 99 boundary: exploration context is conversational; Step 99 is approved, saved brownfield context.
 - Preserve the Step 04/Step 05 Red-Green contract.

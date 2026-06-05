@@ -1,7 +1,8 @@
 {
   "schema_version": 1,
-  "feature": "add-workflow-decomposition-to-sldd-feature",
+  "name": "add-workflow-decomposition-to-sldd-feature",
   "workflow": "sldd",
+  "kind": "feature",
   "current_step": "06",
   "steps": {
     "01": {

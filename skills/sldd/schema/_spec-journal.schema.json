@@ -4,13 +4,13 @@
   "title": "SLDD Spec Journal",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "feature", "workflow", "kind", "steps"],
+  "required": ["schema_version", "name", "workflow", "kind", "steps"],
   "properties": {
     "schema_version": {
       "type": "integer",
       "const": 1
     },
-    "feature": {
+    "name": {
       "type": "string",
       "minLength": 1
     },
@@ -122,6 +122,21 @@
               }
             }
           }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "const": "feature"
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "required": ["workflowSet"]
         }
       }
     }

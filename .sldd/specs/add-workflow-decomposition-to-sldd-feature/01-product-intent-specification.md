@@ -61,8 +61,8 @@ Closed first-version decisions:
 
 # Success Metrics
 
-- Existing feature workflows continue to resume unchanged.
-- A journal without `kind` is treated as `feature`.
+- Existing valid feature workflows continue to resume unchanged.
+- A journal without `name` or `kind` is invalid.
 - A large multi-capability idea triggers a recommendation for workflow-set planning before normal Step 01.
 - A user can reject decomposition and continue with normal single-feature SLDD behavior.
 - A user can approve workflow-set planning and create a `kind: "workflow-set"` parent workflow.
@@ -104,7 +104,7 @@ Risks:
 Assumptions:
 
 - The first version should favor safety and explicit approval over convenience.
-- Missing `kind` compatibility is required before workflow-set routing can be safely added.
+- Journals must declare `name` and `kind` before workflow routing can be safely applied.
 - The workflow-set parent only owns decomposition and scaffold coordination.
 - Child workflows remain normal feature workflows after scaffold.
 - Predecessor readiness means predecessor Step 06 verification is complete.
@@ -113,7 +113,7 @@ Assumptions:
 
 # Acceptance Criteria (Given/When/Then)
 
-- Given an existing SLDD workflow journal without `kind`, when it is resumed, then it behaves as `kind: "feature"`.
+- Given an existing SLDD workflow journal without `name` or `kind`, when it is resumed, then it is rejected as invalid.
 - Given an existing feature workflow, when status or resume routing runs, then existing behavior is preserved.
 - Given a large multi-capability idea, when the agent evaluates it before Step 01, then it recommends workflow-set planning.
 - Given an ambiguous idea, when decomposition may or may not help, then the agent asks one focused clarification question instead of forcing decomposition.

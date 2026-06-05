@@ -8,8 +8,9 @@ Create or revise the parent workflow-set plan for a large idea that should be de
 
 - Require explicit approval before creating or updating workflow-set files.
 - If no parent journal exists, allow this step to draft a new workflow-set plan and create the parent journal only after explicit user approval.
-- If a parent journal exists, require `kind: "workflow-set"`.
-- If an existing journal has no `kind`, treat it as `feature` and do not convert it automatically.
+- If a parent journal exists, require `name` and `kind: "workflow-set"`.
+- If an existing journal has no `name` or `kind`, stop and report it as invalid.
+- If an existing journal has top-level `feature`, stop and report it as invalid.
 - If an existing journal has `kind: "feature"`, stop and ask whether the user wants a different workflow-set name.
 - If an existing journal has an unknown `kind`, stop and ask for correction.
 - Do not create child workflows in this step.
@@ -42,8 +43,9 @@ Writing or completing the plan does not approve child scaffolding unless the use
 ## Save Flow After Approval
 
 1. Create or update `.sldd/specs/<workflow-set-name>/01-workflow-set-plan.md`.
-2. Create or update `_spec-journal.json` with `kind: "workflow-set"`.
+2. Create or update `_spec-journal.json` with `name` and `kind: "workflow-set"`.
 3. When creating a new parent journal, initialize it with:
+   - `name: "<workflow-set-name>"`
    - `kind: "workflow-set"`
    - `current_step: "01-workflow-set-plan"`
    - `steps.01-workflow-set-plan`

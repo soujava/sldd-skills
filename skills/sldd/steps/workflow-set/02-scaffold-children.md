@@ -60,7 +60,7 @@ On name collision, missing origin metadata, unsafe overwrite risk, or inconsiste
 ## Save Flow After Scaffold
 
 1. Create child Step 01 draft content.
-2. Create child `_spec-journal.json` with concrete predecessor journal paths.
+2. Create child `_spec-journal.json` with `name`, `kind: "feature"`, and concrete predecessor journal paths.
 3. Update parent child scaffold state to `created` only after child files exist.
 4. Update parent child scaffold state to `conflict` only for conflicts the user explicitly accepted for recording.
 5. Mark `02-scaffold-children` complete only when every proposed child is either created successfully or explicitly recorded as an accepted conflict.

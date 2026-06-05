@@ -1031,11 +1031,6 @@ Example child journal excerpt:
       "../user-registration-and-login/_spec-journal.json"
     ]
   },
-  "feature": {
-    "requiredPredecessors": [
-      "user-registration-and-login"
-    ]
-  },
   "steps": {
     "01-product-intent": {
       "status": "pending",
@@ -1471,14 +1466,13 @@ Kind-specific data should live in kind-specific sections, for example:
 }
 ```
 
-Feature-specific data can live under:
+Feature-specific scope and predecessor data should stay in approved artifacts or standard journal fields:
 
 ```json
 {
   "kind": "feature",
-  "feature": {
-    "scope": [],
-    "requiredPredecessors": []
+  "relationships": {
+    "predecessors": []
   }
 }
 ```
@@ -1571,7 +1565,7 @@ Create or resume a workflow-set planning workflow after approval.
 Behavior:
 
 - Creates or resumes `.sldd/specs/<workflow-set-name>/`.
-- Creates or updates `_spec-journal.json` with `kind: "workflow-set"`.
+- Creates or updates `_spec-journal.json` with `name` and `kind: "workflow-set"`.
 - Creates or updates `01-workflow-set-plan.md`.
 - Does not create child workflows.
 - Stops for approval before `02-scaffold-children`.
@@ -2120,7 +2114,7 @@ Add safe child scaffold support.
 Behavior:
 
 - Scaffold child workflow directories from an approved plan.
-- Create child `_spec-journal.json` with `kind: "feature"`.
+- Create child `_spec-journal.json` with `name` and `kind: "feature"`.
 - Create child `01-product-intent-specification.md` as a self-contained draft.
 - Set child Step 01 to `pending` with `origin.type: "workflow-set-scaffold"`.
 - Use simplified scaffold states: `proposed`, `created`, `conflict`.
@@ -2134,7 +2128,7 @@ Enhance `/sldd resume <name>` behavior.
 
 Behavior:
 
-- Detect `kind`.
+- Detect `name` and `kind`.
 - Resume feature workflows as today.
 - Resume workflow-set parent steps when pending.
 - If workflow-set parent is complete, list children by reading child journals.
@@ -2426,7 +2420,7 @@ Before implementing workflow decomposition in the SLDD skill, define acceptance 
 - Given child workflows are scaffolded, then each child Step 01 is `pending` and includes `origin.type: "workflow-set-scaffold"`.
 - Given a scaffolded child workflow is resumed, then the agent verifies predecessor completion before allowing Step 01 approval.
 - Given a workflow-set is resumed after parent completion, then the agent lists children by reading child journals and does not auto-select a child when multiple are pending.
-- Given existing workflows without `kind`, then the agent treats them as `kind: "feature"` and preserves current behavior.
+- Given existing workflows without `name` or `kind`, then the agent rejects them as invalid instead of inferring `kind: "feature"`.
 
 ## Safety Acceptance Criteria
 
@@ -2451,7 +2445,7 @@ For an initial implementation, only these may be required:
 - Large-idea heuristic recommendation.
 - `kind: "workflow-set"` parent support.
 - `01-workflow-set-plan.md` creation.
-- Backward-compatible `kind` inference for existing workflows.
+- Required `name` and `kind` validation for existing workflows.
 
 Child scaffolding can be deferred to a later release.
 
@@ -2465,7 +2459,7 @@ This section consolidates the current refinement state so the proposal can be re
 - Decomposition can start from structured input or emerge during Step 88 exploration.
 - Exploration may recommend decomposition, but must not create artifacts without approval.
 - A `workflow-set` is a normal workflow with `kind: "workflow-set"`.
-- Existing workflows without `kind` are treated as `kind: "feature"`.
+- Existing workflows without `name` or `kind` are invalid.
 - Workflow-set parent steps are compact: `01-workflow-set-plan`, `02-scaffold-children`, `03-verify-workflow-set`.
 - `01-workflow-set-plan.md` combines intent and initial decomposition plan.
 - Child workflows are not created until scaffold is explicitly approved.
@@ -2602,7 +2596,7 @@ The first version should include recommendation, workflow-set planning, child sc
 ### Workflow-Set Creation
 
 - Create `.sldd/specs/<name>-set/` for new workflow-sets by default.
-- Create `_spec-journal.json` with `kind: "workflow-set"`.
+- Create `_spec-journal.json` with `name` and `kind: "workflow-set"`.
 - Create `01-workflow-set-plan.md`.
 - Use compact workflow-set steps:
   - `01-workflow-set-plan`
@@ -2612,7 +2606,7 @@ The first version should include recommendation, workflow-set planning, child sc
 ### Child Scaffolding
 
 - Create `.sldd/specs/<name>-feature/` for child feature workflows by default.
-- Create child `_spec-journal.json` with `kind: "feature"`.
+- Create child `_spec-journal.json` with `name` and `kind: "feature"`.
 - Create child `01-product-intent-specification.md`.
 - Set child Step 01 to `pending`.
 - Add `origin.type: "workflow-set-scaffold"` to child Step 01 metadata.
@@ -2781,11 +2775,6 @@ Example:
     "06-verification": {
       "status": "pending"
     }
-  },
-  "feature": {
-    "requiredPredecessors": [
-      "user-registration-and-login-feature"
-    ]
   }
 }
 ```
@@ -3601,10 +3590,10 @@ The feature changes routing and workflow structure, so users need clear docs. Bu
 
 Workflow decomposition should be verified with focused scenarios before being considered ready.
 
-## Backward Compatibility Scenarios
+## Journal Contract Scenarios
 
-- Given an existing workflow journal without `kind`, when `/sldd resume <workflow>` runs, then it behaves as a normal `feature` workflow.
-- Given an existing feature workflow, when `/sldd status` runs, then it is listed as `feature` by inference.
+- Given an existing workflow journal without `name` or `kind`, when `/sldd resume <workflow>` runs, then it is rejected as invalid.
+- Given an existing feature workflow, when `/sldd status` runs, then it is listed as `feature` from explicit `kind`.
 - Given an existing workflow, the agent must not rename or migrate it automatically.
 
 ## Recommendation Scenarios
@@ -3729,10 +3718,11 @@ If the user approves decomposition, create or resume a workflow with:
 }
 ```
 
-Existing journals without `kind` are treated as:
+Existing journals without `name` or `kind` are invalid. A valid feature journal declares:
 
 ```json
 {
+  "name": "example-feature",
   "kind": "feature"
 }
 ```
@@ -4011,7 +4001,7 @@ Use this checklist when resuming the work in another session or turning the refi
 - Workflow-set parent plans and scaffolds; it does not execute children.
 - Child workflows own their own SLDD gates.
 - Child Step 01 approval requires all predecessor workflows to have Step 06 complete.
-- Existing journals without `kind` are treated as `feature`.
+- Existing journals without `name` or `kind` are invalid.
 - New decomposition-created names use suffixes by default: `-set` and `-feature`.
 - Scaffold is all-or-nothing in the first version.
 - Partial scaffold selection is postponed.
@@ -4501,7 +4491,7 @@ Improve the SLDD skill so it can recommend and manage workflow decomposition for
 
 ## Step 01 Acceptance Criteria Draft
 
-- Given an existing SLDD workflow journal without `kind`, when it is resumed, then it behaves as `kind: "feature"`.
+- Given an existing SLDD workflow journal without `name` or `kind`, when it is resumed, then it is rejected as invalid.
 - Given a large multi-capability idea, when the agent evaluates it before Step 01, then it recommends workflow-set planning.
 - Given the user rejects decomposition, then normal single-feature workflow behavior continues.
 - Given the user approves workflow-set planning, then a `kind: "workflow-set"` parent workflow can be created.
@@ -4575,7 +4565,7 @@ The following decisions are closed for the first version:
 - Child Step 01 is pending after scaffold.
 - Child workflows enforce predecessor Step 06 completion before Step 01 approval.
 - Parent does not persist child execution progress.
-- Existing workflows are backward-compatible through missing-kind-as-feature inference.
+- Existing workflows must declare required `name` and `kind` fields.
 - Suffix naming is default for new decomposition-created workflows.
 
 ## Do Not Reopen Unless Needed

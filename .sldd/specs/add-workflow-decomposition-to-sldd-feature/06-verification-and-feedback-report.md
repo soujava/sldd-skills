@@ -2,7 +2,7 @@
 
 | Requirement | Verification Result |
 |---|---|
-| Existing journals without `kind` behave as feature | Covered in `skills/sldd/SKILL.md` and `skills/sldd/steps/00-navigation.md` with missing-kind-as-feature guidance. |
+| Existing journals without `name` or `kind` are invalid | Covered in `skills/sldd/SKILL.md` and `skills/sldd/steps/feature/00-navigation.md` with required journal contract guidance. |
 | Workflow-set parent step files exist | Verified: `01-workflow-set-plan.md`, `02-scaffold-children.md`, and `03-verify-workflow-set.md` exist under `skills/sldd/steps/`. |
 | Workflow-set templates exist | Verified: `01-workflow-set-plan.md` and `01-product-intent-from-workflow-set.md` exist under `skills/sldd/templates/`. |
 | Router recognizes workflow-set behavior | Verified: `skills/sldd/SKILL.md` documents workflow kinds, workflow-set flow, scaffold states, and parent/child responsibilities. |

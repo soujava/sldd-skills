@@ -19,7 +19,7 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Ensure every step has a clear objective, gate enforcement rules, approval protocol when applicable, save/progress behavior, and response format.
 - Preserve progressive disclosure: `SKILL.md` routes and loads exactly the step file needed; templates are loaded only for produced Markdown artifacts.
 - Preserve `.sldd/specs/<feature-name>/_spec-journal.json` as the canonical journal for new workflows.
-- Preserve legacy resume compatibility for `docs/specs/<feature-name>/SPEC.md` unless explicitly removed.
+- Preserve `name` and `kind` as required `_spec-journal.json` fields; journals without either field are invalid.
 - Preserve `/sldd help` as an informational command that explains the skill and does not mutate journals, artifacts, or workflow state.
 - Preserve `/sldd explore [idea]` as Step 88 exploration: establish lightweight project context first, inspect the repository instead of asking questions the codebase can answer, ask one focused clarification question at a time, include a recommended answer or default assumption, and offer explicit exits.
 - Preserve Step 88 workflow-set recommendation behavior: recommend workflow-set planning for multiple capabilities, dependencies, parallel workstreams, or oversized Step 01 scope, but do not create workflow-set artifacts without explicit approval.
@@ -27,13 +27,15 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Preserve the Step 04/Step 05 Red-Green contract: Step 04 writes tests first only; Step 05 makes minimal production changes, does not modify Step 04 tests, and follows applicable repository or context-provided agent instructions.
 - Preserve Step 04 and Step 05 as journal-evidence phases, not mandatory Markdown report artifact phases: Step 04 records `evidence: "red_confirmed"` and Step 05 records `evidence: "green_confirmed"` in `_spec-journal.json`.
 - Preserve workflow-set parent sequencing: `01-workflow-set-plan -> 02-scaffold-children -> 03-verify-workflow-set`.
-- Preserve workflow-set parent creation gates: new parent journals are created only through approved `01-workflow-set-plan`; existing journals without `kind` remain legacy-compatible `feature` workflows and are not converted automatically.
+- Preserve workflow-set parent creation gates: new parent journals are created only through approved `01-workflow-set-plan`; existing journals without `name` or `kind` are invalid and are not routed automatically.
 - Preserve workflow-set parent boundaries: parents plan and scaffold child workflows, but do not execute children, approve child Step 01, enforce child implementation gates, or persist child execution progress.
 - Preserve workflow-set Step 03 behavior: verify coordination in the conversation and journal only; do not create a dedicated verification report artifact unless the workflow is explicitly changed.
 - Preserve predecessor gates: when `relationships.predecessors` exists, Step 01 completion and Step 02+ routing are blocked until every listed predecessor journal has Step 06 complete.
 - Preserve completed-step rerun choices: run again only, run again and mark later completed steps `requires_rerun`, or do nothing.
 - Preserve workflow-set scaffold states: `proposed`, `created`, and `conflict`.
 - Preserve journal schema concepts used by the current skill: `kind`, `current_step`, `relationships`, `workflowSet.children`, `origin.type`, `evidence`, `reason`, and `requires_rerun`.
+- Preserve `name` as the workflow/spec name field in `_spec-journal.json`; do not use or accept `feature` as a journal-name field.
+- Preserve `workflowSet` as exclusive to `kind: "workflow-set"`; `kind: "feature"` journals must not include it.
 - Update `README.md` when changing user-visible process behavior, sequencing, gates, approval semantics, commands, journal fields, storage, templates, installer options, or step responsibilities.
 - Use Conventional Commits for commit messages, following the `<type>(optional-scope): <description>` format.
 
@@ -48,6 +50,8 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Do not persist child workflow execution progress into a workflow-set parent journal; compute child progress by reading child journals when needed.
 - Do not infer child scaffolding approval from workflow-set plan approval.
 - Do not auto-convert existing feature journals into workflow-set journals.
+- Do not create legacy migration logic or a fallback that treats journals without `name` or `kind` as `feature`.
+- Do not create legacy migration logic or a fallback that accepts both `feature` and `name` as journal fields.
 - Do not treat accepted workflow-set scaffold conflicts as successful child creation.
 - Do not modify `LICENSE` unless explicitly asked.
 

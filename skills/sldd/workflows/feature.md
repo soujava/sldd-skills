@@ -59,15 +59,17 @@ Load only the template needed by the selected step:
 
 ## Resume Rules
 
-1. Resolve the feature and journal path from user input, current context, or available specs.
+1. Resolve the requested workflow and journal path from user input, current context, or available specs.
 2. Prefer `.sldd/specs/<feature-name>/_spec-journal.json`.
-3. If no new journal exists, allow legacy resume from `docs/specs/<feature-name>/SPEC.md`.
-4. Validate that referenced Markdown artifacts exist.
-5. Validate predecessor completion when `relationships.predecessors` exists.
-6. Detect out-of-order completions or missing prerequisites.
-7. For Step 99, validate freshness and relevance before reuse.
-8. For Step 04 and Step 05, re-evaluate repository state and relevant test results before trusting journal evidence.
-9. Load only the required feature step file.
+3. Require existing `_spec-journal.json` files to include `name` and `kind: "feature"`; journals without `name` or `kind` are invalid.
+4. Reject journals that use top-level `feature` as the workflow name field.
+5. Reject `kind: "feature"` journals that include top-level `workflowSet`.
+6. Validate that referenced Markdown artifacts exist.
+7. Validate predecessor completion when `relationships.predecessors` exists.
+8. Detect out-of-order completions or missing prerequisites.
+9. For Step 99, validate freshness and relevance before reuse.
+10. For Step 04 and Step 05, re-evaluate repository state and relevant test results before trusting journal evidence.
+11. Load only the required feature step file.
 
 If predecessor validation fails, stop and route the user to the incomplete predecessor workflow. If journal, artifacts, repository state, or test results conflict, stop and ask for direction before writing or routing forward.
 

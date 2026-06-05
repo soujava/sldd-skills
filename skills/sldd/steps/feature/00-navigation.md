@@ -10,8 +10,9 @@ Determine current state, block invalid jumps, and route to the correct next step
 - For new workflows, default to `.sldd/specs/<feature-name>/_spec-journal.json`.
 - Treat `_spec-journal.json` as journal-only: progress, artifact links, evidence, and rerun notes only.
 - Never write numbered step body content, logs, or reports into `_spec-journal.json`.
-- Legacy `docs/specs/<feature-name>/SPEC.md` is readable for resume compatibility only.
-- When resuming a legacy `SPEC.md`, continue in the legacy directory unless migration is explicitly requested.
+- Require every `_spec-journal.json` to include `name` and `kind`.
+- Treat journals without `name` or `kind` as invalid.
+- Treat top-level `feature` as invalid in `_spec-journal.json`; use `name` for the workflow/spec name.
 
 Expected new-workflow artifacts:
 
@@ -32,9 +33,8 @@ Approved numbered artifacts take precedence over `00-exploration-summary.md`.
 2. Detect jump-ahead requests and stop if prerequisites are missing.
 3. Resolve target journal:
    - user-provided path, or
-   - `.sldd/specs/<feature-name>/_spec-journal.json`, or
-   - legacy `docs/specs/<feature-name>/SPEC.md`.
-4. If the target journal exists, use `kind` as the source of truth. If `kind` is missing, treat it as `feature` for compatibility and do not rewrite the journal solely to add `kind`.
+   - `.sldd/specs/<feature-name>/_spec-journal.json`.
+4. If the target journal exists, use `kind` as the source of truth and `name` as the workflow/spec name. If `name` or `kind` is missing or invalid, stop and report the journal as invalid.
 5. If no target journal exists, classify the request before creating one:
    - Use `feature` for isolated features, bugfixes, endpoints, business rules, local refactors, local brownfield changes, or component documentation.
    - Use `workflow-set` for large initiatives, full products, epics, multiple modules, multiple related features, broad system plans, decomposition requests, or child-workflow needs.
@@ -46,8 +46,10 @@ Approved numbered artifacts take precedence over `00-exploration-summary.md`.
 10. If the spec is still being clarified, route to Step 88.
 11. Preserve the normal feature flow for `kind: "feature"`.
 12. For existing codebases, check whether Step 99 is required, complete, and still valid.
-13. If any violation exists, stop and route to the missing step.
-14. Route only to the next valid feature step file.
+13. Reject journals that use top-level `feature` as the workflow name field.
+14. Reject `kind: "feature"` journals with top-level `workflowSet`.
+15. If any violation exists, stop and route to the missing step.
+16. Route only to the next valid feature step file.
 
 If predecessor validation fails, stop and route to the incomplete predecessor workflow. Draft artifacts in the blocked workflow may remain linked, but Step 01 and Step 99 must stay `pending` with a predecessor-gate `reason` until all predecessors complete Step 06.
 
@@ -63,7 +65,7 @@ When the workflow-set parent is complete:
 - Do not auto-select a child when multiple children are pending or actionable.
 - If exactly one child is clearly unblocked and pending, ask before switching context to that child.
 
-When `kind` is missing, treat the workflow as `feature` for compatibility.
+When `name` or `kind` is missing, stop and report the journal as invalid.
 
 ## Specific Step Run Flow
 
@@ -109,7 +111,7 @@ All completed-step choices remain subject to the target step's gate checks, appr
 
 When resuming at Step 04 or Step 05:
 
-1. Inspect `_spec-journal.json` or legacy `SPEC.md`.
+1. Inspect `_spec-journal.json` and require valid `name` and `kind`.
 2. Inspect current test and production file state.
 3. Run or request the relevant test commands when the current Red/Green state cannot be trusted from files alone.
 4. Re-evaluate Step 04 and Step 05 even if the journal marks them complete.

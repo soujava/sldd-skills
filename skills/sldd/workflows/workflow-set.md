@@ -35,7 +35,7 @@ Load only the template needed by the selected step:
 
 - Workflow-set planning requires explicit approval.
 - A new workflow-set parent journal may be created only after explicit approval.
-- Existing journals without `kind` are treated as `feature` workflows and must not be converted automatically.
+- Existing journals without `name` or `kind` are invalid and must not be routed automatically.
 - Existing journals with `kind: "feature"` stop the workflow-set path and require a different workflow-set name or explicit user direction.
 - Child scaffolding requires `01-workflow-set-plan` complete and separate explicit scaffold approval.
 - Scaffold is all-or-nothing for all proposed children in the approved plan.
@@ -54,14 +54,17 @@ These states describe materialization only, not child execution progress.
 ## Resume Rules
 
 1. Resolve the workflow-set name and journal path from user input, current context, or available specs.
-2. Require an existing parent journal to have `kind: "workflow-set"`.
-3. If the user explicitly approved creating a new workflow-set and no parent journal exists, route to `01-workflow-set-plan` instead of treating the missing journal as a resume failure.
-4. Validate that referenced Markdown artifacts exist.
-5. Resume pending parent workflow-set steps first.
-6. If the parent is complete, compute a read-only child overview by reading child journals.
-7. Do not write child progress to the parent journal.
-8. Do not auto-select a child when multiple children are pending or actionable.
-9. Load only the required workflow-set step file.
+2. Require an existing parent journal to have `name` and `kind: "workflow-set"`.
+3. Reject existing parent journals without `name` or `kind`.
+4. Reject journals that use top-level `feature` as the workflow name field.
+5. Require top-level `workflowSet` on workflow-set parent journals.
+6. If the user explicitly approved creating a new workflow-set and no parent journal exists, route to `01-workflow-set-plan` instead of treating the missing journal as a resume failure.
+7. Validate that referenced Markdown artifacts exist.
+8. Resume pending parent workflow-set steps first.
+9. If the parent is complete, compute a read-only child overview by reading child journals.
+10. Do not write child progress to the parent journal.
+11. Do not auto-select a child when multiple children are pending or actionable.
+12. Load only the required workflow-set step file.
 
 If journal, artifacts, scaffold state, child journal state, or filesystem state conflict, stop and ask for direction before writing or routing forward.
 
