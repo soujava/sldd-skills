@@ -30,6 +30,8 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Preserve workflow-set parent creation gates: new parent journals are created only through approved `01-workflow-set-plan`; existing journals without `name` or `kind` are invalid and are not routed automatically.
 - Preserve workflow-set parent boundaries: parents plan and scaffold child workflows, but do not execute children, approve child Step 01, enforce child implementation gates, or persist child execution progress.
 - Preserve workflow-set Step 03 behavior: verify coordination in the conversation and journal only; do not create a dedicated verification report artifact unless the workflow is explicitly changed.
+- Preserve kind-specific workflow completion: `kind: "feature"` is complete only when `steps["06-verification"].status == "complete"`, and `kind: "workflow-set"` is complete only when `steps["03-verify-workflow-set"].status == "complete"`.
+- Preserve `/sldd resume` active-workflow selection: find journals under `.sldd/specs/*/_spec-journal.json`, exclude workflows complete for their kind, filter blocked workflows by `relationships.predecessors`, auto-resume exactly one unblocked active workflow, ask when multiple are unblocked, and report blockers when none are unblocked.
 - Preserve predecessor gates: when `relationships.predecessors` exists, Step 01 completion and Step 02+ routing are blocked until every listed predecessor journal has Step 06 complete.
 - Preserve completed-step rerun choices: run again only, run again and mark later completed steps `requires_rerun`, or do nothing.
 - Preserve workflow-set scaffold states: `proposed`, `created`, and `conflict`.

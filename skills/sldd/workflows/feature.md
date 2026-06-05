@@ -57,6 +57,10 @@ Load only the template needed by the selected step:
 - Step 05 must make the minimum production changes needed to pass Step 04 tests, must not modify Step 04 tests, and must follow applicable repository or context-provided agent instructions.
 - Child workflows scaffolded from a workflow-set are normal feature workflows. They start with `01-product-intent` pending and `origin.type: "workflow-set-scaffold"`.
 
+## Completion Rule
+
+This kind of workflow is complete when `steps["06-verification"].status == "complete"`.
+
 ## Resume Rules
 
 1. Resolve the requested workflow and journal path from user input, current context, or available specs.

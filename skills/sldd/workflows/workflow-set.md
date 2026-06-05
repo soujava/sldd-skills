@@ -51,6 +51,10 @@ Workflow-set child scaffold states are only:
 
 These states describe materialization only, not child execution progress.
 
+## Completion Rule
+
+This kind of workflow is complete when `steps["03-verify-workflow-set"].status == "complete"`.
+
 ## Resume Rules
 
 1. Resolve the workflow-set name and journal path from user input, current context, or available specs.

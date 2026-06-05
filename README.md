@@ -122,6 +122,29 @@ Every `_spec-journal.json` must include `name` and `kind`. `name` is the workflo
 
 When the request is ambiguous, SLDD chooses `feature` unless the user clearly asks for decomposition or the work has multiple independent deliverables.
 
+## Completion and Resume Selection
+
+Workflow completion is defined by `kind`:
+
+| Kind | Complete when |
+|---|---|
+| `feature` | `steps["06-verification"].status == "complete"` |
+| `workflow-set` | `steps["03-verify-workflow-set"].status == "complete"` |
+
+SLDD uses this kind-specific completion rule when filtering active workflows, validating predecessor gates, and resolving `/sldd resume`.
+
+For `/sldd resume` without a workflow name, SLDD:
+
+1. Finds all journals under `.sldd/specs/*/_spec-journal.json`.
+2. Excludes workflows already complete for their `kind`.
+3. Checks `relationships.predecessors` for each remaining workflow.
+4. Treats a workflow as unblocked when it has no predecessors, or when every predecessor journal exists and is complete by its own workflow kind.
+5. Automatically resumes only when exactly one active workflow is unblocked.
+6. Asks the user to choose when multiple active workflows are unblocked.
+7. Reports the blocking predecessor chain when no active workflow is unblocked.
+
+A complete `workflow-set` parent means parent planning, child scaffolding, and coordination verification are complete. It does not mean child `feature` workflows are complete; child progress is computed by reading child journals.
+
 ## Feature Workflow
 
 Feature workflows use this route:
@@ -171,6 +194,7 @@ Core feature rules:
 - Step 04 records `evidence: "red_confirmed"` in the journal; Step 05 records `evidence: "green_confirmed"`.
 - Step 04 and Step 05 are journal-evidence phases, not mandatory Markdown report phases.
 - Step 06 produces `06-verification-and-feedback-report.md`.
+- A feature workflow is complete only when `06-verification` is complete.
 - If `relationships.predecessors` exists, every predecessor journal must exist and have Step 06 complete before this workflow may complete Step 01 or route to Step 02+.
 
 ## Workflow-Set Workflow
@@ -210,6 +234,8 @@ Created child workflows are normal `feature` workflows. Each child starts with `
 Parent status may compute child progress by reading child journals, but computed child progress is never written into the parent journal.
 
 `03-verify-workflow-set` verifies coordination state in the conversation and journal only. It does not create a dedicated verification report artifact in the current workflow-set version. Verification may complete with accepted scaffold conflicts only when the user explicitly accepts preserving those conflicts for later resolution.
+
+A workflow-set parent is complete only when `03-verify-workflow-set` is complete.
 
 ## Storage
 
@@ -313,6 +339,8 @@ Option 1 is an explicit override. Option 2 marks later completed steps in the se
 - Preserve progressive disclosure from router to workflow to one derived current step.
 - Preserve `.sldd/specs/<feature-name>/_spec-journal.json` as the canonical journal for new workflows.
 - Preserve `name` and `kind` as required journal fields; journals without either field are invalid.
+- Preserve kind-specific completion: `feature` completes at `06-verification`; `workflow-set` completes at `03-verify-workflow-set`.
+- Preserve `/sldd resume` active-workflow selection: exclude complete workflows, filter blocked workflows by predecessors, auto-resume exactly one unblocked active workflow, otherwise ask or report blockers.
 - Preserve `/sldd help` as informational and non-mutating.
 - Preserve the Step 88/Step 99 boundary: exploration context is conversational; Step 99 is approved, saved brownfield context.
 - Preserve the Step 04/Step 05 Red-Green contract.

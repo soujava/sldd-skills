@@ -59,16 +59,44 @@ Supported workflow kinds:
 - `feature`: normal feature workflows for isolated features, bugfixes, endpoints, business rules, local refactors, component documentation, and other single-workflow changes.
 - `workflow-set`: decomposition and coordination workflows for large initiatives, epics, products, multi-module work, broad system plans, or work that needs child workflows.
 
-Persist `name` and `kind` immediately when creating a journal:
+Persist `name` and `kind` immediately when creating a journal. Minimal schema-valid feature journals include the required router fields:
 
 ```json
-{ "name": "pix-transfer", "kind": "feature" }
+{
+  "schema_version": 1,
+  "name": "pix-transfer",
+  "workflow": "sldd",
+  "kind": "feature",
+  "steps": {
+    "01-product-intent": { "status": "pending" }
+  }
+}
 ```
 
-or:
+Minimal schema-valid workflow-set parent journals include `workflowSet.children` and the parent step map:
 
 ```json
-{ "name": "marketplace-platform", "kind": "workflow-set" }
+{
+  "schema_version": 1,
+  "name": "marketplace-platform",
+  "workflow": "sldd",
+  "kind": "workflow-set",
+  "steps": {
+    "01-workflow-set-plan": { "status": "pending" },
+    "02-scaffold-children": { "status": "pending" },
+    "03-verify-workflow-set": { "status": "pending" }
+  },
+  "workflowSet": {
+    "children": [
+      {
+        "name": "catalog-feature",
+        "title": "Catalog Feature",
+        "kind": "feature",
+        "scaffold": { "state": "proposed" }
+      }
+    ]
+  }
+}
 ```
 
 For existing journals, use `name` as the workflow/spec name and `kind` as the workflow type source of truth. Do not reclassify `kind` from user wording or current intent. If `name` or `kind` is missing, stop and report the journal as invalid.
@@ -76,6 +104,13 @@ For existing journals, use `name` as the workflow/spec name and `kind` as the wo
 `workflowSet` is exclusive to `kind: "workflow-set"`. Journals with `kind: "feature"` must not include `workflowSet`.
 
 Journal step keys use the step file basename without `.md`. For example, feature Step 01 uses `01-product-intent`, feature Step 04 uses `04-tests-red`, and workflow-set Step 01 uses `01-workflow-set-plan`. Do not persist a separate `current_step`; derive the current step from `steps` and the selected workflow's gate rules.
+
+Workflow completion is kind-specific:
+
+- A `feature` workflow is complete when `steps["06-verification"].status == "complete"`.
+- A `workflow-set` workflow is complete when `steps["03-verify-workflow-set"].status == "complete"`.
+
+Use this definition when filtering active workflows, validating predecessor gates, and resolving `/sldd resume`.
 
 Allowed step statuses:
 
@@ -117,7 +152,7 @@ If slash-style commands reach this skill as text, interpret them as SLDD command
 - `/sldd` or `/sldd status`: inspect available specs and route to the next valid workflow and step.
 - `/sldd start <feature>`: start a new workflow under `.sldd/specs/<feature>/`.
 - `/sldd resume <feature>`: resume a specific workflow.
-- `/sldd resume`: resume the only active workflow, or ask the user to choose when there are multiple.
+- `/sldd resume`: inspect all active workflows. If exactly one active workflow is unblocked by explicit predecessors, resume it automatically. If multiple active workflows are unblocked, ask the user to choose among only those unblocked workflows and list blocked workflows separately. If no active workflow is unblocked, report the blocking predecessor chain.
 - `/sldd continue`: continue the last clear workflow if it can be identified.
 - `/sldd run step <step-id> <feature>`: request a specific step for a specific workflow after gate validation. Accept numeric shorthand like `01` only as a convenience that resolves to the workflow's canonical basename step ID.
 - `/sldd run step <step-id>`: request a specific step in the resolved workflow when the workflow is unambiguous.
@@ -142,6 +177,22 @@ For `/sldd run step <step-id>`, stop before loading a completed step and ask whe
 3. Do nothing.
 
 All reruns remain subject to the selected workflow and target step gates.
+
+## Active Workflow Selection
+
+For `/sldd resume` without a workflow name:
+
+1. Find all journals under `.sldd/specs/*/_spec-journal.json`.
+2. Exclude workflows that are already complete for their workflow kind.
+3. For each remaining active workflow, inspect `relationships.predecessors`.
+4. A workflow is unblocked when:
+   - it has no `relationships.predecessors`; or
+   - every predecessor journal exists and has its workflow-final verification/scaffold step complete.
+5. If exactly one active workflow is unblocked, route to that workflow automatically.
+6. If multiple active workflows are unblocked, ask the user to choose from the unblocked set only.
+7. If no active workflows are unblocked, report the blocked workflows and their incomplete predecessors.
+
+This dependency-aware selection happens before treating multiple active workflows as ambiguous.
 
 ## Response Format
 
