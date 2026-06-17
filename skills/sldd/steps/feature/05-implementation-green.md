@@ -2,7 +2,7 @@
 
 ## Objective
 
-Implement the minimum production changes required to pass Step 04 tests without modifying tests, respecting approved Step 03 constraints, Step 01 requirements, repository instructions, and agentic instructions present in context. Mark Step 05 complete after Green confirmation.
+Implement the minimum production changes required to pass Step 04 tests without modifying tests, respecting approved Step 03 constraints, Step 01 requirements, repository instructions, and agentic instructions present in context. The minimal production changes MUST not replace an approved architectural mechanism with an in-memory, fake, or temporary implementation unless Step 03 explicitly allows it. Mark Step 05 complete after Green confirmation.
 
 ## Gate + Resume Checks
 
