@@ -36,7 +36,7 @@ Execute strict Red phase by creating tests first, proving they fail, and marking
 
 Execute Step 04 directly when Step 01 acceptance criteria and Step 03 test scenarios are approved, clear, and sufficient.
 
-Create only executable tests directly traceable to approved Step 01 acceptance criteria and Step 03 scenarios. If extra behavior, edge cases, test layers, assumptions, or non-obvious stubs are needed, stop and route back to Step 01 or Step 03 instead of expanding scope.
+Create only executable tests directly traceable to approved Step 01 acceptance criteria and Step 03 scenarios, including executable tests or verification checks for approved architectural constraints from Step 03, including persistence mechanism, security mechanism, serialization choice, and cross-module boundaries when those constraints are part of the approved design. If extra behavior, edge cases, test layers, assumptions, or non-obvious stubs are needed, stop and route back to Step 01 or Step 03 instead of expanding scope.
 
 After execution, present failing-output evidence and repository state. This conversational snapshot may continue directly to Step 05.
 
