@@ -54,7 +54,11 @@ Load only the template needed by the selected step:
 - For any workflow with `relationships.predecessors`, every predecessor journal must exist and have Step 06 complete before Step 01 may be marked complete or Step 02+ may be loaded.
 - If any predecessor is missing or incomplete, keep Step 01 and any drafted Step 99 context pending, preserve artifact links as drafts, record the predecessor-gate reason, and route to the predecessor instead of advancing.
 - Step 04 must stay Red-only.
+- Step 03 must identify mandatory architecture decisions that constrain Step 04, Step 05, and Step 06.
+- Step 04 must define tests or checks for every mandatory Step 03 architecture decision.
 - Step 05 must make the minimum production changes needed to pass Step 04 tests, must not modify Step 04 tests, and must follow applicable repository or context-provided agent instructions.
+- Step 05 must satisfy every mandatory Step 03 architecture decision before `green_confirmed`; unapproved substitutes, fakes, in-memory implementations, opaque-token replacements, demo-only mechanisms, or local-only fallbacks are violations.
+- Step 06 must produce a decision-by-decision architecture compliance matrix. Any violated mandatory decision forces No-Go.
 - Child workflows scaffolded from a workflow-set are normal feature workflows. They start with `01-product-intent` pending and `origin.type: "workflow-set-scaffold"`.
 
 ## Completion Rule

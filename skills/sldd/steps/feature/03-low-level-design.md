@@ -29,6 +29,20 @@ The draft must explicitly state:
 - version pinning or compatibility constraints for each new dependency
 - the impact on runtime behavior, tests, and maintenance
 
+The draft must include a dedicated `Mandatory Architecture Decisions` section. For every approved architecture decision that constrains Step 04, Step 05, or Step 06, record:
+
+- Decision ID
+- decision summary
+- source requirement or Step 02 decision
+- required implementation mechanism
+- required dependency or runtime capability, if any
+- expected files, layers, or components affected
+- test or verification strategy
+- whether fallback, stub, in-memory, demo-only, or degraded substitution is allowed
+- blocking behavior when the required mechanism cannot be implemented or tested
+
+Classify each decision as `mandatory`, `optional`, `deferred`, or `prohibited`. Decisions classified as `mandatory` are Step 05 blockers: Step 05 must not mark `green_confirmed` if any mandatory decision is absent, substituted, or implemented with an unapproved fallback. Decisions classified as `prohibited` must not appear in Step 05 production code unless Step 03 is rerun and explicitly changes that classification.
+
 Wait for approval.
 
 ## Approval Protocol

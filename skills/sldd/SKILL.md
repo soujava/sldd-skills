@@ -178,6 +178,14 @@ For `/sldd run step <step-id>`, stop before loading a completed step and ask whe
 
 All reruns remain subject to the selected workflow and target step gates.
 
+If a completed workflow is challenged because implementation may violate approved Step 03 architecture decisions, treat it as a Step 05 and Step 06 integrity issue. Before editing code, ask whether to:
+
+1. rerun Step 05 only and keep later steps as historical;
+2. rerun Step 05 and mark Step 06 as `requires_rerun`;
+3. hold for manual review.
+
+If the violation is confirmed, Step 06 must be rerun or updated before the workflow can be considered complete again.
+
 ## Active Workflow Selection
 
 For `/sldd resume` without a workflow name:

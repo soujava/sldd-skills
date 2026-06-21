@@ -197,6 +197,19 @@ Core feature rules:
 - A feature workflow is complete only when `06-verification` is complete.
 - If `relationships.predecessors` exists, every predecessor journal must exist and have Step 06 complete before this workflow may complete Step 01 or route to Step 02+.
 
+### Architecture Decision Lifecycle
+
+Step 03 classifies every architecture decision that constrains implementation as `mandatory`, `optional`, `deferred`, or `prohibited`. This classification drives enforcement through Steps 04-06:
+
+| Step | Responsibility |
+|---|---|
+| **Step 03** | Records a `Mandatory Architecture Decisions` table with Decision ID, required mechanism, affected files, and whether fallback substitution is allowed.
+| **Step 04** | Requires a `Mandatory Architecture Decision Coverage` table: for every `mandatory` decision, at least one executable test, build check, configuration check, contract test, or documented environment-gated verification. Step 04 cannot mark `red_confirmed` if any mandatory decision lacks a test or check strategy (unless Step 03 explicitly marks it as not testable with a manual verification method).
+| **Step 05** | Produces an `Architecture Guardrail Compliance Matrix` listing every mandatory decision with Decision ID, Required mechanism, Implemented mechanism, Evidence files, and Status (`satisfied`, `environment-blocked`, or `violated`). Step 05 cannot mark `green_confirmed` if any mandatory decision is `violated`. Unapproved substitutes — fakes, in-memory, demo-only, opaque-token, or local-fallback implementations — are violations unless Step 03 explicitly allows them.
+| **Step 06** | Includes an `Architecture Compliance Matrix` in the verification report with implemented vs. required mechanism, verification commands, and Go/No-Go impact. Any `violated` mandatory decision forces a No-Go result.
+
+`environment-blocked` is valid only when the approved mechanism is implemented in production code, the blockage is limited to local verification infrastructure, no unapproved fallback was introduced, and remediation is recorded for Step 06.
+
 ## Workflow-Set Workflow
 
 Workflow-set parents decompose large work into child feature workflows:
@@ -326,7 +339,7 @@ When a requested step is already `complete`, SLDD stops before loading the step 
 2. Run it again and mark later completed steps as `requires_rerun`.
 3. Do nothing.
 
-Option 1 is an explicit override. Option 2 marks later completed steps in the selected workflow order as `requires_rerun`. When invalidating Step 04 or Step 05, clear `evidence` and keep any artifact link only as historical reference.
+Option 1 is an explicit override. Option 2 marks later completed steps in the selected workflow order as `requires_rerun`. When invalidating Step 04 or Step 05, clear `evidence` from the journal and keep any artifact link only as historical reference. Option 3 leaves the journal unchanged.
 
 ## Development Rules
 
