@@ -1,0 +1,102 @@
+{
+  "skill_name": "sldd",
+  "evals": [
+    {
+      "id": 0,
+      "name": "help-non-mutating",
+      "prompt": "In a repository that has the SLDD skill installed, the user sends exactly: /sldd help. Respond as the agent should. Do not modify files.",
+      "expected_output": "Explains SLDD commands, router, gates, storage, required journal name/kind, and states that help is non-mutating without loading workflow or step files.",
+      "files": [],
+      "assertions": [
+        "Mentions /sldd help is informational or non-mutating",
+        "Mentions the canonical .sldd/specs/<feature-name>/_spec-journal.json storage",
+        "Mentions journals require both name and kind",
+        "Does not claim to create, update, or inspect a specific workflow journal"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "invalid-journal-rejected",
+      "prompt": "A workflow journal exists at .sldd/specs/payments/_spec-journal.json with this content: {\"schema_version\":1,\"workflow\":\"sldd\",\"steps\":{\"01-product-intent\":{\"status\":\"complete\"}}}. The user asks: /sldd resume payments. Respond as the SLDD router should. Do not modify files.",
+      "expected_output": "Stops routing and reports the journal invalid because required name and kind fields are missing; does not infer feature or continue to Step 02.",
+      "files": [],
+      "assertions": [
+        "Reports the journal is invalid",
+        "Identifies missing name and kind",
+        "Does not fall back to kind feature",
+        "Does not load or proceed to a feature step"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "resume-predecessor-filtering",
+      "prompt": "The workspace has three journals. .sldd/specs/auth/_spec-journal.json is kind feature and complete at 06-verification. .sldd/specs/catalog/_spec-journal.json is kind feature with 01-product-intent complete and no predecessors. .sldd/specs/checkout/_spec-journal.json is kind feature with 01-product-intent pending and relationships.predecessors=[\"auth\",\"catalog\"]. The user asks: /sldd resume. Respond as the SLDD router should. Do not modify files.",
+      "expected_output": "Excludes complete auth, treats checkout as blocked because catalog is not complete, and auto-resumes catalog as the only unblocked active workflow.",
+      "files": [],
+      "assertions": [
+        "Excludes auth because it is complete",
+        "Reports checkout is blocked by catalog or incomplete predecessor",
+        "Auto-resumes catalog as the only unblocked active workflow",
+        "Does not ask the user to choose among catalog and checkout",
+        "Uses the canonical next step 02-high-level-design"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "explore-workflow-set-recommendation",
+      "prompt": "The user asks: /sldd explore I want to build a full marketplace platform with seller onboarding, catalog management, inventory, cart, checkout, payments, delivery tracking, and admin reporting. Respond as Step 88 exploration should at the start of the conversation. Do not create files.",
+      "expected_output": "Performs lightweight exploration, recommends workflow-set planning because the idea spans multiple capabilities, asks one focused clarification question with a recommended/default answer, and offers exits without creating artifacts.",
+      "files": [],
+      "assertions": [
+        "Recommends workflow-set planning or decomposition",
+        "Does not create workflow-set artifacts without explicit approval",
+        "Asks one focused clarification question",
+        "Includes a recommended answer or default assumption",
+        "Offers explicit exits such as continue exploring, formalize, save summary after approval, or stop",
+        "Identifies the response as Step 88 exploration or says to continue Step 88"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "red-mandatory-architecture-coverage",
+      "prompt": "A feature workflow is at Step 04. Step 03 is approved and classifies these decisions as mandatory: ARCH-01 PostgreSQL persistence, ARCH-02 JWT validation through the project's approved security mechanism, and ARCH-03 Auth -> Audit integration through an event. The Step 03 test catalog has behavior tests for login but no test or check strategy for ARCH-03. The user says: proceed, mark Red confirmed, and we will verify the event later. Respond as Step 04 should. Do not modify files.",
+      "expected_output": "Refuses red_confirmed because a mandatory architecture decision lacks a test/check strategy, explains acceptable executable or environment-gated verification, and routes back to Step 03 without adding production logic.",
+      "files": [],
+      "assertions": [
+        "Does not mark Step 04 red_confirmed while ARCH-03 lacks a test or check strategy",
+        "Requires explicit coverage for every mandatory Step 03 architecture decision",
+        "Accepts tests, build/dependency/configuration/contract checks, or approved environment-gated/manual verification as appropriate",
+        "Routes back to Step 03 or asks for the missing approved verification strategy",
+        "Does not implement production logic during Step 04"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "green-refuses-unapproved-fallback",
+      "prompt": "A feature workflow is at Step 05 with red_confirmed. Step 03 classifies PostgreSQL persistence and Kafka-based Auth -> Audit events as mandatory and says fallback is not allowed. The local environment has no Docker, database, Kafka broker, or credentials. The user asks to implement an in-memory map and direct Audit call so tests can pass locally, then mark green_confirmed. Respond as Step 05 should. Do not modify files.",
+      "expected_output": "Refuses architectural substitution and green_confirmed, distinguishes inability to implement from inability to verify, and either blocks or permits only the approved mechanisms with environment-blocked verification under strict conditions.",
+      "files": [],
+      "assertions": [
+        "Refuses the in-memory persistence and direct Audit call as unapproved substitutes",
+        "Does not mark green_confirmed when mandatory mechanisms are replaced or cannot be implemented",
+        "Distinguishes implementation blockage from local verification infrastructure blockage",
+        "Allows environment-blocked status only when approved production mechanisms are implemented and no fallback is introduced",
+        "Preserves Step 04 tests without modification"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "completed-workflow-architecture-violation",
+      "prompt": "A feature workflow is marked complete through Step 06. A review now proves that Step 03 required PostgreSQL and JWT validation, but Step 05 implemented an in-memory map and opaque random tokens. The user asks the agent to silently patch production code and keep Step 06 complete. Respond as the SLDD router should before editing files.",
+      "expected_output": "Treats the finding as Step 05/06 integrity failure, refuses silent patching, offers the completed-step rerun choices, and requires Step 06 rerun/update if the violation is confirmed.",
+      "files": [],
+      "assertions": [
+        "Treats the architecture mismatch as a Step 05 and Step 06 integrity issue",
+        "Does not silently edit production code while leaving Step 06 complete",
+        "Offers rerun Step 05 only, rerun Step 05 with Step 06 requires_rerun, or hold for manual review",
+        "States that confirmed violations require Step 06 rerun or update before completion",
+        "Preserves the approved PostgreSQL and JWT mechanisms rather than accepting substitutes"
+      ]
+    }
+  ]
+}

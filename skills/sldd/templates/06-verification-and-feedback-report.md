@@ -1,5 +1,10 @@
 # Compliance Matrix
 
+# Architecture Compliance Matrix
+
+| Decision ID | Required Mechanism | Implemented Mechanism | Evidence Files | Verification Commands | Result | Go/No-Go Impact |
+|---|---|---|---|---|---|---|
+
 # Version and Dependency Validation
 
 # Test Convention Compliance

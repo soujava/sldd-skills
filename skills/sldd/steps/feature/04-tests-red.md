@@ -36,7 +36,7 @@ Execute strict Red phase by creating tests first, proving they fail, and marking
 
 Execute Step 04 directly when Step 01 acceptance criteria and Step 03 test scenarios are approved, clear, and sufficient.
 
-Create only executable tests directly traceable to approved Step 01 acceptance criteria and Step 03 scenarios. If extra behavior, edge cases, test layers, assumptions, or non-obvious stubs are needed, stop and route back to Step 01 or Step 03 instead of expanding scope.
+Create only executable tests directly traceable to approved Step 01 acceptance criteria and Step 03 scenarios, including executable tests or verification checks for approved architectural constraints from Step 03, including persistence mechanism, security mechanism, serialization choice, and cross-module boundaries when those constraints are part of the approved design. Mandatory Step 03 architecture decisions require explicit Red-phase coverage through tests, build checks, dependency checks, configuration checks, contract checks, or documented environment-gated verification. If extra behavior, edge cases, test layers, assumptions, or non-obvious stubs are needed, stop and route back to Step 01 or Step 03 instead of expanding scope.
 
 After execution, present failing-output evidence and repository state. This conversational snapshot may continue directly to Step 05.
 
@@ -58,6 +58,9 @@ Use these required Step 04 snapshot headings:
 - Exact test commands
 - Failing output summary
 - Explicit Red confirmation
+- Mandatory Architecture Decision Coverage: for every `mandatory` decision from Step 03, include at least one executable test, build check, dependency check, configuration check, contract test, or documented environment-gated verification. The Red-phase snapshot must include a table with `Decision ID`, `Required mechanism`, `Test/check file or command`, and `Expected Red reason`.
+
+Step 04 must not be marked `red_confirmed` if any mandatory Step 03 architecture decision lacks a test or check strategy, unless Step 03 explicitly marks that decision as not testable in this workflow and provides an approved manual verification method.
 
 If an edge case requires new behavior or assumptions, stop and route back to Step 01 or Step 03.
 
@@ -72,7 +75,7 @@ If an edge case requires new behavior or assumptions, stop and route back to Ste
 ## Save Flow After Red Confirmation
 
 1. Do not create a mandatory Step 04 report artifact.
-2. Update `_spec-journal.json` Step 04 to `status: "complete"` and `evidence: "red_confirmed"`.
+2. Update `_spec-journal.json` step `04-tests-red` to `status: "complete"` and `evidence: "red_confirmed"`.
 3. Keep `_spec-journal.json` journal-only; do not include logs, report body, or numbered artifact content.
 4. If continuous Step 04 -> Step 05 execution was requested, route directly to Step 05.
 5. Otherwise, ask whether to continue to the next step or hold.

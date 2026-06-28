@@ -1,220 +1,56 @@
-# SLDD Skill - Spec Loops Driven Development
+# SLDD Skill
 
-A runtime skill for implementing **Spec Loops Driven Development (SLDD)**, a specs-driven feedback loop for disciplined AI-assisted development.
+SLDD is a runtime skill for **Spec Loops Driven Development**: a gated, specs-driven workflow for AI-assisted software delivery.
 
-SLDD adds engineering control around AI-assisted coding so teams can keep speed without sacrificing quality.
+It keeps exploration, product intent, architecture, test design, implementation, and verification in separate phases so agents can move quickly without skipping review gates.
 
-## Based On
+This implementation is based on Loiane Groner's article [Vibe Coding, But Production-Ready: A Specs-Driven Feedback Loop for AI-Assisted Development](https://loiane.com/2026/03/vibe-coding-with-specs-driven-feedback-loops/).
 
-This work is based on the article **["Vibe Coding, But Production-Ready: A Specs-Driven Feedback Loop for AI-Assisted Development"](https://loiane.com/2026/03/vibe-coding-with-specs-driven-feedback-loops/)** by [Loiane Groner](https://loiane.com/).
+## Install
 
-> **The goal is not to stop vibe coding. The goal is to add engineering control around vibe coding so we can keep speed without sacrificing quality.**
->
-> - Loiane Groner
-
-## What Problem Does SLDD Solve?
-
-When using AI for code generation, teams often face:
-
-- **Version drift**: AI selects framework versions that do not align with team policy.
-- **Missing non-functional requirements**: Security, observability, and maintainability are discovered too late.
-- **Diluted product intent**: Implementation starts before design is clear.
-- **Architecture confusion**: Plausible code is mistaken for valid architecture.
-
-SLDD provides a structured feedback loop that prevents these issues while maintaining development velocity.
-
-## Installation
-
-### Using Skills CLI
-
-Install the SLDD runtime skill with:
+Install from the Skills CLI:
 
 ```bash
 npx skills add soujava/sldd-skills
 ```
 
-### Manual Installation
-
-#### Claude Code
+Install manually for Claude Code:
 
 ```bash
 git clone https://github.com/soujava/sldd-skills.git
 cp -r sldd-skills/skills/sldd ~/.claude/skills/
 ```
 
-#### OpenCode
+Install manually for OpenCode:
 
 ```bash
 git clone https://github.com/soujava/sldd-skills.git
 cp -r sldd-skills/skills/sldd ~/.agents/skills/
 ```
 
-### Development Installation
-
-During local development, install the `sldd` skill as a symbolic link:
+For local development, install the repository skill as a symlink:
 
 ```bash
 ./install-sldd-skills.sh
 ```
 
-To install the symlink into a different skills directory, pass `--target`:
+Use `--target <skills-dir>` to choose another skills directory:
 
 ```bash
 ./install-sldd-skills.sh --target ~/.claude/skills
 ```
 
-To install a copy instead of a symbolic link, pass `--copy`:
+Use `--copy` to install a copy instead of a symlink:
 
 ```bash
 ./install-sldd-skills.sh --copy
 ```
 
-Copied files do not reflect later repository edits until the script is run again.
-
-The script:
-
-- uses `skills/sldd` as the source skill;
-- uses `$HOME/.agents/skills` as the default target;
-- accepts `--target <skills-dir>` for a custom target directory;
-- accepts `--copy` to copy skill files instead of creating a symbolic link;
-- creates the selected target directory if it does not exist;
-- removes previous `sldd` and legacy `sldd-*` entries from the selected target directory;
-- creates one symbolic link or copied directory at `<target>/sldd`;
-- prints a summary of removed entries and created links or copies.
-
-After changing the skill, reload or restart the CLI/tool that consumes skills so it refreshes loaded instructions.
-
-## Skill Architecture
-
-SLDD is distributed as one executable skill:
-
-```text
-skills/sldd/
-  SKILL.md
-  steps/
-  templates/
-  schema/
-```
-
-`SKILL.md` is the workflow router. It resolves the current SLDD workflow, validates gates, interprets natural language or slash-style commands, and loads only the step file needed for the next action.
-
-The skill uses progressive disclosure:
-
-- `SKILL.md` contains global routing, storage, journal, and gate rules.
-- `steps/` contains step-specific behavior, gates, approval protocol, save flow, and response format.
-- `templates/` contains Markdown artifact formats.
-- `schema/` contains the `_spec-journal.json` contract.
-
-## Managed Spec Storage
-
-New SLDD workflows store versioned artifacts under:
-
-```text
-.sldd/specs/<feature-name>/
-  _spec-journal.json
-  00-exploration-summary.md
-  01-product-intent-specification.md
-  02-high-level-technical-design.md
-  03-low-level-design-and-version-policy.md
-  06-verification-and-feedback-report.md
-  existing-codebase-understanding.md
-```
-
-`.sldd/specs` is intended to be committed to Git and reviewed with the code changes it governs.
-
-`_spec-journal.json` is the canonical progress journal for new workflows. It records only workflow state, artifact links, evidence, and rerun notes. It must not contain step body content, command logs, or implementation reports.
-
-Allowed journal statuses:
-
-- `pending`
-- `complete`
-- `requires_rerun`
-
-Step 04 uses `status: "complete"` with `evidence: "red_confirmed"`.
-Step 05 uses `status: "complete"` with `evidence: "green_confirmed"`.
-When Step 04 or Step 05 is not complete, `evidence` must be omitted or `null`.
-Step 99 uses `status: "complete"` only when `existing-codebase-understanding.md` is approved and saved.
-
-Legacy workflows using `docs/specs/<feature-name>/SPEC.md` remain readable for resume compatibility. When the skill resumes a legacy workflow, it keeps writing in that legacy directory unless the user explicitly asks to migrate.
-
-## The Process Flow
-
-Use `/sldd` to start, inspect, or resume the workflow. The skill routes to the next valid step after checking the journal and prerequisites.
-
-```text
-+----------------------------------------------------------------+
-| SLDD Process Flow                                              |
-+----------------------------------------------------------------+
-|                                                                |
-| Optional Step 88: Exploration                                  |
-| Clarify a rough idea before formal Step 01                     |
-|                                                                |
-|                              v                                 |
-| Step 00: Navigation                                            |
-| Resolve journal, validate state, and route                     |
-|                                                                |
-|                              v                                 |
-| Step 01: Product Intent                                        |
-| Define problem, users, metrics, risks, and acceptance criteria |
-|                                                                |
-|                              v                                 |
-| Optional Step 99: Existing Codebase Understanding              |
-| Required for existing codebases before Step 02                 |
-|                                                                |
-|                              v                                 |
-| Step 02: High-Level Technical Design                           |
-| Architecture, system boundaries, and data flow                 |
-|                                                                |
-|                              v                                 |
-| Step 03: Low-Level Design and Version Policy                   |
-| API contracts, data models, tests, dependencies, and versions  |
-|                                                                |
-|                              v                                 |
-|                     GATE: Design Review                        |
-|                                                                |
-|                              v                                 |
-| Step 04: Tests-First Red Phase                                 |
-| Write tests only and prove expected failure                    |
-|                                                                |
-|                              v                                 |
-| Step 05: Minimal Green Implementation                          |
-| Minimal production changes to pass Step 04 tests               |
-|                                                                |
-|                              v                                 |
-| Step 06: Verification                                          |
-| Audit implementation and make Go/No-Go decision                |
-|                                                                |
-|                              v                                 |
-| Production Ready                                               |
-|                                                                |
-+----------------------------------------------------------------+
-```
-
-### Gate Rule
-
-**No implementation before intent and design are reviewed and approved.**
-
-Step 04 must stay Red-only. Step 05 must implement only the minimum production changes required to pass Step 04 tests, must not modify Step 04 tests, and must inspect and follow applicable repository or context-provided agent instructions.
-
-If a gap appears at any step, loop back to the earlier step and revise.
-
-## Steps Included
-
-| Step | File | Description |
-|---|---|---|
-| 88 | `steps/88-exploration.md` | Clarify rough ideas before formal Step 01 |
-| 00 | `steps/00-navigation.md` | Resolve journal state and route to the next valid step |
-| 01 | `steps/01-product-intent.md` | Define product intent and acceptance criteria |
-| 99 | `steps/99-codebase-context.md` | Capture existing-codebase context for brownfield work |
-| 02 | `steps/02-high-level-design.md` | Define architecture, responsibilities, data flow, and test map |
-| 03 | `steps/03-low-level-design.md` | Define contracts, models, error model, tests, dependencies, and version policy |
-| 04 | `steps/04-tests-red.md` | Write tests first and confirm Red |
-| 05 | `steps/05-implementation-green.md` | Implement minimal production changes and confirm Green |
-| 06 | `steps/06-verification.md` | Audit compliance and produce Go/No-Go decision |
+The installer uses `skills/sldd` as the source, defaults to `$HOME/.agents/skills`, removes previous `sldd` and legacy `sldd-*` entries in the target directory, and creates one installed skill at `<target>/sldd`. Reload the consuming tool after changing the skill.
 
 ## Commands
 
-When slash-style commands are passed to the skill as text, the `sldd` skill interprets them as workflow commands:
+SLDD accepts slash-style commands when they reach the skill as text:
 
 ```text
 /sldd
@@ -224,165 +60,323 @@ When slash-style commands are passed to the skill as text, the `sldd` skill inte
 /sldd resume <feature>
 /sldd resume
 /sldd continue
-/sldd run step <NN> <feature>
-/sldd run step <NN>
-/sldd step <NN>
+/sldd run step <step-id> <feature>
+/sldd run step <step-id>
+/sldd step <step-id>
 /sldd explore [idea]
 ```
 
-Slash commands are convenience syntax only. They do not bypass gates. For example, `/sldd run step 05 user-auth`, `/sldd run step 05`, and `/sldd step 05` still require Step 01, Step 02, Step 03, and Step 04 Red confirmation.
+Commands are routing shortcuts. They do not bypass workflow gates, approval rules, journal checks, or Red/Green contracts.
 
-`/sldd explore [idea]` starts Step 88 exploration. When idea text is provided inline, the skill treats it as the initial exploration seed, establishes lightweight project context, inspects the repository instead of asking questions the codebase can answer, then asks one focused clarification question at a time with a recommended answer or default assumption. Exploration stays pre-Step-01 until the user explicitly chooses to formalize, save an optional summary, route to Step 99, or stop without saving.
+Numeric step values are accepted as shorthand and resolve to the canonical step ID for the workflow kind. Journal `steps` keys use the canonical step ID, which is the step file basename without `.md`. The current step is derived from `steps` and workflow gate rules instead of being persisted separately.
 
-`/sldd run step <NN> <feature>` requests a specific step for a specific workflow. `/sldd run step <NN>` is allowed when the workflow can be resolved unambiguously. `/sldd step <NN>` is an alias for the same behavior.
+Use `/sldd help` for a non-mutating overview. It must not load workflow or step files and must not create or change workflow state.
 
-When the requested step is already complete, the skill stops before loading the step and asks whether to run it again only, run it again and mark later completed steps as `requires_rerun`, or do nothing. The run-again-only option is an explicit user override and records a journal-only note if the target step changes without downstream invalidation.
+Use `/sldd explore [idea]` for Step 88 exploration before formal Step 01. Exploration establishes project context, inspects the repository before asking questions the codebase can answer, asks one focused question at a time, and offers explicit exits: continue exploring, formalize Step 01, save an optional summary after approval, route to Step 99, or stop without saving.
 
-All choices still enforce the target step's gates, approval protocol, save flow, and Red/Green contracts.
+When exploration reveals multiple capabilities, dependencies, parallel workstreams, or an oversized Step 01, SLDD recommends workflow-set planning. Exploration does not create workflow-set artifacts without explicit approval.
 
-`/sldd help` is informational only. It explains the skill, the gated flow, `.sldd/specs` storage, `_spec-journal.json`, legacy `SPEC.md` resume compatibility, and available commands without creating or changing workflow state.
+## Architecture
 
-## Usage
-
-### Exploring an Idea
+SLDD is one executable skill:
 
 ```text
-/sldd explore Add a lightweight onboarding checklist for new project contributors.
+skills/sldd/SKILL.md
 ```
 
-The skill starts an interview from the inline idea, establishes project context first, and asks targeted questions one at a time to clarify the target outcome. Each question includes a recommended answer or default assumption. If the current repository can answer a question, the skill inspects it instead of asking. The skill offers explicit exits: continue exploring, formalize Step 01, save an optional `00-exploration-summary.md` after approval, route to Step 99 when reusable codebase context is needed, or stop without saving.
+`SKILL.md` is the router. It detects the workflow name and kind for new journals, reads required `name` and `kind` from existing journals, validates journal state, interprets commands, and loads only the workflow and step needed for the current action.
 
-### Starting a New Feature
+Runtime content is split by responsibility:
 
-```text
-/sldd start user-auth
-
-Feature idea: Build a user authentication system with email/password and OAuth providers.
-```
-
-The skill creates or resolves `.sldd/specs/user-auth/_spec-journal.json`, loads the next required step, and asks for the approvals required by that step.
-
-### Getting Help
-
-```text
-/sldd help
-```
-
-The skill explains the SLDD workflow and command interface without loading a step or mutating any journal.
-
-### Resuming Work
-
-```text
-/sldd resume user-auth
-```
-
-The skill reads `_spec-journal.json`, verifies referenced artifacts, re-checks Step 04/05 operational state when relevant, and loads only the next valid step file.
-
-### Requesting a Specific Step
-
-```text
-/sldd run step 04 user-auth
-```
-
-The skill validates all prerequisites before loading Step 04. If prerequisites are missing, it blocks and routes to the required earlier step. `/sldd run step 04` and `/sldd step 04` are accepted when the workflow can be resolved unambiguously.
-
-If Step 04 is already complete, the skill asks whether to run it again only, run it again and invalidate later completed steps, or do nothing.
-
-### Existing Codebases
-
-For brownfield work, Step 99 is required before Step 02. Step 99 may run during exploration when codebase understanding is needed to clarify scope, constraints, risks, or alternatives.
-
-A Step 99 completed during exploration can be reused later only after the skill validates that its saved artifact still reflects the current codebase and remains relevant to the approved Step 01 scope.
-
-Conversational or unsaved codebase context does not satisfy the Step 99 brownfield gate. To proceed to Step 02+, Step 99 must be approved, saved as `existing-codebase-understanding.md`, and marked `complete` in `_spec-journal.json`.
-
-### Greenfield Projects
-
-Skip Step 99 and proceed from Step 01 to Step 02.
-
-## Key Principles
-
-### 1. Vibe Coding + Specs-Driven = Production Ready
-
-- **Vibe coding**: useful for discovery and fast prototypes.
-- **Specs-driven**: essential for production decisions.
-- **The winning model**: both, in sequence.
-
-### 2. Decision Framework
-
-| Context | Approach |
+| Path | Responsibility |
 |---|---|
-| Early discovery | Vibe coding first |
-| User-facing in production | Specs-driven loop first |
-| Migration or platform work | Include explicit version checks |
+| `skills/sldd/SKILL.md` | Single executable router |
+| `skills/sldd/workflows/` | Workflow-specific ordering, gates, resume rules, and step maps |
+| `skills/sldd/steps/<kind>/` | Step behavior, approval protocol, save flow, and response format |
+| `skills/sldd/templates/` | Markdown artifact formats |
+| `skills/sldd/schema/_spec-journal.schema.json` | Structured journal contract |
 
-### 3. The Engineer's Role
+The router uses progressive disclosure:
 
-The role shifts from writing every line to orchestrating and validating:
+```text
+SKILL.md
+  -> workflows/<kind>.md
+    -> steps/<kind>/<current step of the workflow kind>.md
+      -> templates/<artifact>.md only when writing that artifact
+```
 
-- Define intent and constraints.
-- Review architecture decisions.
-- Verify correctness.
-- Own what gets committed.
+Do not create additional executable SLDD skills. `skills/sldd/SKILL.md` remains the only entrypoint.
 
-### 4. TDD Throughout
+The current runtime package has no application code, package manager, build pipeline, or secondary runtime entrypoint. It is a documentation-first skill package made of the router, workflow files, step files, artifact templates, the journal schema, repository documentation, evaluations, and the local installer.
 
-Tests are written before implementation:
+## Workflow Kinds
 
-- Unit tests for logic.
-- Integration tests for data boundaries.
-- E2E tests for user-visible flows.
+SLDD supports two workflow kinds:
 
-## Benefits
-
-| Before SLDD | After SLDD |
+| Kind | Use for |
 |---|---|
-| Version drift discovered late | Version policy enforced upfront |
-| Missing non-functional requirements | Security and observability designed in |
-| Scope creep from unclear acceptance criteria | Explicit Given/When/Then criteria |
-| Expensive rework after release | Gaps caught during design |
-| Unreliable estimates | Structured decomposition enables accurate estimates |
+| `feature` | Isolated features, bugfixes, endpoints, business rules, local refactors, component documentation, and other single-workflow changes |
+| `workflow-set` | Large initiatives, products, epics, multi-module work, broad system plans, decomposition requests, and work that needs child workflows |
 
-## Team Working Agreement
+Every `_spec-journal.json` must include `name` and `kind`. `name` is the workflow/spec name. New journals persist `name` and `kind` as soon as the workflow is created, and existing journals use `kind` as the workflow type source of truth. Journals without `name` or `kind` are invalid; SLDD does not provide a fallback to `feature` or a legacy compatibility mode for missing `kind`.
 
-1. No implementation prompts before intent and design are approved.
-2. Every AI-generated project includes a version validation step.
-3. Architecture changes during coding require a design delta note.
-4. PRs include a spec compliance checklist.
-5. Release readiness requires explicit support-lifecycle verification.
+When the request is ambiguous, SLDD chooses `feature` unless the user clearly asks for decomposition or the work has multiple independent deliverables.
 
-## Maintenance Rules
+## Completion and Resume Selection
+
+Workflow completion is defined by `kind`:
+
+| Kind | Complete when |
+|---|---|
+| `feature` | `steps["06-verification"].status == "complete"` |
+| `workflow-set` | `steps["03-verify-workflow-set"].status == "complete"` |
+
+SLDD uses this kind-specific completion rule when filtering active workflows, validating predecessor gates, and resolving `/sldd resume`.
+
+For `/sldd resume` without a workflow name, SLDD:
+
+1. Finds all journals under `.sldd/specs/*/_spec-journal.json`.
+2. Excludes workflows already complete for their `kind`.
+3. Checks `relationships.predecessors` for each remaining workflow.
+4. Treats a workflow as unblocked when it has no predecessors, or when every predecessor journal exists and is complete by its own workflow kind.
+5. Automatically resumes only when exactly one active workflow is unblocked.
+6. Asks the user to choose when multiple active workflows are unblocked.
+7. Reports the blocking predecessor chain when no active workflow is unblocked.
+
+A complete `workflow-set` parent means parent planning, child scaffolding, and coordination verification are complete. It does not mean child `feature` workflows are complete; child progress is computed by reading child journals.
+
+## Feature Workflow
+
+Feature workflows use this route:
+
+```mermaid
+flowchart LR
+  E["88 exploration<br/>(optional)"] --> N["00 navigation"]
+  N --> I["01 product intent"]
+  I --> C{"Existing codebase?"}
+  C -- yes --> B["99 codebase context"]
+  C -- no --> H["02 high-level design"]
+  B --> H
+  H --> L["03 low-level design<br/>and version policy"]
+  L --> R["04 tests-first Red"]
+  R --> G["05 minimal Green"]
+  G --> V["06 verification"]
+```
+
+Formal gate order is:
+
+```text
+01 -> 99 when needed -> 02 -> 03 -> 04 -> 05 -> 06
+```
+
+Step 99 is required before Step 02 for existing codebases. It may run during Step 88 when brownfield context is needed, but it satisfies the gate only after `existing-codebase-understanding.md` is approved, saved, current, and marked complete.
+
+Feature step files:
+
+| Step ID | File | Purpose |
+|---|---|---|
+| `88-exploration` | `steps/feature/88-exploration.md` | Clarify rough ideas before formal Step 01 |
+| `00-navigation` | `steps/feature/00-navigation.md` | Inspect state and route |
+| `01-product-intent` | `steps/feature/01-product-intent.md` | Product intent and acceptance criteria |
+| `99-codebase-context` | `steps/feature/99-codebase-context.md` | Existing-codebase context |
+| `02-high-level-design` | `steps/feature/02-high-level-design.md` | High-level technical design |
+| `03-low-level-design` | `steps/feature/03-low-level-design.md` | Low-level design and version policy |
+| `04-tests-red` | `steps/feature/04-tests-red.md` | Tests-first Red phase |
+| `05-implementation-green` | `steps/feature/05-implementation-green.md` | Minimal Green implementation |
+| `06-verification` | `steps/feature/06-verification.md` | Verification and Go/No-Go |
+
+Core feature rules:
+
+- No implementation prompts or code changes before Step 01, Step 02, and Step 03 are approved.
+- Step 88 context is conversational and non-binding unless formalized into approved numbered artifacts.
+- Step 04 writes tests first and must stay Red-only.
+- Step 05 makes the minimum production changes needed to pass Step 04 tests and must not modify Step 04 tests.
+- Step 04 records `evidence: "red_confirmed"` in the journal; Step 05 records `evidence: "green_confirmed"`.
+- Step 04 and Step 05 are journal-evidence phases, not mandatory Markdown report phases.
+- Step 06 produces `06-verification-and-feedback-report.md`.
+- A feature workflow is complete only when `06-verification` is complete.
+- If `relationships.predecessors` exists, every predecessor journal must exist and have Step 06 complete before this workflow may complete Step 01 or route to Step 02+.
+
+### Architecture Decision Lifecycle
+
+Step 03 classifies every architecture decision that constrains implementation as `mandatory`, `optional`, `deferred`, or `prohibited`. This classification drives enforcement through Steps 04-06:
+
+| Step | Responsibility |
+|---|---|
+| **Step 03** | Records a `Mandatory Architecture Decisions` table with Decision ID, required mechanism, affected files, and whether fallback substitution is allowed.
+| **Step 04** | Requires a `Mandatory Architecture Decision Coverage` table: for every `mandatory` decision, at least one executable test, build check, configuration check, contract test, or documented environment-gated verification. Step 04 cannot mark `red_confirmed` if any mandatory decision lacks a test or check strategy (unless Step 03 explicitly marks it as not testable with a manual verification method).
+| **Step 05** | Produces an `Architecture Guardrail Compliance Matrix` listing every mandatory decision with Decision ID, Required mechanism, Implemented mechanism, Evidence files, and Status (`satisfied`, `environment-blocked`, or `violated`). Step 05 cannot mark `green_confirmed` if any mandatory decision is `violated`. Unapproved substitutes — fakes, in-memory, demo-only, opaque-token, or local-fallback implementations — are violations unless Step 03 explicitly allows them.
+| **Step 06** | Includes an `Architecture Compliance Matrix` in the verification report with implemented vs. required mechanism, verification commands, and Go/No-Go impact. Any `violated` mandatory decision forces a No-Go result.
+
+`environment-blocked` is valid only when the approved mechanism is implemented in production code, the blockage is limited to local verification infrastructure, no unapproved fallback was introduced, and remediation is recorded for Step 06.
+
+## Workflow-Set Workflow
+
+Workflow-set parents decompose large work into child feature workflows:
+
+```mermaid
+flowchart LR
+  P["01 workflow-set plan"] --> S["02 scaffold children"]
+  S --> V["03 verify workflow-set"]
+```
+
+Workflow-set parent steps:
+
+| Step | File | Purpose |
+|---|---|---|
+| `01-workflow-set-plan` | `steps/workflow-set/01-workflow-set-plan.md` | Parent decomposition plan |
+| `02-scaffold-children` | `steps/workflow-set/02-scaffold-children.md` | Create approved child workflow drafts |
+| `03-verify-workflow-set` | `steps/workflow-set/03-verify-workflow-set.md` | Verify coordination consistency |
+
+Workflow-set parents plan and scaffold children. They do not execute child workflows, approve child Step 01, enforce child implementation gates, or persist child execution progress.
+
+Creating or updating a workflow-set parent requires explicit approval. A new parent journal is created only through `01-workflow-set-plan`. Existing journals without `name` or `kind` are invalid and must be corrected before routing. Existing `kind: "feature"` journals stop the workflow-set path unless the user chooses another workflow-set name or gives explicit direction.
+
+Child scaffolding requires:
+
+- a completed `01-workflow-set-plan`;
+- separate explicit approval to scaffold;
+- stable child names, titles, kinds, scopes, and predecessor references;
+- no predecessor cycles;
+- no unsafe overwrite without explicit approval.
+
+Scaffold is all-or-nothing for the proposed children in the approved plan. Invalid plans create no children and keep `02-scaffold-children` pending. Filesystem collisions or unsafe overwrite risks may be recorded as `conflict` only after explicit user approval.
+
+Created child workflows are normal `feature` workflows. Each child starts with `01-product-intent` `pending` and `origin.type: "workflow-set-scaffold"`. Child predecessor gates require listed predecessor journals to complete Step 06 before the child can complete Step 01 or route to Step 02+.
+
+Parent status may compute child progress by reading child journals, but computed child progress is never written into the parent journal.
+
+`03-verify-workflow-set` verifies coordination state in the conversation and journal only. It does not create a dedicated verification report artifact in the current workflow-set version. Verification may complete with accepted scaffold conflicts only when the user explicitly accepts preserving those conflicts for later resolution.
+
+A workflow-set parent is complete only when `03-verify-workflow-set` is complete.
+
+## Storage
+
+New workflows store artifacts under:
+
+```text
+.sldd/specs/<feature-name>/
+```
+
+The canonical journal is:
+
+```text
+.sldd/specs/<feature-name>/_spec-journal.json
+```
+
+Common feature artifacts:
+
+```text
+00-exploration-summary.md
+01-product-intent-specification.md
+existing-codebase-understanding.md
+02-high-level-technical-design.md
+03-low-level-design-and-version-policy.md
+06-verification-and-feedback-report.md
+```
+
+Workflow-set parents also use:
+
+```text
+01-workflow-set-plan.md
+```
+
+Workflow-set Step 03 does not write a separate verification artifact. Scaffolded child workflows write their own `01-product-intent-specification.md` from `templates/01-product-intent-from-workflow-set.md`.
+
+Child workflows scaffolded from a workflow-set get their own `.sldd/specs/<child-name>/` directory and journal.
+
+Legacy `docs/specs/<feature-name>/SPEC.md` files are not `_spec-journal.json` files and do not satisfy the current journal contract.
+
+## Journal Contract
+
+`_spec-journal.json` is journal-only state. It records progress, artifact links, evidence, relationships, workflow kind, reasons, notes, and workflow-set scaffold state. It must not contain numbered artifact body content, command logs, or implementation reports.
+
+Required top-level fields in the current schema:
+
+| Field | Contract |
+|---|---|
+| `schema_version` | Must be `1` |
+| `name` | Workflow/spec name |
+| `workflow` | Must be `sldd` |
+| `kind` | `feature` or `workflow-set` |
+| `steps` | Step status map |
+
+`feature` is not a valid top-level journal field. Use `name` for the workflow/spec name and `kind: "feature"` for normal feature workflows.
+
+Other supported fields include `title`, `relationships.parents`, `relationships.predecessors`, `workflowSet.children`, and `notes`. `workflowSet` is valid only with `kind: "workflow-set"` and is invalid with `kind: "feature"`.
+
+`current_step` is not a supported journal field. SLDD derives the current step from `steps` and the selected workflow's gate rules, so the journal does not persist a second source of progress truth.
+
+Allowed step statuses:
+
+```text
+pending
+complete
+requires_rerun
+```
+
+Step entries may include `artifact`, `evidence`, `reason`, `updated_at`, and `origin`. `origin.type` is currently used for `workflow-set-scaffold`.
+
+Workflow-set child entries require `name`, `title`, `kind`, and `scaffold`. Child `kind` is always `feature`. Scaffold state is one of:
+
+```text
+proposed
+created
+conflict
+```
+
+Step keys use the step file basename without `.md`.
+
+For `kind: "feature"`, the schema accepts only feature step keys from the feature step map: `88-exploration`, `00-navigation`, `01-product-intent`, `99-codebase-context`, `02-high-level-design`, `03-low-level-design`, `04-tests-red`, `05-implementation-green`, and `06-verification`. It also rejects any top-level `workflowSet`.
+
+For `kind: "workflow-set"`, the schema accepts only workflow-set step keys from the workflow-set step map: `01-workflow-set-plan`, `02-scaffold-children`, and `03-verify-workflow-set`. It also requires `workflowSet.children`.
+
+## Reruns
+
+When a requested step is already `complete`, SLDD stops before loading the step and asks whether to:
+
+1. Run it again only.
+2. Run it again and mark later completed steps as `requires_rerun`.
+3. Do nothing.
+
+Option 1 is an explicit override. Option 2 marks later completed steps in the selected workflow order as `requires_rerun`. When invalidating Step 04 or Step 05, clear `evidence` from the journal and keep any artifact link only as historical reference. Option 3 leaves the journal unchanged.
+
+## Development Rules
 
 - Keep `skills/sldd/SKILL.md` as the only executable SLDD skill entrypoint.
-- Keep step behavior in `skills/sldd/steps/`.
-- Keep artifact formats in `skills/sldd/templates/`.
-- Keep `_spec-journal.json` structure in `skills/sldd/schema/`.
-- If SLDD process behavior, sequencing, gates, approval semantics, commands, journal fields, storage, templates, installer options, or step responsibilities change, update this README in the same change.
-- Preserve Step 04 Red-only and Step 05 Green-only contracts.
-- Preserve legacy `docs/specs/<feature-name>/SPEC.md` resume compatibility until explicitly removed.
+- Keep workflow behavior under `skills/sldd/workflows/`.
+- Keep step behavior under `skills/sldd/steps/`.
+- Keep artifact formats under `skills/sldd/templates/`.
+- Keep journal schema files under `skills/sldd/schema/`.
+- Preserve YAML frontmatter in `skills/sldd/SKILL.md`: `name`, `description`, and `metadata.type`.
+- Preserve progressive disclosure from router to workflow to one derived current step.
+- Preserve `.sldd/specs/<feature-name>/_spec-journal.json` as the canonical journal for new workflows.
+- Preserve `name` and `kind` as required journal fields; journals without either field are invalid.
+- Preserve kind-specific completion: `feature` completes at `06-verification`; `workflow-set` completes at `03-verify-workflow-set`.
+- Preserve `/sldd resume` active-workflow selection: exclude complete workflows, filter blocked workflows by predecessors, auto-resume exactly one unblocked active workflow, otherwise ask or report blockers.
+- Preserve `/sldd help` as informational and non-mutating.
+- Preserve the Step 88/Step 99 boundary: exploration context is conversational; Step 99 is approved, saved brownfield context.
+- Preserve the Step 04/Step 05 Red-Green contract.
+- Preserve workflow-set parent sequencing: `01-workflow-set-plan -> 02-scaffold-children -> 03-verify-workflow-set`.
+- Preserve workflow-set parent boundaries: parents do not execute children or persist child progress.
+- Update this README when process behavior, sequencing, gates, approval semantics, commands, journal fields, storage, templates, installer options, or step responsibilities change.
+
+Use Conventional Commits:
+
+```text
+<type>(optional-scope): <description>
+```
 
 ## Further Reading
 
-- [Vibe Coding, But Production-Ready - Original Article by Loiane Groner](https://loiane.com/2026/03/vibe-coding-with-specs-driven-feedback-loops/)
-
-## AI Tools Skills Documentation
-
-- [Claude Code - Custom Instructions](https://docs.anthropic.com/en/docs/claude-code/tutorials#custom-instructions)
-- [OpenCode - Skills System](https://opencode.ai/docs/skills)
-- [Cursor - Rules for AI](https://docs.cursor.com/context/rules-for-ai)
-- [GitHub Copilot - Custom Instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions)
+- [Vibe Coding, But Production-Ready: A Specs-Driven Feedback Loop for AI-Assisted Development](https://loiane.com/2026/03/vibe-coding-with-specs-driven-feedback-loops/)
+- [Claude Code custom instructions](https://docs.anthropic.com/en/docs/claude-code/tutorials#custom-instructions)
+- [OpenCode skills](https://opencode.ai/docs/skills)
+- [Cursor rules](https://docs.cursor.com/context/rules-for-ai)
+- [GitHub Copilot custom instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions)
 
 ## License
 
-The SLDD methodology and original article content are by Loiane Groner, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The SLDD methodology and original article content are by Loiane Groner and licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 This skills implementation is provided for community use.
-
-## Contributing
-
-Contributions are welcome. Please submit issues or pull requests to improve the skill, templates, schema, examples, or documentation.
-
-## Acknowledgments
-
-- Loiane Groner for creating and sharing the SLDD methodology.
-- The broader AI-assisted development community for advancing responsible AI coding practices.

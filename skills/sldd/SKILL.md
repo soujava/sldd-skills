@@ -1,6 +1,6 @@
 ---
 name: sldd
-description: Start, resume, inspect, or continue SLDD spec-driven development workflows, including /sldd slash-style commands, gated intent/design/test/implementation steps, structured journals, and legacy SPEC.md compatibility.
+description: Start, resume, inspect, or continue SLDD spec-driven development workflows, including /sldd slash-style commands, gated intent/design/test/implementation steps, structured journals, and workflow kind routing.
 metadata:
   type: workflow
 ---
@@ -9,17 +9,28 @@ metadata:
 
 ## Objective
 
-Route SLDD work safely through exploration, intent, design, Red tests, Green implementation, and verification.
+Route SLDD work through one installed skill while supporting multiple workflow kinds with two-level progressive disclosure.
 
 ## Runtime Model
 
-Use progressive disclosure:
+SLDD is one executable skill: `sldd`. Do not split workflows or steps into separate skills.
 
-- Load this `SKILL.md` first.
-- Before executing any SLDD step, read exactly one matching file from `steps/`.
-- If that step produces a Markdown artifact, also read the matching file from `templates/`.
-- If creating or validating a new journal, use `schema/_spec-journal.schema.json`.
-- Do not execute a step from memory when its step file is available.
+Use this load sequence:
+
+```text
+Initial load:
+  SKILL.md only
+
+Then:
+  workflows/<kind>.md only
+
+Then:
+  steps/<kind>/<current-step>.md only
+```
+
+Never load every workflow file or every step file at once. Load only the workflow selected by `kind`, then only the current step file named by that workflow's step map. If the step produces a Markdown artifact, load only the matching template from `templates/`. If creating or validating a journal, use `schema/_spec-journal.schema.json`.
+
+Do not execute a workflow or step from memory when its file is available.
 
 ## Default Storage
 
@@ -33,11 +44,73 @@ The canonical journal for new workflows is:
 
 Markdown artifacts are stored beside the journal.
 
-Legacy workflows using `docs/specs/<feature-name>/SPEC.md` remain readable for resume only. When resuming a legacy workflow, keep writing in the legacy directory unless the user explicitly requests migration.
+Legacy `docs/specs/<feature-name>/SPEC.md` files are not `_spec-journal.json` files and do not satisfy the current journal contract.
 
 ## Journal Contract
 
-Use `_spec-journal.json` as journal-only state. It records progress, artifact links, evidence, and rerun notes. It must not contain numbered artifact body content, command logs, or implementation reports.
+Use `_spec-journal.json` as journal-only state. It records the workflow name, progress, artifact links, evidence, relationships, workflow kind, and rerun notes. It must not contain numbered artifact body content, command logs, or implementation reports.
+
+Every `_spec-journal.json` must include `name` and `kind`. `name` is the workflow/spec name. Journals without `name` or `kind` are invalid and must not be routed, resumed, or treated as `feature`.
+
+Do not use `feature` as a top-level journal field. `feature` remains only the workflow kind value `kind: "feature"` and the feature workflow concept.
+
+Supported workflow kinds:
+
+- `feature`: normal feature workflows for isolated features, bugfixes, endpoints, business rules, local refactors, component documentation, and other single-workflow changes.
+- `workflow-set`: decomposition and coordination workflows for large initiatives, epics, products, multi-module work, broad system plans, or work that needs child workflows.
+
+Persist `name` and `kind` immediately when creating a journal. Minimal schema-valid feature journals include the required router fields:
+
+```json
+{
+  "schema_version": 1,
+  "name": "pix-transfer",
+  "workflow": "sldd",
+  "kind": "feature",
+  "steps": {
+    "01-product-intent": { "status": "pending" }
+  }
+}
+```
+
+Minimal schema-valid workflow-set parent journals include `workflowSet.children` and the parent step map:
+
+```json
+{
+  "schema_version": 1,
+  "name": "marketplace-platform",
+  "workflow": "sldd",
+  "kind": "workflow-set",
+  "steps": {
+    "01-workflow-set-plan": { "status": "pending" },
+    "02-scaffold-children": { "status": "pending" },
+    "03-verify-workflow-set": { "status": "pending" }
+  },
+  "workflowSet": {
+    "children": [
+      {
+        "name": "catalog-feature",
+        "title": "Catalog Feature",
+        "kind": "feature",
+        "scaffold": { "state": "proposed" }
+      }
+    ]
+  }
+}
+```
+
+For existing journals, use `name` as the workflow/spec name and `kind` as the workflow type source of truth. Do not reclassify `kind` from user wording or current intent. If `name` or `kind` is missing, stop and report the journal as invalid.
+
+`workflowSet` is exclusive to `kind: "workflow-set"`. Journals with `kind: "feature"` must not include `workflowSet`.
+
+Journal step keys use the step file basename without `.md`. For example, feature Step 01 uses `01-product-intent`, feature Step 04 uses `04-tests-red`, and workflow-set Step 01 uses `01-workflow-set-plan`. Do not persist a separate `current_step`; derive the current step from `steps` and the selected workflow's gate rules.
+
+Workflow completion is kind-specific:
+
+- A `feature` workflow is complete when `steps["06-verification"].status == "complete"`.
+- A `workflow-set` workflow is complete when `steps["03-verify-workflow-set"].status == "complete"`.
+
+Use this definition when filtering active workflows, validating predecessor gates, and resolving `/sldd resume`.
 
 Allowed step statuses:
 
@@ -45,129 +118,97 @@ Allowed step statuses:
 - `complete`
 - `requires_rerun`
 
-Step 04 completion requires `evidence: "red_confirmed"`.
-Step 05 completion requires `evidence: "green_confirmed"`.
-For Step 04 and Step 05, non-complete statuses must omit `evidence` or set it to `null`.
+Step 04 (`04-tests-red`) completion requires `evidence: "red_confirmed"`. Step 05 (`05-implementation-green`) completion requires `evidence: "green_confirmed"`. For Step 04 and Step 05, non-complete statuses must omit `evidence` or set it to `null`.
+
+If a journal has `relationships.predecessors`, every listed predecessor journal must exist and have Step 06 complete before this workflow can mark Step 01 complete or route to Step 02+.
+
+## Workflow Detection
+
+When the journal exists:
+
+1. Read `_spec-journal.json`.
+2. If `name` and `kind` are present and valid, route by `kind`.
+3. If `name` or `kind` is missing or invalid, stop and report the journal as invalid.
+
+When no journal exists:
+
+1. Detect the initial workflow kind from the user's intent.
+2. Persist the detected `kind` in the new journal after the required workflow approval path allows journal creation.
+3. Load exactly one workflow file:
+   - `workflows/feature.md` for `kind: "feature"`
+   - `workflows/workflow-set.md` for `kind: "workflow-set"`
+
+Use `feature` when the request appears to be an isolated feature, bugfix, endpoint, business rule, small or medium refactor, local brownfield change, or technical documentation for a specific component.
+
+Use `workflow-set` when the request appears to be a large initiative, full product, epic, multiple modules, multiple related features, broad system plan, decomposition request, or work that needs child workflows.
+
+When ambiguous, prefer `feature`, except when the request clearly involves decomposition or multiple independent deliverables.
 
 ## Command Interface
 
 If slash-style commands reach this skill as text, interpret them as SLDD commands:
 
-- `/sldd help`: explain the SLDD skill, gated workflow, managed storage, journal, legacy compatibility, and available commands.
-- `/sldd` or `/sldd status`: inspect available specs and route to the next valid step.
+- `/sldd help`: explain the SLDD skill, workflow router, gated workflow, managed storage, required journal `name` and `kind`, and available commands. This command must not load workflow or step files and must not mutate state.
+- `/sldd` or `/sldd status`: inspect available specs and route to the next valid workflow and step.
 - `/sldd start <feature>`: start a new workflow under `.sldd/specs/<feature>/`.
 - `/sldd resume <feature>`: resume a specific workflow.
-- `/sldd resume`: resume the only active workflow, or ask the user to choose when there are multiple.
+- `/sldd resume`: inspect all active workflows. If exactly one active workflow is unblocked by explicit predecessors, resume it automatically. If multiple active workflows are unblocked, ask the user to choose among only those unblocked workflows and list blocked workflows separately. If no active workflow is unblocked, report the blocking predecessor chain.
 - `/sldd continue`: continue the last clear workflow if it can be identified.
-- `/sldd run step <NN> <feature>`: request a specific step for a specific workflow after gate validation.
-- `/sldd run step <NN>`: request a specific step in the resolved workflow when the workflow is unambiguous.
-- `/sldd step <NN>`: alias for `/sldd run step <NN>`.
-- `/sldd explore [idea]`: load Step 88 exploration. If idea text follows the command, use it as the initial exploration seed.
+- `/sldd run step <step-id> <feature>`: request a specific step for a specific workflow after gate validation. Accept numeric shorthand like `01` only as a convenience that resolves to the workflow's canonical basename step ID.
+- `/sldd run step <step-id>`: request a specific step in the resolved workflow when the workflow is unambiguous.
+- `/sldd step <step-id>`: alias for `/sldd run step <step-id>`.
+- `/sldd explore [idea]`: route to the feature workflow's exploration step unless the user explicitly chooses workflow-set planning.
 
 Slash commands are convenience syntax only. Always enforce the same gates, journal checks, approvals, and resume rules as natural-language requests.
 
-For `/sldd explore [idea]`:
+## Routing Procedure
 
-1. Load Step 88 without creating or mutating journals, workflow state, or artifacts by default.
-2. If an inline idea is provided, treat the text after `/sldd explore` as the initial exploration seed.
-3. If no idea is provided, ask the user for the rough idea before continuing.
-4. Establish lightweight project context before asking idea-specific clarification questions.
-5. If a context or clarification question can be answered by read-only repository inspection, inspect the repository instead of asking the user.
-6. Ask one focused clarification question at a time, provide a recommended answer or default assumption, and ask the user to accept, revise, or reject it.
-7. Keep exploration conversational until the user explicitly chooses to formalize, save an optional exploration summary, route to Step 99, or stop.
-8. Do not route to Step 01, route to Step 99, or save `00-exploration-summary.md` without explicit user approval.
+1. Resolve the workflow directory and journal path from user input, current context, or available specs.
+2. Detect `name` and `kind` for new journals or read required `name` and `kind` from existing journals using the Journal Contract and Workflow Detection rules.
+3. Load exactly one workflow instruction file from `workflows/<kind>.md`.
+4. Let that workflow file validate gate order and derive the current step from `steps`.
+5. Load exactly one step file from the selected workflow's `steps/<kind>/` step map.
+6. Load a template only when that step produces or updates the matching Markdown artifact.
 
-For `/sldd run step <NN> <feature>`, `/sldd run step <NN>`, and the `/sldd step <NN>` alias:
+For `/sldd run step <step-id>`, stop before loading a completed step and ask whether to:
 
-1. Require a valid step id. If it is missing or invalid, stop and ask for correction.
-2. Resolve the workflow from the feature argument, user input, current context, or the only active workflow. If the workflow is ambiguous, ask the user to choose.
-3. Validate prerequisites, referenced artifacts, Step 99 freshness when applicable, and Step 04/Step 05 evidence before loading the target step.
-4. If prerequisites are missing or stale, stop and route to the missing prerequisite instead of loading the requested step.
-5. If the target step is `pending`, load the requested step file only when its gates are satisfied.
-6. If the target step is `requires_rerun`, load the requested step file only when its gates are satisfied. After it completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
-7. If the target step is `complete`, stop before loading the step and ask the user to choose:
-   - `1. Run it again only.` Warn that later completed steps will not be marked `requires_rerun`; use only when the user accepts downstream consistency risk.
-   - `2. Run it again and mark later completed steps as requires_rerun.`
-   - `3. Do nothing.`
-8. For option 1, run the step only after explicit confirmation. Do not automatically invalidate later steps. If the target step artifact, files, or journal entry changes, add a journal-only note that Step `<NN>` was run again without downstream invalidation by explicit user choice.
-9. For option 2, run the step only after explicit confirmation. After the target step completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
-10. For each invalidated later step, set `reason` to `Step <NN> was run again; this later step must be reviewed again.`
-11. When invalidating Step 04 or Step 05, clear its `evidence`; keep any existing `artifact` link as a historical reference.
+1. Run it again only.
+2. Run it again and mark later completed steps as `requires_rerun`.
+3. Do nothing.
 
-All completed-step choices remain subject to the target step's gate checks, approval protocol, save flow, and hard Red/Green contracts.
+All reruns remain subject to the selected workflow and target step gates.
 
-`/sldd help` is informational only. It must not load a step file, create or mutate `_spec-journal.json`, route workflow state, inspect repositories, or write artifacts unless the user separately asks for status, resume, or a specific step.
+If a completed workflow is challenged because implementation may violate approved Step 03 architecture decisions, treat it as a Step 05 and Step 06 integrity issue. Before editing code, ask whether to:
 
-When responding to `/sldd help`, summarize:
+1. rerun Step 05 only and keep later steps as historical;
+2. rerun Step 05 and mark Step 06 as `requires_rerun`;
+3. hold for manual review.
 
-- what SLDD is for
-- the gated step flow from exploration through verification
-- `.sldd/specs/<feature-name>/` managed storage
-- `_spec-journal.json` as the canonical journal for new workflows
-- legacy `docs/specs/<feature-name>/SPEC.md` resume compatibility
-- available slash-style commands
-- the fact that commands do not bypass gates
+If the violation is confirmed, Step 06 must be rerun or updated before the workflow can be considered complete again.
 
-## Gate Order
+## Active Workflow Selection
 
-Exploration -> Step 01 + Step 99 when needed -> Step 02 -> Step 03 -> Step 04 -> Step 05 -> Step 06
+For `/sldd resume` without a workflow name:
 
-Step 99 is required before Step 02 for existing codebases. It may run during exploration when codebase context is needed.
-Step 99 completion requires an approved and saved `existing-codebase-understanding.md` artifact.
+1. Find all journals under `.sldd/specs/*/_spec-journal.json`.
+2. Exclude workflows that are already complete for their workflow kind.
+3. For each remaining active workflow, inspect `relationships.predecessors`.
+4. A workflow is unblocked when:
+   - it has no `relationships.predecessors`; or
+   - every predecessor journal exists and has its workflow-final verification/scaffold step complete.
+5. If exactly one active workflow is unblocked, route to that workflow automatically.
+6. If multiple active workflows are unblocked, ask the user to choose from the unblocked set only.
+7. If no active workflows are unblocked, report the blocked workflows and their incomplete predecessors.
 
-## Resume Rules
-
-When resuming:
-
-1. Resolve the feature and journal path from user input, current context, or available specs.
-2. Prefer `.sldd/specs/<feature-name>/_spec-journal.json`.
-3. If no new journal exists, allow legacy resume from `docs/specs/<feature-name>/SPEC.md`.
-4. Validate that referenced Markdown artifacts exist.
-5. Detect out-of-order completions or missing prerequisites.
-6. For Step 99, validate freshness and relevance before reuse.
-7. For Step 04 and Step 05, re-evaluate repository state and relevant test results before trusting the journal.
-8. Load only the required step file.
-
-If journal, artifacts, repository state, or test results conflict, stop and ask for direction before writing or routing forward.
-
-## Step File Map
-
-| Step | File | Purpose |
-|---|---|---|
-| 88 | `steps/88-exploration.md` | Explore rough ideas before Step 01 |
-| 00 | `steps/00-navigation.md` | Inspect state and route |
-| 01 | `steps/01-product-intent.md` | Product intent and acceptance criteria |
-| 99 | `steps/99-codebase-context.md` | Existing-codebase context |
-| 02 | `steps/02-high-level-design.md` | High-level technical design |
-| 03 | `steps/03-low-level-design.md` | Low-level design and version policy |
-| 04 | `steps/04-tests-red.md` | Tests-first Red phase |
-| 05 | `steps/05-implementation-green.md` | Minimal Green implementation |
-| 06 | `steps/06-verification.md` | Verification and Go/No-Go |
-
-## Template Map
-
-| Artifact | Template |
-|---|---|
-| `00-exploration-summary.md` | `templates/00-exploration-summary.md` |
-| `01-product-intent-specification.md` | `templates/01-product-intent-specification.md` |
-| `existing-codebase-understanding.md` | `templates/existing-codebase-understanding.md` |
-| `02-high-level-technical-design.md` | `templates/02-high-level-technical-design.md` |
-| `03-low-level-design-and-version-policy.md` | `templates/03-low-level-design-and-version-policy.md` |
-| `06-verification-and-feedback-report.md` | `templates/06-verification-and-feedback-report.md` |
-
-## Global Gate Rule
-
-No implementation prompts or code changes before Step 01, Step 02, and Step 03 are approved. For existing codebases, Step 99 must also be complete and current before Step 02.
-
-Step 04 must stay Red-only. Step 05 must make the minimum production changes needed to pass Step 04 tests, must not modify Step 04 tests, and must follow applicable repository or context-provided agent instructions.
+This dependency-aware selection happens before treating multiple active workflows as ambiguous.
 
 ## Response Format
 
-1. Resolved workflow and journal
-2. Completed steps and validation result
-3. Violations or conflicts, if any
-4. Loaded step file and reason
-5. Next action or approval request
+1. Resolved workflow kind and journal
+2. Workflow file loaded and reason
+3. Completed steps and validation result
+4. Violations or conflicts, if any
+5. Step file loaded and next action or approval request
 
 ## Credit
 

@@ -9,6 +9,7 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 ### Do
 
 - Keep `skills/sldd/SKILL.md` as the only executable SLDD skill entrypoint.
+- Keep workflow behavior under `skills/sldd/workflows/`.
 - Keep step behavior under `skills/sldd/steps/`.
 - Keep artifact formats under `skills/sldd/templates/`.
 - Keep journal schema files under `skills/sldd/schema/`.
@@ -18,9 +19,29 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Ensure every step has a clear objective, gate enforcement rules, approval protocol when applicable, save/progress behavior, and response format.
 - Preserve progressive disclosure: `SKILL.md` routes and loads exactly the step file needed; templates are loaded only for produced Markdown artifacts.
 - Preserve `.sldd/specs/<feature-name>/_spec-journal.json` as the canonical journal for new workflows.
-- Preserve legacy resume compatibility for `docs/specs/<feature-name>/SPEC.md` unless explicitly removed.
+- Preserve `name` and `kind` as required `_spec-journal.json` fields; journals without either field are invalid.
 - Preserve `/sldd help` as an informational command that explains the skill and does not mutate journals, artifacts, or workflow state.
+- Preserve `/sldd explore [idea]` as Step 88 exploration: establish lightweight project context first, inspect the repository instead of asking questions the codebase can answer, ask one focused clarification question at a time, include a recommended answer or default assumption, and offer explicit exits.
+- Preserve Step 88 workflow-set recommendation behavior: recommend workflow-set planning for multiple capabilities, dependencies, parallel workstreams, or oversized Step 01 scope, but do not create workflow-set artifacts without explicit approval.
+- Preserve the Step 88/Step 99 boundary: Step 88 repository observations are conversational context only; Step 99 is the approved and saved brownfield context gate for Step 02+.
 - Preserve the Step 04/Step 05 Red-Green contract: Step 04 writes tests first only; Step 05 makes minimal production changes, does not modify Step 04 tests, and follows applicable repository or context-provided agent instructions.
+- Preserve Step 04 and Step 05 as journal-evidence phases, not mandatory Markdown report artifact phases: Step 04 records `evidence: "red_confirmed"` and Step 05 records `evidence: "green_confirmed"` in `_spec-journal.json`.
+- Preserve the architecture decision lifecycle across Steps 03-06: Step 03 classifies decisions as `mandatory`, `optional`, `deferred`, or `prohibited`; Step 04 requires Mandatory Architecture Decision Coverage (tests or checks for every mandatory decision); Step 05 produces an Architecture Guardrail Compliance Matrix with `satisfied`, `environment-blocked`, or `violated` statuses; Step 06 produces an Architecture Compliance Matrix where any `violated` decision forces No-Go.
+- Preserve the Step 03 mandatory decision enforcement chain: Step 05 must not mark `green_confirmed` if any mandatory decision is `violated` or substituted with an unapproved fallback; unapproved substitutes include fakes, in-memory implementations, demo-only mechanisms, opaque-token replacements, and local-only fallbacks unless Step 03 explicitly allows them.
+- Preserve the `environment-blocked` semantics: valid only when the approved mechanism is implemented in production code, the blockage is limited to local verification infrastructure, no unapproved fallback was introduced, and remediation is recorded for Step 06.
+- Preserve workflow-set parent sequencing: `01-workflow-set-plan -> 02-scaffold-children -> 03-verify-workflow-set`.
+- Preserve workflow-set parent creation gates: new parent journals are created only through approved `01-workflow-set-plan`; existing journals without `name` or `kind` are invalid and are not routed automatically.
+- Preserve workflow-set parent boundaries: parents plan and scaffold child workflows, but do not execute children, approve child Step 01, enforce child implementation gates, or persist child execution progress.
+- Preserve workflow-set Step 03 behavior: verify coordination in the conversation and journal only; do not create a dedicated verification report artifact unless the workflow is explicitly changed.
+- Preserve kind-specific workflow completion: `kind: "feature"` is complete only when `steps["06-verification"].status == "complete"`, and `kind: "workflow-set"` is complete only when `steps["03-verify-workflow-set"].status == "complete"`.
+- Preserve `/sldd resume` active-workflow selection: find journals under `.sldd/specs/*/_spec-journal.json`, exclude workflows complete for their kind, filter blocked workflows by `relationships.predecessors`, auto-resume exactly one unblocked active workflow, ask when multiple are unblocked, and report blockers when none are unblocked.
+- Preserve predecessor gates: when `relationships.predecessors` exists, Step 01 completion and Step 02+ routing are blocked until every listed predecessor journal has Step 06 complete.
+- Preserve completed-step rerun choices: run again only, run again and mark later completed steps `requires_rerun`, or do nothing.
+- Preserve workflow-set scaffold states: `proposed`, `created`, and `conflict`.
+- Preserve journal schema concepts used by the current skill: `kind`, `steps`, `relationships`, `workflowSet.children`, `origin.type`, `evidence`, `reason`, and `requires_rerun`.
+- Preserve kind-specific journal step keys as step file basenames without `.md`; `kind: "feature"` journals may use only feature step basenames, and `kind: "workflow-set"` journals may use only workflow-set parent step basenames.
+- Preserve `name` as the workflow/spec name field in `_spec-journal.json`; do not use or accept `feature` as a journal-name field.
+- Preserve `workflowSet` as exclusive to `kind: "workflow-set"`; `kind: "feature"` journals must not include it.
 - Update `README.md` when changing user-visible process behavior, sequencing, gates, approval semantics, commands, journal fields, storage, templates, installer options, or step responsibilities.
 - Use Conventional Commits for commit messages, following the `<type>(optional-scope): <description>` format.
 
@@ -29,7 +50,16 @@ This repository contains the SLDD (Spec Loops Driven Development) skill: structu
 - Do not add runtime application code, build scripts, package configuration, or CI/CD changes.
 - Do not introduce conventions, frameworks, or patterns not already present in the SLDD skill architecture.
 - Do not create additional executable SLDD skill entrypoints without explicit user instruction.
+- Do not turn Step 88 exploration into Step 02/Step 03 design work or binding requirements before Step 01 approval.
+- Do not treat Step 88 conversational context, repository observations, or `00-exploration-summary.md` as satisfying Step 99.
 - Do not store numbered artifact body content, command logs, or implementation reports in `_spec-journal.json`.
+- Do not persist `current_step` in `_spec-journal.json`; derive the current step from `steps` and workflow gate rules.
+- Do not persist child workflow execution progress into a workflow-set parent journal; compute child progress by reading child journals when needed.
+- Do not infer child scaffolding approval from workflow-set plan approval.
+- Do not auto-convert existing feature journals into workflow-set journals.
+- Do not create legacy migration logic or a fallback that treats journals without `name` or `kind` as `feature`.
+- Do not create legacy migration logic or a fallback that accepts both `feature` and `name` as journal fields.
+- Do not treat accepted workflow-set scaffold conflicts as successful child creation.
 - Do not modify `LICENSE` unless explicitly asked.
 
 ## Repository Content Policy

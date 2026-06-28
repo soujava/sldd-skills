@@ -14,6 +14,7 @@ Capture and approve existing-codebase context for brownfield exploration and saf
 - If resuming later, re-evaluate the current codebase before relying on any previous Step 99 summary.
 - Reuse a previous Step 99 only if it still reflects the current codebase and approved Step 01 scope; update or rerun it if stale, incomplete, or scoped to a rejected exploration direction.
 - Reject inconsistent journal states where Step 02+ is complete while Step 99 is required and incomplete.
+- If `relationships.predecessors` exists and any predecessor is missing or incomplete, Step 99 may be drafted and saved as context, but must remain `pending` for gating purposes until Step 01 can complete after predecessor verification.
 
 ## Draft Output
 
@@ -31,9 +32,10 @@ Wait for approval.
 
 1. Confirm that approval includes saving `existing-codebase-understanding.md` in the resolved workflow directory.
 2. If persistence is approved, save `existing-codebase-understanding.md`.
-3. Mark Step 99 in journal-only `_spec-journal.json` with `status: "complete"` and the saved artifact link.
-4. If persistence is not approved, do not save, do not mark Step 99 complete, and do not route to Step 02+; state that Step 99 remains incomplete until the artifact is saved and approved.
-5. Ask whether to continue to the next step or hold.
+3. If `relationships.predecessors` exists and any predecessor is missing or incomplete, keep Step 99 as `pending`, preserve the artifact link, set `reason` to the predecessor-gate explanation, and route to the incomplete predecessor instead of Step 02+.
+4. Otherwise, mark Step 99 in journal-only `_spec-journal.json` with `status: "complete"` and the saved artifact link.
+5. If persistence is not approved, do not save, do not mark Step 99 complete, and do not route to Step 02+; state that Step 99 remains incomplete until the artifact is saved and approved.
+6. Ask whether to continue to the next step or hold.
 
 For legacy or user-provided workflow paths, save and update progress in the resolved directory instead.
 
