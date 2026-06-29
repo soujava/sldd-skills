@@ -50,6 +50,14 @@ Legacy `docs/specs/<feature-name>/SPEC.md` files are not `_spec-journal.json` fi
 
 Use `_spec-journal.json` as journal-only state. It records the workflow name, progress, artifact links, evidence, relationships, workflow kind, and rerun notes. It must not contain numbered artifact body content, command logs, or implementation reports.
 
+### Draft Artifact Gate Policy
+
+For steps that produce Markdown artifacts, saving the artifact is draft persistence, not gate approval. Save or update the generated Markdown artifact as a reviewable draft before asking for explicit gate approval. When a journal exists or the workflow permits draft journal state, keep the step `pending` in `_spec-journal.json` with the artifact link and a concise reason such as `draft pending explicit approval`.
+
+A Markdown artifact's existence never satisfies a gate. A gate is satisfied only when the relevant journal step has `status: "complete"` and all workflow-specific prerequisites are valid. On revision requests or rejection, update the draft artifact and keep the step `pending`; do not route forward. On explicit approval of the current draft, mark the step `complete` with the same artifact link unless another gate rule, such as an incomplete predecessor, still blocks completion.
+
+Keep `_spec-journal.json` journal-only during draft persistence and approval. Do not store artifact body content, command logs, or reports in the journal. Step 04 and Step 05 remain evidence phases, not mandatory Markdown artifact phases. Step 88 remains non-mutating by default; saving `00-exploration-summary.md` still requires explicit approval and does not satisfy numbered gates.
+
 Every `_spec-journal.json` must include `name` and `kind`. `name` is the workflow/spec name. Journals without `name` or `kind` are invalid and must not be routed, resumed, or treated as `feature`.
 
 Do not use `feature` as a top-level journal field. `feature` remains only the workflow kind value `kind: "feature"` and the feature workflow concept.
@@ -118,6 +126,8 @@ Allowed step statuses:
 - `complete`
 - `requires_rerun`
 
+A `pending` step may include an `artifact` link to a saved draft and a `reason` such as `draft pending explicit approval`; that link is review context only and does not satisfy the gate. New workflow-set parent journals are the exception: draft plan persistence may save `01-workflow-set-plan.md` without creating `_spec-journal.json` until explicit plan approval.
+
 Step 04 (`04-tests-red`) completion requires `evidence: "red_confirmed"`. Step 05 (`05-implementation-green`) completion requires `evidence: "green_confirmed"`. For Step 04 and Step 05, non-complete statuses must omit `evidence` or set it to `null`.
 
 If a journal has `relationships.predecessors`, every listed predecessor journal must exist and have Step 06 complete before this workflow can mark Step 01 complete or route to Step 02+.
@@ -133,7 +143,7 @@ When the journal exists:
 When no journal exists:
 
 1. Detect the initial workflow kind from the user's intent.
-2. Persist the detected `kind` in the new journal after the required workflow approval path allows journal creation.
+2. Persist the detected `kind` in the new journal when the selected workflow's draft or approval path allows journal creation.
 3. Load exactly one workflow file:
    - `workflows/feature.md` for `kind: "feature"`
    - `workflows/workflow-set.md` for `kind: "workflow-set"`
@@ -169,6 +179,8 @@ Slash commands are convenience syntax only. Always enforce the same gates, journ
 4. Let that workflow file validate gate order and derive the current step from `steps`.
 5. Load exactly one step file from the selected workflow's `steps/<kind>/` step map.
 6. Load a template only when that step produces or updates the matching Markdown artifact.
+
+When a loaded step produces a Markdown artifact, apply the Draft Artifact Gate Policy: save or update the reviewable draft, keep the step `pending`, request explicit approval, and advance only after the journal step becomes `complete`.
 
 For `/sldd run step <step-id>`, stop before loading a completed step and ask whether to:
 

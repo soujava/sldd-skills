@@ -43,25 +43,33 @@ The draft must include a dedicated `Mandatory Architecture Decisions` section. F
 
 Classify each decision as `mandatory`, `optional`, `deferred`, or `prohibited`. Decisions classified as `mandatory` are Step 05 blockers: Step 05 must not mark `green_confirmed` if any mandatory decision is absent, substituted, or implemented with an unapproved fallback. Decisions classified as `prohibited` must not appear in Step 05 production code unless Step 03 is rerun and explicitly changes that classification.
 
-Wait for approval.
+Save the draft for review, keep the step pending, then wait for explicit approval.
 
 ## Approval Protocol
 
-- Save or update artifacts only after explicit approval.
-- On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
+- Save or update the Step 03 artifact as a reviewable draft before gate approval.
+- Draft persistence must keep `03-low-level-design` as `pending` in `_spec-journal.json`, preserve the artifact link, and set `reason` to `draft pending explicit approval` or an equivalent review reason.
+- The existence of `03-low-level-design-and-version-policy.md` does not satisfy the Step 03 gate.
+- On rejection, requested changes, hold, or ambiguous approval, update the draft when needed, keep the step pending, and do not route to Step 04+.
+- Only explicit approval of the current draft may mark Step 03 complete.
 - If writes are unavailable, stop and report the limitation.
 
-## Save Flow After Approval
+## Draft Save Flow
 
 1. Save only Step 03 content to the resolved workflow directory as `03-low-level-design-and-version-policy.md`; for new workflows, this is `.sldd/specs/<feature-name>/03-low-level-design-and-version-policy.md`.
-2. Mark `03-low-level-design` as `complete` in journal-only `_spec-journal.json` with the artifact link.
-3. Ask whether to continue to the next step or hold.
+2. Update journal-only `_spec-journal.json` with `steps["03-low-level-design"].status: "pending"`, the artifact link, and `reason: "draft pending explicit approval"`.
+3. Ask for explicit approval, revision requests, or hold.
 
-For legacy or user-provided workflow paths, save and update progress in the resolved directory instead.
+## Gate Approval Flow
+
+1. On explicit approval of the current draft, mark `03-low-level-design` as `complete` in journal-only `_spec-journal.json` with the artifact link.
+2. Ask whether to continue to the next step or hold.
+
+For legacy or user-provided workflow paths, save the draft and update progress in the resolved directory instead.
 
 ## Response Format
 
 1. Gate and resume check result
-2. Draft summary with required Step 03 headings
-3. Approval request
-4. Continue/hold prompt
+2. Saved draft summary with required Step 03 headings
+3. Pending journal update and explicit approval request
+4. Continue/hold prompt after approval, or revision/hold prompt while pending

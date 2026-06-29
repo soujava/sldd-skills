@@ -25,7 +25,7 @@ Expected new-workflow artifacts:
 - `05-implementation-green` completion in `_spec-journal.json` with `evidence: "green_confirmed"`
 - `06-verification-and-feedback-report.md`
 
-Approved numbered artifacts take precedence over `00-exploration-summary.md`.
+Approved numbered artifacts take precedence over `00-exploration-summary.md`. A numbered Markdown artifact may exist as a pending draft; only the journal step `status: "complete"` makes it approved for routing.
 
 ## Start/Resume Flow
 
@@ -82,7 +82,7 @@ When the command is `/sldd run step <step-id> <feature>`, `/sldd run step <step-
 9. If prerequisite artifacts, predecessor completion, journal order, Step 99 freshness, Step 04 evidence, or Step 05 evidence conflict, stop and report the conflict instead of loading the requested step.
 10. If prerequisites are missing or stale, route to the missing prerequisite instead of loading the requested step.
 11. If the target step is `pending`, load the requested step file only when its gates are satisfied.
-12. If the target step is `requires_rerun`, load the requested step file only when its gates are satisfied. After it completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
+12. If the target step is `requires_rerun`, load the requested step file only when its gates are satisfied. After it completes through its normal draft and approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
 
 If the target step is already `complete`, stop before loading the step and ask:
 
@@ -100,7 +100,7 @@ Step <step-id> is already complete.
 After the user chooses:
 
 1. For option 1, run the step only after explicit confirmation. Do not automatically invalidate later completed steps. If the target step artifact, files, or journal entry changes, add a journal-only note: `Step <step-id> was run again without downstream invalidation by explicit user choice.`
-2. For option 2, run the step only after explicit confirmation. After the target step completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
+2. For option 2, run the step only after explicit confirmation. After the target step completes through its normal draft and approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
 3. For each invalidated later step, set `reason` to `Step <step-id> was run again; this later step must be reviewed again.`
 4. When invalidating Step 04 or Step 05, clear `evidence`; keep any existing `artifact` link as a historical reference.
 5. For option 3, do not load the step, write artifacts, run commands, or update the journal.

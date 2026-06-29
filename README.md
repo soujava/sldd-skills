@@ -133,6 +133,8 @@ Workflow completion is defined by `kind`:
 
 SLDD uses this kind-specific completion rule when filtering active workflows, validating predecessor gates, and resolving `/sldd resume`.
 
+For Markdown-producing steps, saved artifacts are reviewable drafts until the owning step is explicitly approved and marked `complete` in `_spec-journal.json`. Saving a draft is persistence; approval is gate advancement.
+
 For `/sldd resume` without a workflow name, SLDD:
 
 1. Finds all journals under `.sldd/specs/*/_spec-journal.json`.
@@ -169,7 +171,7 @@ Formal gate order is:
 01 -> 99 when needed -> 02 -> 03 -> 04 -> 05 -> 06
 ```
 
-Step 99 is required before Step 02 for existing codebases. It may run during Step 88 when brownfield context is needed, but it satisfies the gate only after `existing-codebase-understanding.md` is approved, saved, current, and marked complete.
+Step 99 is required before Step 02 for existing codebases. It may run during Step 88 when brownfield context is needed, but it satisfies the gate only after the current `existing-codebase-understanding.md` draft is explicitly approved, saved, current, and marked complete. A saved Step 99 draft may exist while the step remains `pending`.
 
 Feature step files:
 
@@ -188,6 +190,8 @@ Feature step files:
 Core feature rules:
 
 - No implementation prompts or code changes before Step 01, Step 02, and Step 03 are approved.
+- Markdown-producing steps save reviewable draft artifacts before approval, but artifact existence never satisfies a gate; only `status: "complete"` does.
+- Revision or rejection updates the draft and keeps the step pending; explicit approval of the current draft marks the step complete and allows routing forward.
 - Step 88 context is conversational and non-binding unless formalized into approved numbered artifacts.
 - Step 04 writes tests first and must stay Red-only.
 - Step 05 makes the minimum production changes needed to pass Step 04 tests and must not modify Step 04 tests.
@@ -230,7 +234,7 @@ Workflow-set parent steps:
 
 Workflow-set parents plan and scaffold children. They do not execute child workflows, approve child Step 01, enforce child implementation gates, or persist child execution progress.
 
-Creating or updating a workflow-set parent requires explicit approval. A new parent journal is created only through `01-workflow-set-plan`. Existing journals without `name` or `kind` are invalid and must be corrected before routing. Existing `kind: "feature"` journals stop the workflow-set path unless the user chooses another workflow-set name or gives explicit direction.
+Creating or updating a workflow-set parent plan starts by saving a reviewable `01-workflow-set-plan.md` draft. For a new workflow-set parent, draft persistence does not create `_spec-journal.json`; the parent journal is created only after explicit approval of the current plan draft, which marks `01-workflow-set-plan` complete. Existing parent journals may keep pending draft links during revision, but artifact existence never approves the plan or authorizes scaffolding. Existing journals without `name` or `kind` are invalid and must be corrected before routing. Existing `kind: "feature"` journals stop the workflow-set path unless the user chooses another workflow-set name or gives explicit direction.
 
 Child scaffolding requires:
 
@@ -283,6 +287,8 @@ Workflow-set parents also use:
 
 Workflow-set Step 03 does not write a separate verification artifact. Scaffolded child workflows write their own `01-product-intent-specification.md` from `templates/01-product-intent-from-workflow-set.md`.
 
+During review, any Markdown artifact above may exist as a draft while its journal step remains `pending`. Draft artifacts are intentionally persisted for review; they are not evidence of gate completion.
+
 Child workflows scaffolded from a workflow-set get their own `.sldd/specs/<child-name>/` directory and journal.
 
 Legacy `docs/specs/<feature-name>/SPEC.md` files are not `_spec-journal.json` files and do not satisfy the current journal contract.
@@ -290,6 +296,8 @@ Legacy `docs/specs/<feature-name>/SPEC.md` files are not `_spec-journal.json` fi
 ## Journal Contract
 
 `_spec-journal.json` is journal-only state. It records progress, artifact links, evidence, relationships, workflow kind, reasons, notes, and workflow-set scaffold state. It must not contain numbered artifact body content, command logs, or implementation reports.
+
+A pending Markdown-producing step may include `artifact: "<file>.md"` and `reason: "draft pending explicit approval"` or an equivalent blocker reason. This records a reviewable draft only; the gate remains closed until that step has `status: "complete"`. New workflow-set parent drafts are the exception: `01-workflow-set-plan.md` may be saved before `_spec-journal.json` exists, because parent journal creation itself waits for explicit plan approval.
 
 Required top-level fields in the current schema:
 
@@ -315,7 +323,7 @@ complete
 requires_rerun
 ```
 
-Step entries may include `artifact`, `evidence`, `reason`, `updated_at`, and `origin`. `origin.type` is currently used for `workflow-set-scaffold`.
+Step entries may include `artifact`, `evidence`, `reason`, `updated_at`, and `origin`. `artifact` may point to either a pending draft or an approved artifact, so gate checks must read `status`, not infer completion from the file. `origin.type` is currently used for `workflow-set-scaffold`.
 
 Workflow-set child entries require `name`, `title`, `kind`, and `scaffold`. Child `kind` is always `feature`. Scaffold state is one of:
 
@@ -356,6 +364,7 @@ Option 1 is an explicit override. Option 2 marks later completed steps in the se
 - Preserve `/sldd resume` active-workflow selection: exclude complete workflows, filter blocked workflows by predecessors, auto-resume exactly one unblocked active workflow, otherwise ask or report blockers.
 - Preserve `/sldd help` as informational and non-mutating.
 - Preserve the Step 88/Step 99 boundary: exploration context is conversational; Step 99 is approved, saved brownfield context.
+- Preserve the draft artifact approval policy: saving a draft is persistence; explicit approval and `status: "complete"` are gate advancement.
 - Preserve the Step 04/Step 05 Red-Green contract.
 - Preserve workflow-set parent sequencing: `01-workflow-set-plan -> 02-scaffold-children -> 03-verify-workflow-set`.
 - Preserve workflow-set parent boundaries: parents do not execute children or persist child progress.

@@ -23,26 +23,36 @@ For a child workflow scaffolded from a workflow-set, use the existing Step 01 dr
 
 If any predecessor is missing or incomplete, Step 01 may be drafted, saved, reviewed, or revised, but it must remain `pending` with a `reason` explaining the predecessor gate. Do not route to Step 02+.
 
-Wait for approval.
+Save the draft for review, keep the step pending, then wait for explicit approval.
 
 ## Approval Protocol
 
-- Save or update artifacts only after explicit approval.
-- On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
+- Save or update the Step 01 artifact as a reviewable draft before gate approval.
+- Draft persistence must keep `01-product-intent` as `pending` in `_spec-journal.json`, preserve the artifact link, and set `reason` to `draft pending explicit approval` or a more specific blocking reason.
+- The existence of `01-product-intent-specification.md` does not satisfy the Step 01 gate.
+- On rejection, requested changes, hold, or ambiguous approval, update the draft when needed, keep the step pending, and do not route to Step 02+.
+- Only explicit approval of the current draft may mark Step 01 complete, and predecessor gates may still keep it pending.
 - If writes are unavailable, stop and report the limitation.
 
-## Save Flow After Approval
+## Draft Save Flow
 
 1. Save only Step 01 content to the resolved workflow directory as `01-product-intent-specification.md`; for new workflows, this is `.sldd/specs/<feature-name>/01-product-intent-specification.md`.
+2. Create or update journal-only `_spec-journal.json` with required top-level fields (`schema_version`, `name`, `workflow: "sldd"`, `kind: "feature"`) when needed.
+3. Set `steps["01-product-intent"].status: "pending"`, preserve the artifact link, and set `reason` to `draft pending explicit approval` unless a predecessor gate requires a more specific reason.
+4. Ask for explicit approval, revision requests, or hold.
+
+## Gate Approval Flow
+
+1. On explicit approval of the current draft, verify predecessor gates again.
 2. If `relationships.predecessors` exists and any predecessor is missing or incomplete, keep `01-product-intent` as `pending`, preserve the artifact link, set `reason` to the predecessor-gate explanation, and route to the incomplete predecessor instead of continuing.
 3. Otherwise, mark `01-product-intent` as `complete` in journal-only `_spec-journal.json` with the artifact link.
 4. Ask whether to continue to the next step or hold.
 
-For legacy or user-provided workflow paths, save and update progress in the resolved directory instead.
+For legacy or user-provided workflow paths, save the draft and update progress in the resolved directory instead.
 
 ## Response Format
 
 1. Gate and resume check result
-2. Draft summary with required Step 01 headings
-3. Approval request
-4. Continue/hold prompt
+2. Saved draft summary with required Step 01 headings
+3. Pending journal update and explicit approval request
+4. Continue/hold prompt after approval, or revision/hold prompt while pending

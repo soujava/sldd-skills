@@ -33,8 +33,9 @@ Load only the template needed by the selected step:
 
 ## Gate Rules
 
-- Workflow-set planning requires explicit approval.
-- A new workflow-set parent journal may be created only after explicit approval.
+- Workflow-set plan drafts may be saved as reviewable Markdown artifacts before approval; artifact existence alone never satisfies the gate.
+- When a parent journal already exists, draft updates keep `01-workflow-set-plan` pending until explicit approval marks it complete.
+- A new workflow-set parent journal may be created only after explicit approval of the current Step 01 plan draft; draft persistence for a new parent must not create `_spec-journal.json`.
 - Existing journals without `name` or `kind` are invalid and must not be routed automatically.
 - Existing journals with `kind: "feature"` stop the workflow-set path and require a different workflow-set name or explicit user direction.
 - Child scaffolding requires `01-workflow-set-plan` complete and separate explicit scaffold approval.
@@ -63,7 +64,7 @@ This kind of workflow is complete when `steps["03-verify-workflow-set"].status =
 4. Reject journals that use top-level `feature` as the workflow name field.
 5. Require top-level `workflowSet` on workflow-set parent journals.
 6. If the user explicitly approved creating a new workflow-set and no parent journal exists, route to `01-workflow-set-plan` instead of treating the missing journal as a resume failure.
-7. Validate that referenced Markdown artifacts exist.
+7. Validate that referenced Markdown artifacts exist, but do not treat a referenced artifact as gate completion unless the owning step is `complete`.
 8. Resume pending parent workflow-set steps first.
 9. If the parent is complete, compute a read-only child overview by reading child journals.
 10. Do not write child progress to the parent journal.
@@ -80,7 +81,7 @@ If the target workflow-set step is already `complete`, stop before loading the s
 2. Run it again and mark later completed workflow-set steps as `requires_rerun`.
 3. Do nothing.
 
-For option 1, run the step only after explicit confirmation and record a journal-only note if the target step changes without downstream invalidation. For option 2, after the target step completes through its normal approval or confirmation flow, mark later completed workflow-set steps as `requires_rerun`.
+For option 1, run the step only after explicit confirmation and record a journal-only note if the target step changes without downstream invalidation. For option 2, after the target step completes through its normal draft and approval or confirmation flow, mark later completed workflow-set steps as `requires_rerun`.
 
 ## Response Format
 
