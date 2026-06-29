@@ -22,25 +22,33 @@ If Step 99 was completed before Step 01, verify that its saved context still fit
 
 Trace approved Step 01 requirements, including formalized exploration outcomes, into architecture, responsibilities, data flow, security/observability, trade-offs, and high-level test scenarios.
 
-Wait for approval.
+Save the draft for review, keep the step pending, then wait for explicit approval.
 
 ## Approval Protocol
 
-- Save or update artifacts only after explicit approval.
-- On rejection, requested changes, hold, or ambiguous approval, do not persist progress; clarify or wait.
+- Save or update the Step 02 artifact as a reviewable draft before gate approval.
+- Draft persistence must keep `02-high-level-design` as `pending` in `_spec-journal.json`, preserve the artifact link, and set `reason` to `draft pending explicit approval` or an equivalent review reason.
+- The existence of `02-high-level-technical-design.md` does not satisfy the Step 02 gate.
+- On rejection, requested changes, hold, or ambiguous approval, update the draft when needed, keep the step pending, and do not route to Step 03+.
+- Only explicit approval of the current draft may mark Step 02 complete.
 - If writes are unavailable, stop and report the limitation.
 
-## Save Flow After Approval
+## Draft Save Flow
 
 1. Save only Step 02 content to the resolved workflow directory as `02-high-level-technical-design.md`; for new workflows, this is `.sldd/specs/<feature-name>/02-high-level-technical-design.md`.
-2. Mark `02-high-level-design` as `complete` in journal-only `_spec-journal.json` with the artifact link.
-3. Ask whether to continue to the next step or hold.
+2. Update journal-only `_spec-journal.json` with `steps["02-high-level-design"].status: "pending"`, the artifact link, and `reason: "draft pending explicit approval"`.
+3. Ask for explicit approval, revision requests, or hold.
 
-For legacy or user-provided workflow paths, save and update progress in the resolved directory instead.
+## Gate Approval Flow
+
+1. On explicit approval of the current draft, mark `02-high-level-design` as `complete` in journal-only `_spec-journal.json` with the artifact link.
+2. Ask whether to continue to the next step or hold.
+
+For legacy or user-provided workflow paths, save the draft and update progress in the resolved directory instead.
 
 ## Response Format
 
 1. Gate and resume check result
-2. Draft summary with required Step 02 headings
-3. Approval request
-4. Continue/hold prompt
+2. Saved draft summary with required Step 02 headings
+3. Pending journal update and explicit approval request
+4. Continue/hold prompt after approval, or revision/hold prompt while pending

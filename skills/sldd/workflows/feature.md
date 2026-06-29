@@ -16,7 +16,7 @@ The formal feature gate order is:
 01-product-intent -> 99-codebase-context -> 02-high-level-design -> 03-low-level-design -> 04-tests-red -> 05-implementation-green -> 06-verification
 ```
 
-Step 99 is required before Step 02 for existing codebases. It may run during Step 88 when brownfield context is needed. Step 99 completion requires an approved and saved `existing-codebase-understanding.md` artifact.
+Step 99 is required before Step 02 for existing codebases. It may run during Step 88 when brownfield context is needed. Step 99 may save `existing-codebase-understanding.md` as a pending draft, but completion requires explicit approval of the current draft, current codebase relevance, and `steps["99-codebase-context"].status == "complete"`.
 
 ## Step Files
 
@@ -50,6 +50,8 @@ Load only the template needed by the selected step:
 ## Gate Rules
 
 - No implementation prompts or code changes before Step 01, Step 02, and Step 03 are approved.
+- For Markdown-producing steps, save or update the reviewable artifact draft while keeping the step `pending`; artifact existence never satisfies the gate.
+- Route to the next formal step only when the current gate step is `complete` in `_spec-journal.json`.
 - For existing codebases, Step 99 must be complete and current before Step 02.
 - For any workflow with `relationships.predecessors`, every predecessor journal must exist and have Step 06 complete before Step 01 may be marked complete or Step 02+ may be loaded.
 - If any predecessor is missing or incomplete, keep Step 01 and any drafted Step 99 context pending, preserve artifact links as drafts, record the predecessor-gate reason, and route to the predecessor instead of advancing.
@@ -72,7 +74,7 @@ This kind of workflow is complete when `steps["06-verification"].status == "comp
 3. Require existing `_spec-journal.json` files to include `name` and `kind: "feature"`; journals without `name` or `kind` are invalid.
 4. Reject journals that use top-level `feature` as the workflow name field.
 5. Reject `kind: "feature"` journals that include top-level `workflowSet`.
-6. Validate that referenced Markdown artifacts exist.
+6. Validate that referenced Markdown artifacts exist, but do not treat a referenced artifact as gate completion unless the owning step is `complete`.
 7. Validate predecessor completion when `relationships.predecessors` exists.
 8. Detect out-of-order completions or missing prerequisites.
 9. For Step 99, validate freshness and relevance before reuse.
@@ -89,7 +91,7 @@ If the target step is already `complete`, stop before loading the step and ask t
 2. Run it again and mark later completed steps as `requires_rerun`.
 3. Do nothing.
 
-For option 1, run the step only after explicit confirmation and record a journal-only note if the target step changes without downstream invalidation. For option 2, after the target step completes through its normal approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
+For option 1, run the step only after explicit confirmation and record a journal-only note if the target step changes without downstream invalidation. For option 2, after the target step completes through its normal draft and approval or confirmation flow, mark later completed steps in gate order as `requires_rerun`.
 
 When invalidating Step 04 or Step 05, clear `evidence`; keep any existing `artifact` link as a historical reference.
 
